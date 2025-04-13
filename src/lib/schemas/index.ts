@@ -67,7 +67,6 @@ export const bookingSchema = z.object({
     message: "Please enter a valid phone number.",
   }),
 
-  // Custom casket parameters (ensure this is consistent with the form)
   customCasket: z.boolean().default(false),
   casketColor: z.string().optional(),
   casketMaterial: z.string().optional(),

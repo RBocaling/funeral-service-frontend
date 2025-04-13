@@ -1,42 +1,36 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Moon,
   Sun,
   LayoutDashboard,
-  Search,
-  Calendar,
   MessageSquare,
   LogOut,
-  User,
   Menu,
   X,
   Bath,
-  TvMinimalPlay,
-  Mail,
+  Shuffle,
 } from "lucide-react";
-import { useTheme } from "./theme-provider";
 import { useLocation } from "wouter";
 import { Link } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useThemeStore } from "@/store/themeStore";
 
 // Simple theme toggle component
 const ModeToggle = () => {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme } = useThemeStore();
 
   return (
-    <Button
-      variant="outline"
-      size="icon"
+    <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="rounded-lg"
+      className="text-sky-500 shadow-xl shadow-sky-500/50 cursor-pointer bg-transparent rounded-full"
     >
       {theme === "dark" ? (
-        <Sun className="h-4 w-4" />
+        <Sun className="h-6 w-6" />
       ) : (
-        <Moon className="h-4 w-4" />
+        <Moon className="h-6 w-6" />
       )}
       <span className="sr-only">Toggle theme</span>
-    </Button>
+    </button>
   );
 };
 
@@ -54,12 +48,11 @@ const Header = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
-  // Array of nav items for easy scalability and management
   const navItems = [
     {
       label: "Dashboard",
       icon: <LayoutDashboard className="h-4 w-4 mr-2" />,
-      href: "/customer/dashboard",
+      href: "/",
     },
     {
       label: "Services",
@@ -67,24 +60,14 @@ const Header = () => {
       href: "/services",
     },
     {
-      label: "My Bookings",
-      icon: <Calendar className="h-4 w-4 mr-2" />,
+      label: " Bookings",
+      icon: <Shuffle className="h-4 w-4 mr-2" />,
       href: "/bookings",
-    },
-    {
-      label: "Online Burial",
-      icon: <TvMinimalPlay className="h-4 w-4 mr-2" />,
-      href: "/online-burial",
     },
     {
       label: "Messages",
       icon: <MessageSquare className="h-4 w-4 mr-2" />,
       href: "/messages",
-    },
-    {
-      label: "Profile",
-      icon: <User className="h-4 w-4 mr-2" />,
-      href: "/profile",
     },
   ];
 
@@ -107,9 +90,9 @@ const Header = () => {
           {navItems.map((item) => (
             <Link key={item.href} to={item.href}>
               <div
-                className={`flex items-center text-sm font-medium cursor-pointer ${
+                className={`relative flex items-center text-sm cursor-pointer ${
                   isActive(item.href)
-                    ? "text-primary"
+                    ? "font-semibold"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -120,18 +103,15 @@ const Header = () => {
           ))}
         </nav>
 
-        <div className="flex items-center gap-4">
-          <button><Mail /></button>
+        <div className="flex items-center gap-5">
+          
           <ModeToggle />
-          <Button
-            onClick={handleLogout}
-            variant="outline"
-            size="sm"
-            className="hidden md:flex items-center py-5 px-7 rounded-xl"
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            Logout
-          </Button>
+          <Link to="/profile">
+            <Avatar className="text-sky-500 shadow-xl shadow-violet-500/50">
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          </Link>
 
           {/* Mobile menu button */}
           <button

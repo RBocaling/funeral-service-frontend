@@ -192,3 +192,117 @@ export const mockProviders = [
       "Traditional funeral services with a focus on religious and cultural practices. We respect diverse traditions and provide specialized ceremonies for all faiths.",
   },
 ];
+
+
+// /messag
+import { Chat, Message } from "./types";
+
+export const messages: Message[] = [
+  {
+    id: "1",
+    content: "Hey there! How are you doing?",
+    sender: {
+      name: "Alice Cooper",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop",
+    },
+    timestamp: "2024-03-20T09:00:00Z",
+    isOwn: false,
+    chatId: "1",
+  },
+  {
+    id: "2",
+    content: "I'm doing great! Just finished working on that new project.",
+    sender: {
+      name: "You",
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=150&auto=format&fit=crop",
+    },
+    timestamp: "2024-03-20T09:01:00Z",
+    isOwn: true,
+    chatId: "1",
+  },
+  {
+    id: "3",
+    content:
+      "That's awesome! Would love to see it sometime. How about we catch up over coffee?",
+    sender: {
+      name: "Alice Cooper",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop",
+    },
+    timestamp: "2024-03-20T09:02:00Z",
+    isOwn: false,
+    chatId: "1",
+  },
+  {
+    id: "4",
+    content: "Sounds perfect! How about tomorrow afternoon?",
+    sender: {
+      name: "You",
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=150&auto=format&fit=crop",
+    },
+    timestamp: "2024-03-20T09:03:00Z",
+    isOwn: true,
+    chatId: "1",
+  },
+  {
+    id: "5",
+    content: "Can you review the project documentation?",
+    sender: {
+      name: "Bob Wilson",
+      avatar:
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150&auto=format&fit=crop",
+    },
+    timestamp: "2024-03-20T08:45:00Z",
+    isOwn: false,
+    chatId: "2",
+  },
+  {
+    id: "6",
+    content: "Thanks for your help yesterday!",
+    sender: {
+      name: "Carol Smith",
+      avatar:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150&auto=format&fit=crop",
+    },
+    timestamp: "2024-03-19T18:30:00Z",
+    isOwn: false,
+    chatId: "3",
+  },
+];
+
+export const chats: Chat[] = [
+  {
+    id: "1",
+    name: "Alice Cooper",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop",
+    lastMessage:
+      "That's awesome! Would love to see it sometime. How about we catch up over coffee?",
+    timestamp: "2024-03-20T09:02:00Z",
+    unread: 2,
+    online: true,
+  },
+  {
+    id: "2",
+    name: "Bob Wilson",
+    avatar:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150&auto=format&fit=crop",
+    lastMessage: "Let me know when you're free to discuss the project",
+    timestamp: "2024-03-20T08:45:00Z",
+    unread: 0,
+    online: false,
+  },
+  {
+    id: "3",
+    name: "Carol Smith",
+    avatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150&auto=format&fit=crop",
+    lastMessage: "Thanks for your help yesterday!",
+    timestamp: "2024-03-19T18:30:00Z",
+    unread: 1,
+    online: true,
+  },
+];

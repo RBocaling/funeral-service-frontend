@@ -77,7 +77,7 @@
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
+  --background: #141925;
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
   --card-foreground: oklch(0.984 0.003 247.858);
@@ -125,15 +125,30 @@
   border-bottom: 0.2px #131212 solid;
 }
 
+.blue__gradient {
+  background: linear-gradient(180deg, rgba(188, 165, 255, 0) 0%, #214d76 100%);
+  filter: blur(123px);
+}
+
+.pink__gradient {
+  background: linear-gradient(90deg, #f4c4f3 0%, #fc67fa 100%);
+  filter: blur(900px);
+}
+
+.white__gradient {
+  background: rgba(255, 255, 255, 0.6);
+  filter: blur(750px);
+}
+
 .text-gradient {
   background: radial-gradient(
     64.18% 64.18% at 71.16% 35.69%,
     #def9fa 0.89%,
     #bef3f5 17.23%,
     #acd3ff 42.04%,
-    #95c3ff 55.12%,
-    #5c81e6 71.54%,
-    #3357cf 100%
+    #b8d9ff 55.12%,
+    
+    #3baee4 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

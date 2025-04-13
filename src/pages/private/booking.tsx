@@ -1,476 +1,430 @@
-import { useAuth } from "@/hooks/use-auth";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Search,
-  Check,
-  Clock8,
-  Ban,
   Calendar,
+  MapPin,
+  Users,
   MessageSquare,
-  FileText,
+  X,
+  Phone,
+  Flower2,
+  Box,
+  Church,
+  DollarSign,
+  Clock,
+  Heart,
+  User,
+  Mail,
+  CalendarDays,
+  UserPlus,
+  Search,
   Filter,
+  ChevronDown,
+  WalletCards
 } from "lucide-react";
+import BookingStatus  from "@/components/booking/BookingStatus";
+import TitlePage from "@/components/ui/title-page";
 
-interface Booking {
-  id: number;
-  providerId: number;
-  serviceId: number;
-  status: string;
-  totalAmount: number;
-  bookingDate: Date;
-  createdAt: Date;
-  providerName?: string;
-  serviceName?: string;
+// Sample funeral service bookings
+const bookings = [
+  {
+    id: 1,
+    deceasedName: "Sarah Johnson",
+    customerName: "Michael Johnson",
+    customerEmail: "michael.johnson@email.com",
+    customerPhone: "+1 (555) 123-4567",
+    location: "Grace Memorial Chapel",
+    date: "March 15, 2025",
+    time: "10:00 AM",
+    attendees: 120,
+    status: "Confirmed",
+    services: {
+      casket: "Premium Mahogany",
+      flowers: "White Lilies & Roses",
+      memorial: "Digital Memorial Service",
+    },
+    additionalNotes:
+      "Family requests privacy during the service. Digital memorial link will be shared with attendees.",
+    totalPrice: 8500,
+    image:
+      "https://media.istockphoto.com/id/1447462464/photo/close-up-of-person-in-black-praying-at-outdoor-funeral.jpg?s=612x612&w=0&k=20&c=NQWKq6W8KemPyFuV9gtiPo7md4vskgiF1l5iQfj1MlU=",
+  },
+  {
+    id: 2,
+    deceasedName: "Robert Wilson",
+    customerName: "Emily Wilson",
+    customerEmail: "emily.wilson@email.com",
+    customerPhone: "+1 (555) 234-5678",
+    location: "Eternal Peace Cemetery",
+    date: "March 16, 2025",
+    time: "2:30 PM",
+    attendees: 80,
+    status: "Pending",
+    services: {
+      casket: "Classic Oak",
+      flowers: "Mixed Seasonal Bouquet",
+      memorial: "Traditional Service",
+    },
+    additionalNotes:
+      "Please arrange for live music during the service. Family prefers classical compositions.",
+    totalPrice: 6800,
+    image:
+      "https://honeywell.scene7.com/is/image/honeywell/hon-corp-commercial-buildings-tab6",
+  },
+  {
+    id: 3,
+    deceasedName: "Maria Rodriguez",
+    customerName: "Carlos Rodriguez",
+    customerEmail: "carlos.rodriguez@email.com",
+    customerPhone: "+1 (555) 345-6789",
+    location: "Sacred Heart Church",
+    date: "March 17, 2025",
+    time: "11:15 AM",
+    attendees: 150,
+    status: "Confirmed",
+    services: {
+      casket: "Silver Steel",
+      flowers: "Red & White Roses",
+      memorial: "Hybrid Service",
+    },
+    additionalNotes:
+      "Bilingual service requested. Please ensure all materials are available in both English and Spanish.",
+    totalPrice: 7200,
+    image:
+      "https://images.unsplash.com/photo-1490122417551-6ee9691429d0?auto=format&fit=crop&q=80&w=1000",
+  },
+];
+
+
+
+function Modal({
+  booking,
+  onClose,
+  isTrack,
+  setIsTrack,
+}: {
+  booking: (typeof bookings)[0];
+  onClose: () => void;
+  isTrack: boolean;
+  setIsTrack: (isTrack:boolean)=>void;
+  }) {
+  
+  return (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div
+        className="bg-gray-800/90 rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+        style={{
+          boxShadow:
+            "0 8px 32px -4px rgba(0, 0, 0, 0.3), 0 4px 16px -2px rgba(0, 0, 0, 0.15)",
+        }}
+      >
+        <div className="relative h-64">
+          <img
+            src={booking.image}
+            alt={booking.deceasedName}
+            className="w-full h-full object-cover rounded-t-3xl"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent rounded-t-3xl" />
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-all duration-300"
+          >
+            <X className="w-6 h-6" />
+          </button>
+          <div className="absolute bottom-4 left-6">
+            <div className="flex items-center gap-2 text-white/80 text-sm">
+              <Heart className="w-4 h-4 text-sky-400" />
+              <span>In Memory of</span>
+            </div>
+            <h2 className="text-3xl font-semibold text-white mt-1">
+              {booking.deceasedName}
+            </h2>
+          </div>
+        </div>
+
+        <div className="p-6 space-y-8">
+          {isTrack ? (
+            <div className="">
+      <BookingStatus  />
+      </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-4">
+                    Customer Information
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center dark:text-gray-300">
+                      <User className="w-4 h-4 mr-3 text-sky-400" />
+                      <span>{booking.customerName}</span>
+                    </div>
+                    <div className="flex items-center dark:text-gray-300">
+                      <Mail className="w-4 h-4 mr-3 text-sky-400" />
+                      <span>{booking.customerEmail}</span>
+                    </div>
+                    <div className="flex items-center dark:text-gray-300">
+                      <Phone className="w-4 h-4 mr-3 text-sky-400" />
+                      <span>{booking.customerPhone}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-4">
+                    Service Details
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center dark:text-gray-300">
+                      <MapPin className="w-4 h-4 mr-3 text-sky-400" />
+                      <span>{booking.location}</span>
+                    </div>
+                    <div className="flex items-center dark:text-gray-300">
+                      <CalendarDays className="w-4 h-4 mr-3 text-sky-400" />
+                      <span>
+                        {booking.date} at {booking.time}
+                      </span>
+                    </div>
+                    <div className="flex items-center dark:text-gray-300">
+                      <UserPlus className="w-4 h-4 mr-3 text-sky-400" />
+                      <span>{booking.attendees} Expected Attendees</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-4">
+                    Selected Services
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center dark:text-gray-300">
+                      <Box className="w-4 h-4 mr-3 text-sky-400" />
+                      <span>Casket: {booking.services.casket}</span>
+                    </div>
+                    <div className="flex items-center dark:text-gray-300">
+                      <Flower2 className="w-4 h-4 mr-3 text-sky-400" />
+                      <span>Flowers: {booking.services.flowers}</span>
+                    </div>
+                    <div className="flex items-center dark:text-gray-300">
+                      <Church className="w-4 h-4 mr-3 text-sky-400" />
+                      <span>Memorial: {booking.services.memorial}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-4">
+                    Additional Notes
+                  </h3>
+                  <p className="dark:text-gray-300 text-sm leading-relaxed">
+                    {booking.additionalNotes}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="border-t border-gray-700/30 pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-gray-400 text-sm">Total Amount</span>
+                <div className="text-2xl font-semibold text-white mt-1">
+                  ${booking.totalPrice.toLocaleString()}
+                </div>
+              </div>
+              <div className="flex items-center gap-5">
+                <span
+                  className={`px-4 py-2 rounded-full text-sm border-r pr-5 ${
+                    booking.status === "Confirmed"
+                      ? "bg-green-500/20 text-green-300"
+                      : "bg-yellow-500/20 text-yellow-300"
+                  }`}
+                >
+                  {booking.status}
+                </span>
+                {booking?.status === "Pending" && (
+                  <button
+                    onClick={() => setIsTrack(!isTrack)}
+                    className="text-sky-500 font-medium bg-sky-70s0/10 py-3 px-5 rounded-full flex items-center gap-2 cursor-pointer"
+                  >
+                    <WalletCards 
+                      size={20}
+                      className="animate-bounce bg-transparent rounded-full shadow-xl shadow-sky-500"
+                    />
+                    {isTrack ? "Close Update Order" : "Update Order Status"}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-const Booking = () => {
-  // Fetch bookings
-
-  // Format currency in Pesos
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-PH", {
-      style: "currency",
-      currency: "PHP",
-      minimumFractionDigits: 0,
-    }).format(amount / 100); // Convert cents to pesos
-  };
-
-  // Format date
-  const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  // Get status badge
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "confirmed":
-        return (
-          <Badge
-            variant="outline"
-            className="bg-green-100 text-green-800 border-green-200"
-          >
-            <Check className="mr-1 h-3 w-3" /> Confirmed
-          </Badge>
-        );
-      case "pending":
-        return (
-          <Badge
-            variant="outline"
-            className="bg-yellow-100 text-yellow-800 border-yellow-200"
-          >
-            <Clock8 className="mr-1 h-3 w-3" /> Pending
-          </Badge>
-        );
-      case "completed":
-        return (
-          <Badge
-            variant="outline"
-            className="bg-blue-100 text-blue-800 border-blue-200"
-          >
-            <Check className="mr-1 h-3 w-3" /> Completed
-          </Badge>
-        );
-      case "cancelled":
-        return (
-          <Badge
-            variant="outline"
-            className="bg-red-100 text-red-800 border-red-200"
-          >
-            <Ban className="mr-1 h-3 w-3" /> Cancelled
-          </Badge>
-        );
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
-  };
-
-  // Mock data for development
-  const mockBookings: Booking[] = [
-    {
-      id: 1,
-      providerId: 201,
-      serviceId: 301,
-      status: "completed",
-      totalAmount: 3500000, // In cents (35,000 PHP)
-      bookingDate: new Date("2023-05-20"),
-      createdAt: new Date("2023-05-15"),
-      providerName: "Eternal Rest Funeral Homes",
-      serviceName: "Premium Memorial Service",
-    },
-    {
-      id: 2,
-      providerId: 202,
-      serviceId: 302,
-      status: "pending",
-      totalAmount: 2800000, // In cents (28,000 PHP)
-      bookingDate: new Date("2023-06-15"),
-      createdAt: new Date("2023-05-30"),
-      providerName: "Peaceful Gardens Memorial",
-      serviceName: "Standard Funeral Package",
-    },
-    {
-      id: 3,
-      providerId: 203,
-      serviceId: 303,
-      status: "confirmed",
-      totalAmount: 4200000, // In cents (42,000 PHP)
-      bookingDate: new Date("2023-06-05"),
-      createdAt: new Date("2023-05-25"),
-      providerName: "Serenity Funeral Services",
-      serviceName: "Deluxe Memorial Package with Custom Casket",
-    },
-    {
-      id: 4,
-      providerId: 204,
-      serviceId: 304,
-      status: "cancelled",
-      totalAmount: 3000000, // In cents (30,000 PHP)
-      bookingDate: new Date("2023-05-10"),
-      createdAt: new Date("2023-05-01"),
-      providerName: "Heavenly Memorial Chapel",
-      serviceName: "Basic Funeral Package",
-    },
-    {
-      id: 5,
-      providerId: 205,
-      serviceId: 305,
-      status: "completed",
-      totalAmount: 3800000, // In cents (38,000 PHP)
-      bookingDate: new Date("2023-04-25"),
-      createdAt: new Date("2023-04-20"),
-      providerName: "Graceful Passage Funeral Services",
-      serviceName: "Memorial Service with Flower Arrangements",
-    },
-  ];
-
-  const displayedBookings = mockBookings;
+function Booking() {
+  const [selectedBooking, setSelectedBooking] = useState<
+    (typeof bookings)[0] | null
+    >(null);
+  const [isTrack, setIsTrack] = useState<boolean>(false)
 
   return (
-    <div className="container py-10 px-5">
-      <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0 mb-3">
-        <div>
-          <h2 className="text-2xl font-bold">My Bookings</h2>
-          <p className="text-muted-foreground">
-            Manage and track your service bookings
-          </p>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="relative w-full md:w-auto">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search bookings..."
-              className="pl-8 w-full md:w-[300px]"
-            />
+    <div className="relative ">
+      <div className="container px-5 mx-auto">
+        <div className="flex flex-col md:flex-row gap-5 md:justify-between md:items-center mb-7 md:mb-12">
+          <TitlePage
+            label="My Bookings"
+          />
+          <div className="relative flex items-center gap-5 mb-7">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search bookings..."
+                className="w-full bg-gray-800/50 border border-gray-700/30 rounded-xl pl-10 pr-4 py-2 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/30"
+              />
+            </div>
+
+            <div className="relative">
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <select className="w-full bg-gray-800/50 border border-gray-700/30 rounded-xl pl-10 pr-4 py-2 text-gray-300 appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500/30">
+                <option value="">All Locations</option>
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+            </div>
+
+            <div className="relative">
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <select className="w-full bg-gray-800/50 border border-gray-700/30 rounded-xl pl-10 pr-4 py-2 text-gray-300 appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500/30">
+                <option value="">All Statuses</option>
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+            </div>
           </div>
-          <Button variant="outline" className="hidden md:flex">
-            <Filter className="mr-2 h-4 w-4" /> Filter
-          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {bookings.map((booking) => (
+            <div
+              key={booking.id}
+              className="group relative dark:bg-gray-800/40 backdrop-blur-xl shadow-xl shadow-black/10 rounded-3xl overflow-hidden border border-gray-700/30"
+              //
+            >
+              <div className="absolute top-4 right-4 z-10 flex gap-2">
+                <button className="bg-sky-500/50 hover:bg-sky-500/30 text-white-300 p-2 rounded-full transition-all duration-300">
+                  <MessageSquare className="w-5 h-5" />
+                </button>
+                <button className="bg-red-500/50 hover:bg-red-500/30 text-white-300 p-2 rounded-full transition-all duration-300">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="relative h-48">
+                <img
+                  src="https://media.istockphoto.com/id/1447462464/photo/close-up-of-person-in-black-praying-at-outdoor-funeral.jpg?s=612x612&w=0&k=20&c=NQWKq6W8KemPyFuV9gtiPo7md4vskgiF1l5iQfj1MlU="
+                  alt={booking.deceasedName}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4">
+                  <div className="flex items-center gap-2 text-white/80 text-sm">
+                    <Heart className="w-4 h-4 text-sky-400" />
+                    <span>In Memory of</span>
+                  </div>
+                  <h2 className="text-2xl font-semibold text-white mt-1">
+                    {booking.deceasedName}
+                  </h2>
+                </div>
+              </div>
+
+              <div className="p-6 space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center dark:text-gray-300">
+                      <Users className="w-4 h-4 mr-2 text-sky-400" />
+                      <span className="text-xs">
+                        Arranged by: {booking.customerName}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
+                      <MapPin className="w-4 h-4 mr-2 text-sky-400" />
+                      {booking.location}
+                    </div>
+
+                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
+                      <Calendar className="w-4 h-4 mr-2 text-sky-400" />
+                      {booking.date}
+                    </div>
+
+                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
+                      <Clock className="w-4 h-4 mr-2 text-sky-400" />
+                      {booking.time}
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
+                      <Box className="w-4 h-4 mr-2 text-sky-400" />
+                      {booking.services.casket}
+                    </div>
+
+                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
+                      <Flower2 className="w-4 h-4 mr-2 text-sky-400" />
+                      {booking.services.flowers}
+                    </div>
+
+                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
+                      <Church className="w-4 h-4 mr-2 text-sky-400" />
+                      {booking.services.memorial}
+                    </div>
+
+                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
+                      <DollarSign className="w-4 h-4 mr-2 text-sky-400" />$
+                      {booking.totalPrice.toLocaleString()}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-gray-700/30">
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm ${
+                        booking.status === "Confirmed"
+                          ? "bg-green-500/20 text-green-300"
+                          : "bg-yellow-500/20 text-yellow-300"
+                      }`}
+                    >
+                      {booking.status}
+                    </span>
+                    <button
+                      onClick={() => setSelectedBooking(booking)}
+                      className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-full text-sm transition-all duration-300 shadow-2xl shadow-sky-500/50"
+                    >
+                      View Details
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="absolute inset-0 border-2 border-transparent group-hover:border-sky-500/30 rounded-3xl pointer-events-none transition-colors duration-300" />
+            </div>
+          ))}
         </div>
       </div>
 
-      <Tabs defaultValue="all" className="space-y-8 bg-transparent">
-        <TabsList>
-          <TabsTrigger className="bg-transparent" value="all">
-            All Bookings
-          </TabsTrigger>
-          <TabsTrigger className="bg-transparent" value="upcoming">
-            Upcoming
-          </TabsTrigger>
-          <TabsTrigger className="bg-transparent" value="completed">
-            Completed
-          </TabsTrigger>
-          <TabsTrigger className="bg-transparent" value="cancelled">
-            Cancelled
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="all" className="space-y-4">
-          <Card className="dark:bg-gray-700/20 rounded-3xl">
-            <CardHeader>
-              <CardTitle>All Bookings</CardTitle>
-              <CardDescription>
-                View all your funeral service bookings
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {displayedBookings.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10">
-                  <Calendar className="h-10 w-10 text-muted-foreground mb-4" />
-                  <p className="text-lg font-medium">No bookings found</p>
-                  <p className="text-sm text-muted-foreground">
-                    You haven't made any funeral service bookings yet
-                  </p>
-                  <Button className="mt-4">Browse Services</Button>
-                </div>
-              ) : (
-                <Table className="">
-                  <TableHeader>
-                    <TableRow className="h-[70px]">
-                      <TableHead>Provider</TableHead>
-                      <TableHead>Service</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {displayedBookings.map((booking: any) => (
-                      <TableRow className="h-[70px]" key={booking.id}>
-                        <TableCell className="font-medium">
-                          {booking.providerName}
-                        </TableCell>
-                        <TableCell>{booking.serviceName}</TableCell>
-                        <TableCell>{formatDate(booking.bookingDate)}</TableCell>
-                        <TableCell>
-                          {formatCurrency(booking.totalAmount)}
-                        </TableCell>
-                        <TableCell>{getStatusBadge(booking.status)}</TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-2">
-                            <Button variant="outline" size="sm">
-                              <FileText className="mr-1 h-3 w-3" /> Details
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <MessageSquare className="mr-1 h-3 w-3" /> Contact
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="upcoming" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Upcoming Bookings</CardTitle>
-              <CardDescription>
-                View your upcoming service appointments
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {displayedBookings.filter((b: any) =>
-                ["pending", "confirmed"].includes(b.status)
-              ).length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10">
-                  <Calendar className="h-10 w-10 text-muted-foreground mb-4" />
-                  <p className="text-lg font-medium">No upcoming bookings</p>
-                  <p className="text-sm text-muted-foreground">
-                    You don't have any pending or confirmed bookings
-                  </p>
-                  <Button className="mt-4">Browse Services</Button>
-                </div>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow className="h-[70px]">
-                      <TableHead>Provider</TableHead>
-                      <TableHead>Service</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {displayedBookings
-                      .filter((b: any) =>
-                        ["pending", "confirmed"].includes(b.status)
-                      )
-                      .map((booking: any) => (
-                        <TableRow className="h-[70px]" key={booking.id}>
-                          <TableCell className="font-medium">
-                            {booking.providerName}
-                          </TableCell>
-                          <TableCell>{booking.serviceName}</TableCell>
-                          <TableCell>
-                            {formatDate(booking.bookingDate)}
-                          </TableCell>
-                          <TableCell>
-                            {formatCurrency(booking.totalAmount)}
-                          </TableCell>
-                          <TableCell>
-                            {getStatusBadge(booking.status)}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex justify-end gap-2">
-                              <Button variant="outline" size="sm">
-                                <FileText className="mr-1 h-3 w-3" /> Details
-                              </Button>
-                              <Button variant="outline" size="sm">
-                                <MessageSquare className="mr-1 h-3 w-3" />{" "}
-                                Contact
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="completed" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Completed Bookings</CardTitle>
-              <CardDescription>
-                View your past completed services
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {displayedBookings.filter((b: any) => b.status === "completed")
-                .length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10">
-                  <Check className="h-10 w-10 text-muted-foreground mb-4" />
-                  <p className="text-lg font-medium">No completed bookings</p>
-                  <p className="text-sm text-muted-foreground">
-                    You don't have any completed service bookings yet
-                  </p>
-                </div>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow className="h-[70px]">
-                      <TableHead>Provider</TableHead>
-                      <TableHead>Service</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {displayedBookings
-                      .filter((b: any) => b.status === "completed")
-                      .map((booking: any) => (
-                        <TableRow className="h-[70px]" key={booking.id}>
-                          <TableCell className="font-medium">
-                            {booking.providerName}
-                          </TableCell>
-                          <TableCell>{booking.serviceName}</TableCell>
-                          <TableCell>
-                            {formatDate(booking.bookingDate)}
-                          </TableCell>
-                          <TableCell>
-                            {formatCurrency(booking.totalAmount)}
-                          </TableCell>
-                          <TableCell>
-                            {getStatusBadge(booking.status)}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex justify-end gap-2">
-                              <Button variant="outline" size="sm">
-                                <FileText className="mr-1 h-3 w-3" /> Details
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="cancelled" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Cancelled Bookings</CardTitle>
-              <CardDescription>
-                View your cancelled service bookings
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {displayedBookings.filter((b: any) => b.status === "cancelled")
-                .length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10">
-                  <Ban className="h-10 w-10 text-muted-foreground mb-4" />
-                  <p className="text-lg font-medium">No cancelled bookings</p>
-                  <p className="text-sm text-muted-foreground">
-                    You don't have any cancelled service bookings
-                  </p>
-                </div>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow className="h-[70px]">
-                      <TableHead>Provider</TableHead>
-                      <TableHead>Service</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {displayedBookings
-                      .filter((b: any) => b.status === "cancelled")
-                      .map((booking: any) => (
-                        <TableRow className="h-[70px]" key={booking.id}>
-                          <TableCell className="font-medium">
-                            {booking.providerName}
-                          </TableCell>
-                          <TableCell>{booking.serviceName}</TableCell>
-                          <TableCell>
-                            {formatDate(booking.bookingDate)}
-                          </TableCell>
-                          <TableCell>
-                            {formatCurrency(booking.totalAmount)}
-                          </TableCell>
-                          <TableCell>
-                            {getStatusBadge(booking.status)}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex justify-end gap-2">
-                              <Button variant="outline" size="sm">
-                                <FileText className="mr-1 h-3 w-3" /> Details
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+      {selectedBooking && (
+        <Modal
+          booking={selectedBooking}
+          onClose={() => setSelectedBooking(null)}
+          isTrack={isTrack}
+          setIsTrack={setIsTrack}
+        />
+      )}
     </div>
   );
-};
+}
 
 export default Booking;

@@ -102,14 +102,14 @@ const onlineBurial = () => {
     scheduledDate: new Date().toISOString(),
   });
 
-  const filteredStreams = [
-    ...mockPreviousStreams,
-    ...mockUpcomingStreams,
-  ].filter(
-    (stream) =>
-      stream.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      stream.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // const filteredStreams = [
+  //   ...mockPreviousStreams,
+  //   ...mockUpcomingStreams,
+  // ].filter(
+  //   (stream) =>
+  //     stream.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     stream.description.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
 
   const handleCreateStream = () => {
     // Reset form and open modal
