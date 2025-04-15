@@ -306,3 +306,73 @@ export const chats: Chat[] = [
     online: true,
   },
 ];
+
+// booking
+export const bookings = [
+  {
+    id: 1,
+    deceasedName: "Sarah Johnson",
+    customerName: "Michael Johnson",
+    customerEmail: "michael.johnson@email.com",
+    customerPhone: "+1 (555) 123-4567",
+    location: "Grace Memorial Chapel",
+    date: "March 15, 2025",
+    time: "10:00 AM",
+    attendees: 120,
+    status: "Confirmed",
+    services: {
+      casket: "Premium Mahogany",
+      flowers: "White Lilies & Roses",
+      memorial: "Digital Memorial Service",
+    },
+    additionalNotes:
+      "Family requests privacy during the service. Digital memorial link will be shared with attendees.",
+    totalPrice: 8500,
+    image:
+      "https://media.istockphoto.com/id/1447462464/photo/close-up-of-person-in-black-praying-at-outdoor-funeral.jpg?s=612x612&w=0&k=20&c=NQWKq6W8KemPyFuV9gtiPo7md4vskgiF1l5iQfj1MlU=",
+  },
+  {
+    id: 2,
+    deceasedName: "Robert Wilson",
+    customerName: "Emily Wilson",
+    customerEmail: "emily.wilson@email.com",
+    customerPhone: "+1 (555) 234-5678",
+    location: "Eternal Peace Cemetery",
+    date: "March 16, 2025",
+    time: "2:30 PM",
+    attendees: 80,
+    status: "Pending",
+    services: {
+      casket: "Classic Oak",
+      flowers: "Mixed Seasonal Bouquet",
+      memorial: "Traditional Service",
+    },
+    additionalNotes:
+      "Please arrange for live music during the service. Family prefers classical compositions.",
+    totalPrice: 6800,
+    image:
+      "https://honeywell.scene7.com/is/image/honeywell/hon-corp-commercial-buildings-tab6",
+  },
+  {
+    id: 3,
+    deceasedName: "Maria Rodriguez",
+    customerName: "Carlos Rodriguez",
+    customerEmail: "carlos.rodriguez@email.com",
+    customerPhone: "+1 (555) 345-6789",
+    location: "Sacred Heart Church",
+    date: "March 17, 2025",
+    time: "11:15 AM",
+    attendees: 150,
+    status: "Confirmed",
+    services: {
+      casket: "Silver Steel",
+      flowers: "Red & White Roses",
+      memorial: "Hybrid Service",
+    },
+    additionalNotes:
+      "Bilingual service requested. Please ensure all materials are available in both English and Spanish.",
+    totalPrice: 7200,
+    image:
+      "https://images.unsplash.com/photo-1490122417551-6ee9691429d0?auto=format&fit=crop&q=80&w=1000",
+  },
+];

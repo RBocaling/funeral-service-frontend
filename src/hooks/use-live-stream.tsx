@@ -18,7 +18,6 @@ interface UseLiveStreamProps {
   onMessage?: (message: StreamMessage) => void;
 }
 
-// WebSocket hook for live streaming
 export function useLiveStream({ sessionId, onMessage }: UseLiveStreamProps) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
@@ -29,7 +28,6 @@ export function useLiveStream({ sessionId, onMessage }: UseLiveStreamProps) {
   const reconnectAttempts = useRef(0);
   const maxReconnectAttempts = 5;
   
-  // Create and connect to WebSocket
   const connect = useCallback(() => {
     if (reconnectAttempts.current >= maxReconnectAttempts) {
      
@@ -37,12 +35,10 @@ export function useLiveStream({ sessionId, onMessage }: UseLiveStreamProps) {
     }
     
     try {
-      // Close existing connection if any
       if (socket) {
         socket.close();
       }
       
-      // Create new connection
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
       const wsUrl = `${protocol}//${window.location.host}/ws`;
       const newSocket = new WebSocket(wsUrl);
@@ -51,7 +47,6 @@ export function useLiveStream({ sessionId, onMessage }: UseLiveStreamProps) {
         setIsConnected(true);
         reconnectAttempts.current = 0;
         
-        // Join the session
         if (user) {
           const joinMessage = {
             type: 'join',
@@ -66,10 +61,9 @@ export function useLiveStream({ sessionId, onMessage }: UseLiveStreamProps) {
       newSocket.onclose = (event) => {
         setIsConnected(false);
         
-        // Auto reconnect if not closed cleanly
         if (event.code !== 1000) {
           reconnectAttempts.current += 1;
-          setTimeout(connect, 2000); // Reconnect after 2 seconds
+          setTimeout(connect, 2000); 
         }
       };
       
@@ -82,7 +76,6 @@ export function useLiveStream({ sessionId, onMessage }: UseLiveStreamProps) {
         try {
           const data = JSON.parse(event.data);
           
-          // Handle different message types
           if (data.type) {
             const message: StreamMessage = {
               type: data.type,
@@ -93,10 +86,8 @@ export function useLiveStream({ sessionId, onMessage }: UseLiveStreamProps) {
               timestamp: data.timestamp || new Date().toISOString(),
             };
             
-            // Update messages
             setMessages(prev => [...prev, message]);
             
-            // Call the onMessage callback if provided
             if (onMessage) {
               onMessage(message);
             }
@@ -114,12 +105,10 @@ export function useLiveStream({ sessionId, onMessage }: UseLiveStreamProps) {
     }
   }, [sessionId, user, socket, onMessage]);
   
-  // Connect on mount
   useEffect(() => {
     connect();
     
     return () => {
-      // Leave session and close connection on unmount
       if (socket && socket.readyState === WebSocket.OPEN) {
         if (user) {
           const leaveMessage = {

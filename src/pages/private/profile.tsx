@@ -8,19 +8,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import GridCard from "@/components/profile/GridCard";
 
-const GridCard = ({ key, title, label }: any) => {
-  return (
-    <div key={key}>
-      <p className="text-gray-500 text-sm  dark:text-white/70  trackibng-wider">
-        {label}
-      </p>
-      <p className="text-gray-500 text-base  dark:text-white font-medium trackibng-wider">
-        {title}
-      </p>
-    </div>
-  );
-};
+
 const Profile = () => {
   const personalInfo = {
     id: 1,

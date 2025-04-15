@@ -1,12 +1,12 @@
+import StatCard from "@/components/dashboard/StatCard";
 import { Badge } from "@/components/ui/badge";
+import { bookings } from "@/lib/constants";
 import {
   Bath,
   CircleDollarSign,
   FolderDot,
-  TrendingUp,
   Users,
 } from "lucide-react";
-import  { ReactNode } from "react";
 import {
   AreaChart,
   Area,
@@ -18,43 +18,7 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-function StatCard({
-  icon: Icon,
-  label,
-  value,
-  trend,
-  additional
-}: {
-  icon: any;
-  label: string;
-  value: string;
-    trend?: string;
-    additional?: ReactNode
-}) {
-  return (
-    <div
-      className="bg-gray-800/40 backdrop-blur-sm rounded-3xl p-6 border border-gray-700/30"
-      style={{ boxShadow: "0 8px 32px -4px rgba(0, 0, 0, 0.2)" }}
-    >
-      <div className="flex items-center gap-4">
-        <div className="bg-sky-500/10 p-4 rounded-2xl">
-          <Icon className="w-6 h-6 text-sky-400" />
-        </div>
-        <div>
-          <p className="text-gray-400 text-sm">{label}</p>
-          <p className="text-white text-2xl font-semibold mt-1">{value}</p>
-        </div>
-      </div>
-      {
-        trend && <div className="mt-4 flex items-center gap-2">
-        <TrendingUp className="w-4 h-4 text-green-400" />
-        <span className="text-green-400 text-sm">{trend}</span>
-      </div>
-      }
-      {additional}
-    </div>
-  );
-}
+
 const dashboard = () => {
   const revenueData = [
     { name: "Jan", value: 12000 },
@@ -75,74 +39,7 @@ const dashboard = () => {
     { name: "Sun", value: 3 },
   ];
 
-  const bookings = [
-    {
-      id: 1,
-      deceasedName: "Sarah Johnson",
-      customerName: "Michael Johnson",
-      customerEmail: "michael.johnson@email.com",
-      customerPhone: "+1 (555) 123-4567",
-      location: "Grace Memorial Chapel",
-      date: "March 15, 2025",
-      time: "10:00 AM",
-      attendees: 120,
-      status: "Confirmed",
-      services: {
-        casket: "Premium Mahogany",
-        flowers: "White Lilies & Roses",
-        memorial: "Digital Memorial Service",
-      },
-      additionalNotes:
-        "Family requests privacy during the service. Digital memorial link will be shared with attendees.",
-      totalPrice: 8500,
-      image:
-        "https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&q=80&w=1000",
-    },
-    {
-      id: 2,
-      deceasedName: "Robert Wilson",
-      customerName: "Emily Wilson",
-      customerEmail: "emily.wilson@email.com",
-      customerPhone: "+1 (555) 234-5678",
-      location: "Eternal Peace Cemetery",
-      date: "March 16, 2025",
-      time: "2:30 PM",
-      attendees: 80,
-      status: "Pending",
-      services: {
-        casket: "Classic Oak",
-        flowers: "Mixed Seasonal Bouquet",
-        memorial: "Traditional Service",
-      },
-      additionalNotes:
-        "Please arrange for live music during the service. Family prefers classical compositions.",
-      totalPrice: 6800,
-      image:
-        "https://images.unsplash.com/photo-1544829832-c8047d6a8d04?auto=format&fit=crop&q=80&w=1000",
-    },
-    {
-      id: 3,
-      deceasedName: "Maria Rodriguez",
-      customerName: "Carlos Rodriguez",
-      customerEmail: "carlos.rodriguez@email.com",
-      customerPhone: "+1 (555) 345-6789",
-      location: "Sacred Heart Church",
-      date: "March 17, 2025",
-      time: "11:15 AM",
-      attendees: 150,
-      status: "Confirmed",
-      services: {
-        casket: "Silver Steel",
-        flowers: "Red & White Roses",
-        memorial: "Hybrid Service",
-      },
-      additionalNotes:
-        "Bilingual service requested. Please ensure all materials are available in both English and Spanish.",
-      totalPrice: 7200,
-      image:
-        "https://images.unsplash.com/photo-1490122417551-6ee9691429d0?auto=format&fit=crop&q=80&w=1000",
-    },
-  ];
+  
 
   const transactions = [
     {
