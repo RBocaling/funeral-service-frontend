@@ -1,27 +1,31 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MessageError from "@/components/ui/MessageError";
-import { useAuthStore } from "@/store/authStore";
+import { useLogin } from "@/hooks/controllers/useLogin";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState<string>("")
+  const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
-  const [isError, setIsError] = useState<boolean>(false)
+  const loginMutation = useLogin();
 
-  const login = useAuthStore((state) => state.login);
-
-  const handleLogin = (e:any) => {
-     e.preventDefault()
-    if (username === "test" && password === "test123") {
-       login()
-       navigate("/");
-     } else {
-       setIsError(true)
-     }
-   };
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    loginMutation.mutate(
+      { email, password },
+      {
+        onSuccess: () => {
+          alert("Success register")
+          navigate("/");
+        },
+        onError: (error: any) => {
+          console.error("Login failed:", error.response?.data?.message || error.message);
+        },
+      }
+    );
+  };
   return (
     <div className="w-full min-h-screen   text-white flex flex-col justify-center relative">
       <div className="max-w-md w-full mx-auto">
@@ -38,14 +42,14 @@ const Login = () => {
         <p className="text-sm text-gray-400 mb-6">
           Welcome back! Please enter your details.
         </p>
-        {isError && (
+        {loginMutation.isError && (
           <MessageError message="Invalid credentials. Please verify your email and password, then try again." />
         )}
         <form className="space-y-5 relative z-20 mt-3">
           <Input
             type="text"
             placeholder="Email"
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-3 bg-neutral-800 focus:bg-neutral-800/70 border border-neutral-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
           />
           <Input
@@ -58,7 +62,11 @@ const Login = () => {
             onClick={handleLogin}
             className="w-full py-6 bg-sky-500 shadow-2xl shadow-sky-500/20 hover:bg-sky-600 rounded-full font-semibold"
           >
-            Sign in
+           
+
+            {
+              loginMutation.isPending ? "Loading":" Sign in"
+            }
           </Button>
         </form>
 

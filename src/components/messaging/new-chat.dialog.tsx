@@ -16,7 +16,7 @@ interface NewChatDialogProps {
   trigger: React.ReactNode;
 }
 
-export function NewChatDialog({ onNewChat, trigger }: NewChatDialogProps) {
+export function NewChatDialog() {
   const [name, setName] = useState("");
   const [open, setOpen] = useState(false);
 
@@ -34,14 +34,14 @@ export function NewChatDialog({ onNewChat, trigger }: NewChatDialogProps) {
       online: true,
     };
 
-    onNewChat(newChat);
+    
     setName("");
     setOpen(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <DialogTrigger asChild>{}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>New Chat</DialogTitle>

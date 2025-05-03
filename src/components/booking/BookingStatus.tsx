@@ -1,41 +1,121 @@
 import { Box, Check, MapPin, Truck, X } from "lucide-react";
-import{ useState } from "react";
-
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import Map from "./Map";
+import { useGetBooking, useGetBookingStatus, usUpdateBooking } from "@/hooks/controllers/useBooking";
+import { useServiceTypeStore } from "@/store/serviceStore";
+import { useQueryClient } from "@tanstack/react-query";
 
-const BookingStatus = () => {
+type BookingStatusType = "CONFIRMED" | "PREPARING_ITEMS" | "ON_THE_WAY" | "COMPLETED";
+
+const BookingStatus = ({booking}:{booking:any}) => {
   const [isAddLocation, setIsAddLocation] = useState<boolean>(false);
+  const [currentStatus, setCurrentStatus] = useState<BookingStatusType>(
+    booking?.status === "CONFIRMED"
+      ? "PREPARING_ITEMS"
+      : booking?.status === "PREPARING_ITEMS"
+      ? "ON_THE_WAY"
+      : booking?.status === "ON_THE_WAY"
+      ? "COMPLETED"
+      : "CONFIRMED"
+  );
+  
+  const updateStatusMutation = usUpdateBooking();
+ 
+const {selectedSBooking} = useServiceTypeStore()
+const queryClient = useQueryClient();
+
   const [steps, setSteps] = useState([
     {
       id: 1,
       title: "Booking Confirmed",
       subtitle: "8:00 AM · Feb 8, 2023",
       icon: <Check className="w-5 h-5" />,
-      status: "completed",
+      status: "upcoming",
+      statusName: "CONFIRMED",
     },
     {
       id: 2,
       title: "Preparing Items",
       subtitle: "Casket, Flowers & Setup",
-      icon: <Truck className="w-5 h-5" />,
-      status: "active",
+      icon: <Box className="w-5 h-5" />,
+      status: "upcoming",
+      statusName: "PREPARING_ITEMS",
     },
     {
       id: 3,
-      title: "Service Day",
-      subtitle: "Estimated: Feb 15, 2023",
-      icon: <Box className="w-5 h-5" />,
+      title: "On the Way",
+      subtitle: "Delivery in Progress",
+      icon: <Truck className="w-5 h-5" />,
       status: "upcoming",
+      statusName: "ON_THE_WAY",
     },
   ]);
 
+  useEffect(() => {
+    const updatedSteps = steps.map((step) => {
+      if (currentStatus === "COMPLETED") {
+        return { ...step, status: "completed" };
+      }
+
+      if (step.statusName === currentStatus) {
+        return { ...step, status: "active" };
+      } else if (
+        currentStatus === "PREPARING_ITEMS" &&
+        step.statusName === "CONFIRMED"
+      ) {
+        return { ...step, status: "completed" };
+      } else if (
+        currentStatus === "ON_THE_WAY" &&
+        (step.statusName === "CONFIRMED" || step.statusName === "PREPARING_ITEMS")
+      ) {
+        return { ...step, status: "completed" };
+      }
+
+      return { ...step, status: "upcoming" };
+    });
+
+    setSteps(updatedSteps);
+  }, [currentStatus]);
+
+  const handleUpdate = (payload:any) => {
+    updateStatusMutation.mutate(
+      payload,
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: ["customesr-booking"],
+          });
+        },
+        onError: (error: any) => {
+          alert("Failed: " + JSON.stringify(error));
+        },
+      }
+    );
+  }
   const handleMarkAsDone = (index: number) => {
     const updatedSteps = [...steps];
     updatedSteps[index].status = "completed";
     if (updatedSteps[index + 1]) {
       updatedSteps[index + 1].status = "active";
+      setCurrentStatus(updatedSteps[index + 1].statusName as BookingStatusType);
+        handleUpdate({ 
+          id: booking?.id,
+          data: { 
+            bookingStatus: updatedSteps[index].statusName as BookingStatusType 
+          } 
+      })
+     
+    } else {
+      setCurrentStatus("COMPLETED");
+        handleUpdate({ 
+          id: booking?.id,
+          data: { 
+            bookingStatus: "ON_THE_WAY" 
+          } 
+      })
+      
     }
     setSteps(updatedSteps);
   };
@@ -47,10 +127,33 @@ const BookingStatus = () => {
       updatedSteps[i].status = "upcoming";
     }
     setSteps(updatedSteps);
+    setCurrentStatus(updatedSteps[index].statusName as BookingStatusType);
+    if (index - 1 > 0) {
+      handleUpdate({ 
+        id: booking?.id,
+        data: { 
+          bookingStatus: updatedSteps[index - 1].statusName as BookingStatusType
+        } 
+    })
+    } else {
+      handleUpdate({ 
+        id: booking?.id,
+        data: { 
+          bookingStatus: "PENDING"
+        } 
+    })
+    }
+   
+    
   };
 
   const firstActiveIndex = steps.findIndex((step) => step.status === "active");
   const allCompleted = steps.every((step) => step.status === "completed");
+
+  
+  console.log("selectedSBooking",booking);
+  
+  
 
   return (
     <div className="flex flex-col gap-7 items-center">
@@ -63,7 +166,6 @@ const BookingStatus = () => {
             {index !== 0 && (
               <div className="absolute -left-1/2 top-4 hidden sm:block w-full h-0.5 bg-gray-700 z-0" />
             )}
-
             <div
               className={`relative z-10 flex items-center justify-center w-9 h-9 rounded-full border-2 ${
                 step.status === "completed"

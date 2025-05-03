@@ -3,7 +3,6 @@ import {
   Eye,
   Plus,
   Search,
-  Lock,
   Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +12,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import TitlePage from "@/components/ui/title-page";
 import CreateService from "@/components/services/CreateService";
 import ViewService from "@/components/services/ViewService";
+import { useGetServices } from "@/hooks/controllers/useAddService";
+import { useServiceTypeStore } from "@/store/serviceStore";
 
 const data = [
   {
@@ -23,7 +24,7 @@ const data = [
     thumbnail: "",
     isPrivate: false,
     list: 10,
-    type: "caskets",
+    type: "casket",
   },
   {
     id: "2",
@@ -50,51 +51,22 @@ const data = [
 ];
 
 const Services = () => {
-  const [createModalOpen, setCreateModalOpen] = useState(false);
   const [viewModalOpen, setViewModalOpen] = useState(false);
-  const [currentStream, setCurrentStream] = useState<any>(null);
-  const [activeStep, setActiveStep] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isRecording, setIsRecording] = useState(false);
+  const { setServiceType } = useServiceTypeStore();
+  const { data: myServices, isLoading } = useGetServices();
 
-  const [newStream, setNewStream] = useState({
-    title: "",
-    description: "",
-    isPrivate: false,
-    password: "",
-    scheduledDate: new Date().toISOString(),
-  });
-
-  const handleCreateStream = () => {
-    setNewStream({
-      title: "",
-      description: "",
-      isPrivate: false,
-      password: "",
-      scheduledDate: new Date().toISOString(),
-    });
-    setActiveStep(1);
-    setCreateModalOpen(true);
-  };
-
-  const handleViewStream = (stream: any) => {
-    setCurrentStream(stream);
+  const handleViewService = (service: any) => {
+    setServiceType(service?.type?.toUpperCase());
     setViewModalOpen(true);
   };
 
-  const handlePrevStep = () => {
-    if (activeStep > 1) {
-      setActiveStep(activeStep - 1);
-    }
-  };
+console.log("myServices",myServices);
 
-  const handleStartLive = () => {
-    setIsRecording(true);
-  };
 
   return (
     <div className="space-y-6 container mx-auto px-5">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 ">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
         <TitlePage
           label="My Services"
           description="Create and manage funeral services for distant family members"
@@ -110,7 +82,6 @@ const Services = () => {
             />
           </div>
           <Button
-            onClick={handleCreateStream}
             size="sm"
             className="rounded-full bg-primary/90 hover:bg-primary w-1/2 md:w-auto"
           >
@@ -123,40 +94,31 @@ const Services = () => {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {data
           ?.filter(
-            (stream) =>
-              stream.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              stream.description
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase())
+            (service) =>
+              service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              service.description.toLowerCase().includes(searchQuery.toLowerCase())
           )
-          .map((stream: any) => (
+          .map((service: any) => (
             <Card
-              key={stream.id}
+              key={service.id}
               className="overflow-hidden hover:shadow-md transition-shadow rounded-xl pt-0 relative"
             >
-              <div className="relative h-48  flex items-center justify-center">
-                {stream.isPrivate && (
-                  <Badge className="absolute top-3 right-3 bg-gray-800/70 text-white dark:bg-gray-700 flex items-center gap-1 px-2 py-1">
-                    <Lock className="h-3 w-3" /> Private
-                  </Badge>
-                )}
-
+              <div className="relative h-48 flex items-center justify-center">
                 <Badge className="absolute bottom-3 left-3 bg-gray-800 text-white flex items-center gap-1 whitespace-nowrap z-10 uppercase">
-                  {stream.type}
+                  {service.type}
                 </Badge>
 
-                {/* price */}
                 <div className="absolute top-3 right-3 bg-white/70 dark:bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-sm font-semibold shadow-lg z-10">
-                  <span className="flex items-center">{stream.list} pcs</span>
+                  <span className="flex items-center">{service.list} pcs</span>
                 </div>
-                {/* bg */}
+
                 <img
                   src={
-                    stream?.type === "caskets"
+                    service.type === "casket"
                       ? "/casket1.jpg"
-                      : stream?.type === "flowers"
+                      : service.type === "flowers"
                       ? "/flower2.webp"
-                      : stream?.type === "memorials"
+                      : service.type === "memorials"
                       ? "/memorial.jpg"
                       : ""
                   }
@@ -165,27 +127,21 @@ const Services = () => {
               </div>
               <CardContent className="px-4">
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-semibold line-clamp-1">{stream.title}</h3>
+                  <h3 className="font-semibold line-clamp-1">{service.title}</h3>
                 </div>
                 <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                  {stream.description}
+                  {service.description}
                 </p>
                 <div className="flex justify-between">
                   <Button
                     variant="outline"
                     size="sm"
                     className="rounded-full text-xs flex gap-1 cursor-pointer"
-                    onClick={() => handleViewStream(stream)}
+                    onClick={() => handleViewService(service)}
                   >
                     <Eye className="h-3.5 w-3.5" /> View List
                   </Button>
-                  <Button
-                    size="sm"
-                    className="rounded-full bg-red-600/10 hover:bg-red-600/30  text-xs text-red-500 cursor-pointer"
-                    onClick={() => handleViewStream(stream)}
-                  >
-                    <Trash2 className="h-3.5 w-3.5 mr-1" /> Delete
-                  </Button>
+                 
                 </div>
               </CardContent>
             </Card>
@@ -194,7 +150,6 @@ const Services = () => {
         {/* Create New Card */}
         <Card
           className="overflow-hidden border-dashed border-2 hover:border-primary/50 transition-colors bg-transparent hover:bg-muted/30 rounded-xl cursor-pointer flex items-center justify-center"
-          onClick={handleCreateStream}
         >
           <CardContent className="p-8 flex flex-col items-center justify-center text-center">
             <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
@@ -209,26 +164,16 @@ const Services = () => {
         </Card>
       </div>
 
-      {/* Create service Modal */}
-      <CreateService
-        activeStep={activeStep}
-        createModalOpen={createModalOpen}
-        handlePrevStep={handlePrevStep}
-        handleStartLive={handleStartLive}
-        isRecording={isRecording}
-        newStream={newStream}
-        setCreateModalOpen={setCreateModalOpen}
-        setNewStream={setNewStream}
-      />
+      {/* Create Service Modal */}
+    
 
-      {/* View Stream Modal */}
+      {/* View Service Modal */}
       <ViewService
-        currentStream={currentStream}
-        isRecording={isRecording}
         setViewModalOpen={setViewModalOpen}
         viewModalOpen={viewModalOpen}
       />
     </div>
   );
 };
+
 export default Services;

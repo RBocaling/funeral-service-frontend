@@ -16,6 +16,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
 import PrivateLayout from "./layout/PrivateLayout";
 import PublicLayout from "./layout/PublicLayout";
+import PaymentMethodsPage from "./pages/private/paymentMethod";
 
 export default function App() {
   return (
@@ -34,6 +35,7 @@ export default function App() {
           <Route path="/messages" element={<Messages />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/payment-method" element={<PaymentMethodsPage />} />
         </Route>
       </Route>
 

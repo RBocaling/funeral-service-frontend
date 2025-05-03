@@ -1,6 +1,8 @@
 import { bookings } from "@/lib/mockdata";
-import { Box, CalendarDays, Church, Flower2, Heart, Mail, MapPin, Phone, User, UserPlus, WalletCards, X } from "lucide-react";
+import { Box, CalendarClock, CalendarDays, Church, DollarSign, Flower2, Heart, Mail, MapPin, Phone, User, UserPlus, Users, WalletCards, X } from "lucide-react";
 import BookingStatus from "./BookingStatus";
+import { formatCurrency } from "@/lib/utils";
+import { useServiceTypeStore } from "@/store/serviceStore";
 
 const BookingModal = ({
     booking,
@@ -8,12 +10,12 @@ const BookingModal = ({
     isTrack,
     setIsTrack,
   }: {
-    booking: (typeof bookings)[0];
+    booking: any;
     onClose: () => void;
     isTrack: boolean;
     setIsTrack: (isTrack:boolean)=>void;
     }) =>{
-    
+    const {setSelectedBooking} = useServiceTypeStore()
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div
@@ -25,13 +27,15 @@ const BookingModal = ({
         >
           <div className="relative h-64">
             <img
-              src={booking.image}
-              alt={booking.deceasedName}
+             src="https://honeywell.scene7.com/is/image/honeywell/hon-corp-commercial-buildings-tab6"
               className="w-full h-full object-cover rounded-t-3xl"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent rounded-t-3xl" />
             <button
-              onClick={onClose}
+              onClick={() => {
+                setSelectedBooking("");
+                onClose()
+              }}
               className="absolute top-4 right-4 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-all duration-300"
             >
               <X className="w-6 h-6" />
@@ -50,85 +54,122 @@ const BookingModal = ({
           <div className="p-6 space-y-8">
             {isTrack ? (
               <div className="">
-        <BookingStatus  />
+        <BookingStatus booking={booking}  />
         </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-lg font-semibold text-white mb-4">
-                      Customer Information
-                    </h3>
-                    <div className="space-y-3">
-                      <div className="flex items-center dark:text-gray-300">
-                        <User className="w-4 h-4 mr-3 text-sky-400" />
-                        <span>{booking.customerName}</span>
-                      </div>
-                      <div className="flex items-center dark:text-gray-300">
-                        <Mail className="w-4 h-4 mr-3 text-sky-400" />
-                        <span>{booking.customerEmail}</span>
-                      </div>
-                      <div className="flex items-center dark:text-gray-300">
-                        <Phone className="w-4 h-4 mr-3 text-sky-400" />
-                        <span>{booking.customerPhone}</span>
-                      </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ">
+              <div className="space-y-3">
+                  <div className="flex flex-col">
+                    <p className="text-xs text-gray-500 mb-2">
+                      Funeral Service Detail:
+                    </p>
+                    <div className="flex items-center dark:text-gray-300">
+                      <Users className="w-4 h-4 mr-2 text-sky-400" />
+                      <span className="text-xs">
+                        Funeral: {booking?.funeralServiceName}
+                      </span>
                     </div>
                   </div>
-  
-                  <div>
-                    <h3 className="text-lg font-semibold text-white mb-4">
-                      Service Details
-                    </h3>
-                    <div className="space-y-3">
-                      <div className="flex items-center dark:text-gray-300">
-                        <MapPin className="w-4 h-4 mr-3 text-sky-400" />
-                        <span>{booking.location}</span>
+
+                  <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
+                    <Mail className="w-4 h-4 mr-2 text-sky-400" />
+                    {booking.email}
+                  </div>
+                  <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
+                    <MapPin className="w-4 h-4 mr-2 text-sky-400" />
+                    {booking.location}
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                    <div className="flex flex-col">
+                      <p className="text-xs text-gray-500 mb-2">
+                        Appointment / Order's
+                      </p>
+                      <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
+                        <CalendarClock className="w-4 h-4 mr-2 text-sky-400" />
+                        {booking?.appoinmentDate}
                       </div>
-                      <div className="flex items-center dark:text-gray-300">
-                        <CalendarDays className="w-4 h-4 mr-3 text-sky-400" />
-                        <span>
-                          {booking.date} at {booking.time}
+                    </div>
+
+                    {booking?.customCasketDetail && (
+                      <div className="flex flex-col">
+                        <p className="text-xs text-gray-500 mb-2">
+                          Custom Casket{" "}
+                          <span className="text-xs text-red-500 font-medium">
+                            {" "}
+                            -
+                            {formatCurrency(
+                              booking?.customCasketDetail?.additionalCost
+                            )}
+                          </span>
+                        </p>
+                        <div className="flex items-center gap-5 dark:text-gray-300 text-xs tracking-wider">
+                          -{booking?.customCasketDetail?.material}
+                          <div
+                            className="w-5 h-5 rounded-full border-2 border-white ring-2 ring-gray-100"
+                            style={{
+                              backgroundColor:
+                                booking?.customCasketDetail?.color,
+                            }}
+                          />
+                        </div>
+                        <div className="flex items-center gap-2 mt-2">
+                          <div className="flex flex-col items-center dark:text-gray-300 text-xs tracking-wider">
+                            -Height: {booking?.customCasketDetail?.height} cm
+                          </div>
+                          <div className="flex flex-col items-center dark:text-gray-300 text-xs tracking-wider">
+                            -Width: {booking?.customCasketDetail?.width} cm
+                          </div>
+                          <div className="flex flex-col items-center dark:text-gray-300 text-xs tracking-wider">
+                            -Length: {booking?.customCasketDetail?.length} cm
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {booking?.serviceBookings?.map((item: any, index: any) => (
+                      <div
+                        key={index}
+                        className="flex items-center dark:text-gray-300 text-xs tracking-wider capitalize"
+                      >
+                        {item?.casket ? (
+                          <Box className="w-4 h-4 mr-2 text-sky-400" />
+                        ) : (
+                          <Flower2 className="w-4 h-4 mr-2 text-sky-400" />
+                        )}
+                        {item.details?.name}
+                        <span className="text-sky-500 font-medium text-xs">
+                          ({item?.casket?.size || item?.flower?.size})
+                        </span>
+                        <span className="text-xs text-red-500 font-medium">
+                          {" "}
+                          -
+                          {formatCurrency(
+                            item?.casket?.price || item?.flower?.price
+                          )}
                         </span>
                       </div>
-                      <div className="flex items-center dark:text-gray-300">
-                        <UserPlus className="w-4 h-4 mr-3 text-sky-400" />
-                        <span>{booking.attendees} Expected Attendees</span>
-                      </div>
+                    ))}
+
+                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider capitalize">
+                      <DollarSign className="w-4 h-4 mr-2 text-sky-400" />
+                      {formatCurrency(
+                        Number(
+                          booking?.serviceBookings?.reduce(
+                            (sum: number, item: any) =>
+                              sum +
+                              (Number(item?.casket?.price) || 0) +
+                              (Number(item?.flower?.price) || 0),
+                            0
+                          )
+                        ) +
+                          Number(
+                            booking?.customCasketDetail?.additionalCost ?? 0
+                          )
+                      )}
                     </div>
                   </div>
-                </div>
-  
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-lg font-semibold text-white mb-4">
-                      Selected Services
-                    </h3>
-                    <div className="space-y-3">
-                      <div className="flex items-center dark:text-gray-300">
-                        <Box className="w-4 h-4 mr-3 text-sky-400" />
-                        <span>Casket: {booking.services.casket}</span>
-                      </div>
-                      <div className="flex items-center dark:text-gray-300">
-                        <Flower2 className="w-4 h-4 mr-3 text-sky-400" />
-                        <span>Flowers: {booking.services.flowers}</span>
-                      </div>
-                      <div className="flex items-center dark:text-gray-300">
-                        <Church className="w-4 h-4 mr-3 text-sky-400" />
-                        <span>Memorial: {booking.services.memorial}</span>
-                      </div>
-                    </div>
-                  </div>
-  
-                  <div>
-                    <h3 className="text-lg font-semibold text-white mb-4">
-                      Additional Notes
-                    </h3>
-                    <p className="dark:text-gray-300 text-sm leading-relaxed">
-                      {booking.additionalNotes}
-                    </p>
-                  </div>
-                </div>
-              </div>
+            </div>
             )}
   
             <div className="border-t border-gray-700/30 pt-6">
@@ -136,7 +177,15 @@ const BookingModal = ({
                 <div>
                   <span className="text-gray-400 text-sm">Total Amount</span>
                   <div className="text-2xl font-semibold text-white mt-1">
-                    ${booking.totalPrice.toLocaleString()}
+                  {formatCurrency(
+                        booking?.serviceBookings?.reduce(
+                          (sum: number, item: any) =>
+                            sum +
+                            (Number(item?.casket?.price) || 0) +
+                            (Number(item?.flower?.price) || 0),
+                          0
+                        )
+                      )}
                   </div>
                 </div>
                 <div className="flex items-center gap-5">
@@ -149,7 +198,7 @@ const BookingModal = ({
                   >
                     {booking.status}
                   </span>
-                  {booking?.status === "Pending" && (
+                  {booking?.status !== "COMPLETED" && (
                     <button
                       onClick={() => setIsTrack(!isTrack)}
                       className="text-sky-500 font-medium bg-sky-70s0/10 py-3 px-5 rounded-full flex items-center gap-2 cursor-pointer"

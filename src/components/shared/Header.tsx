@@ -9,6 +9,7 @@ import {
   X,
   Bath,
   Shuffle,
+  HandCoins,
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { Link } from "react-router-dom";
@@ -68,6 +69,11 @@ const Header = () => {
       label: "Messages",
       icon: <MessageSquare className="h-4 w-4 mr-2" />,
       href: "/messages",
+    },
+    {
+      label: "Payment Method",
+      icon: <HandCoins className="h-4 w-4 mr-2" />,
+      href: "/payment-method",
     },
   ];
 

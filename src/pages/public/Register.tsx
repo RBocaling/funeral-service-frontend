@@ -1,9 +1,31 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { useRegister } from "@/hooks/controllers/useRegister";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
- 
+  const navigate = useNavigate();
+  const [email, setEmail] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+  const [username, setUsername] = useState<string>("")
+  const registerMutation = useRegister();
+
+  const handleRegister = (e: React.FormEvent) => {
+    e.preventDefault();
+    registerMutation.mutate(
+      { email, password, role: "FUNERAL_SERVICE",username,},
+      {
+        onSuccess: () => {
+          navigate("/login");
+        },
+        onError: (error: any) => {
+          console.error("register failed:", error.response?.data?.message || error.message);
+        },
+      }
+    );
+  };
+
   return (
     <div className="w-full min-h-screen   text-white flex flex-col justify-center relative">
       <div className="max-w-md w-full mx-auto">
@@ -21,26 +43,37 @@ const Register = () => {
         </p>
 
         <form className="space-y-5 relative z-20">
-          <Input
+          {/* <Input
             type="User name"
             placeholder="Email"
+            className="w-full px-4 py-3 bg-neutral-800 focus:bg-neutral-800/70 border border-neutral-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+          /> */}
+          <Input
+            type="text"
+            placeholder="Username"
+            onChange={(e) => setUsername(e.target.value)}
             className="w-full px-4 py-3 bg-neutral-800 focus:bg-neutral-800/70 border border-neutral-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
           />
           <Input
             type="email"
             placeholder="Email"
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-3 bg-neutral-800 focus:bg-neutral-800/70 border border-neutral-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
           />
           <Input
             type="password"
             placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-3 bg-neutral-800 focus:bg-neutral-800/70 border border-neutral-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
           />
           <Button
-            
+            onClick={handleRegister}
+            disabled={registerMutation?.isPending}
             className="w-full py-6 bg-sky-500 shadow-2xl shadow-sky-500/20 hover:bg-sky-600 rounded-full font-semibold"
           >
-            Sign Up
+            {
+              registerMutation?.isPending ? "Registering...":"Sign Up"
+            }
           </Button>
         </form>
 

@@ -1,16 +1,17 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { Box, Check, Truck } from "lucide-react";
+import BookingStatus from "./BookingStatus";
 
 const manilaCoords = { lat: 14.5995, lng: 120.9842 };
 
 const Map = () => {
  
   return (
-    <div className="w-full h-[370px]  rounded-3xl  flex flex-col">
-    
+    <div className="w-full h-[370px]  rounded-3xl  flex flex-col relative overflow-hidden">
 
-      <div className="rounded-3xl overflow-hidden w-full h-full">
+      <div className="rounded-3xl overflow-hidden w-full h-full z-10 relative">
         <MapContainer
           center={manilaCoords}
           zoom={13}
@@ -32,6 +33,10 @@ const Map = () => {
             <Popup>Funeral Service Center - Manila</Popup>
           </Marker>
         </MapContainer>
+      </div>
+
+      <div className="absolute top-0 left-0 h-full w-full flex items-center justify-center bg-black/70 z-50">
+        <p className="text-white text-2xl font-semibold animate-bounce">Coming Soon</p>
       </div>
     </div>
   );

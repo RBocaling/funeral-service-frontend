@@ -1,4 +1,4 @@
-import { Play } from "lucide-react";
+import { useServiceTypeStore } from "@/store/serviceStore";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -10,38 +10,67 @@ import {
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import { Textarea } from "../ui/textarea";
+import { useAddService } from "@/hooks/controllers/useAddService";
+import { useState } from "react";
+import { uploadImageToCloudinary } from "@/utils/uploadImageToCloudinary";
 
 const CreateService = ({
-  createModalOpen,
-  setCreateModalOpen,
-  newStream,
-  setNewStream,
-  activeStep,
-  handlePrevStep,
-  isRecording,
-  handleStartLive,
+  isOpen,
+  setIsOpen,
 }: {
-  createModalOpen:any;
-  setCreateModalOpen:any;
-  newStream:any;
-  setNewStream:any;
-  activeStep:any;
-  handlePrevStep:any;
-  isRecording:any;
-  handleStartLive:any;
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
 }) => {
+  const { serviceType } = useServiceTypeStore();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+  });
+
+  const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const addServiceMutation = useAddService();
+
+  const handleAddServices = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    
+
+    if (!file) {
+      throw new Error("NO file selected");
+    }
+    const fileUrl = await uploadImageToCloudinary(file);
+
+    setLoading(true);
+
+    addServiceMutation.mutate(
+      {
+        name: formData.name,
+        description: formData.description,
+        serviceType: serviceType as "CASKET" | "FLOWERS",
+        imgUrl: fileUrl,
+      },
+      {
+        onSuccess: () => {
+          alert("Success Added");
+          setFormData({ name: '', description: '' });
+          setFile(null);
+          setIsOpen(false);
+          setLoading(false);
+        },
+        onError: (error: any) => {
+          alert("Failed: " + JSON.stringify(error));
+          setLoading(false);
+        },
+      }
+    );
+  };
+
   return (
-    <Dialog open={createModalOpen} onOpenChange={setCreateModalOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[600px] p-0 rounded-2xl overflow-hidden">
         <DialogHeader className="p-6 pb-0">
           <DialogTitle className="text-xl">Create Service</DialogTitle>
@@ -53,30 +82,25 @@ const CreateService = ({
 
         <div className="space-y-4 p-7">
           <div className="space-y-2">
-            <Label htmlFor="title"> Service</Label>
-            <Select>
-              <SelectTrigger className="w-full py-7 rounded-2xl">
-                <SelectValue placeholder="Select a Services" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Services</SelectLabel>
-                  <SelectItem value="apple">Casket</SelectItem>
-                  <SelectItem value="banana">Flower</SelectItem>
-                  <SelectItem value="banana">Memorial</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
             <Label htmlFor="title">Title</Label>
             <Input
               id="title"
               placeholder="Enter the title of your service"
-              value={newStream.title}
+              value={formData.name}
               onChange={(e) =>
-                setNewStream({ ...newStream, title: e.target.value })
+                setFormData((prev) => ({ ...prev, name: e.target.value }))
               }
+              className="w-full py-4"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="image">Service Image</Label>
+            <Input
+              type="file"
+              id="image"
+              accept="image/*"
+              onChange={(e) => setFile(e.target.files?.[0] || null)}
               className="w-full py-4"
             />
           </div>
@@ -86,49 +110,27 @@ const CreateService = ({
             <Textarea
               id="description"
               placeholder="Add details about the service"
-              className="min-h-[100px] rounded-2xl"
-              value={newStream.description}
+              value={formData.description}
               onChange={(e) =>
-                setNewStream({
-                  ...newStream,
+                setFormData((prev) => ({
+                  ...prev,
                   description: e.target.value,
-                })
+                }))
               }
+              className="min-h-[100px] rounded-2xl"
             />
           </div>
         </div>
 
         <DialogFooter className="px-6 py-4 border-t">
-          {activeStep === 1 ? (
-            <div className="flex justify-end w-full gap-2">
-              <Button
-                variant="outline"
-                onClick={() => setCreateModalOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={() => setCreateModalOpen(false)}
-                className="rounded-full"
-              >
-                Add Now
-              </Button>
-            </div>
-          ) : (
-            <div className="flex justify-between w-full">
-              <Button variant="outline" onClick={handlePrevStep}>
-                Back
-              </Button>
-              {!isRecording && (
-                <Button
-                  onClick={handleStartLive}
-                  className="rounded-full bg-primary/90 hover:bg-primary"
-                >
-                  <Play className="h-4 w-4 mr-2" /> Go Live Now
-                </Button>
-              )}
-            </div>
-          )}
+          <div className="flex justify-end w-full gap-2">
+            <Button className="rounded-full py-5 px-5 bg-red-500 shadow-xl shadow-red-500/10 text-white font-medium" onClick={() => setIsOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleAddServices} className="rounded-full py-5 px-5 bg-sky-500 shadow-xl shadow-sky-500/10 text-white font-medium">
+                {loading || addServiceMutation.isPending ? "Submitting.." : "Add Now"}
+            </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

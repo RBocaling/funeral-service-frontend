@@ -14,16 +14,47 @@ import {
   Search,
   Filter,
   ChevronDown,
+  Mail,
+  CalendarClock,
 } from "lucide-react";
 import TitlePage from "@/components/ui/title-page";
 import { bookings } from "@/lib/mockdata";
 import BookingModal from "@/components/booking/BookingModal";
+import { useGetBooking } from "@/hooks/controllers/useBooking";
+import { formatCurrency } from "@/lib/utils";
+import { useServiceTypeStore } from "@/store/serviceStore";
 
 function Booking() {
   const [selectedBooking, setSelectedBooking] = useState<
     (typeof bookings)[0] | null
   >(null);
   const [isTrack, setIsTrack] = useState<boolean>(false);
+const {setSelectedBooking:setBooking} = useServiceTypeStore()
+  const { data, isLoading } = useGetBooking();
+
+  if (isLoading) return <>loading..</>;
+
+  const customData = data?.map((i: any) => ({
+    id: i?.id,
+    funeralServiceName: `${i?.customer?.firstName} ${i?.customer?.lastName}`,
+    location: i?.location,
+    email: i?.customer?.user?.email,
+    phone: i?.customer?.phone,
+    appoinmentDate: i?.appointmentDate,
+    status: i?.bookingStatus,
+    customCasketDetail: i?.customCasketDetail[0],
+    serviceBookings: i?.serviceBookings?.map((item: any) => ({
+      details: item?.service,
+      casket: item?.selectedCasketDetail,
+      flower: item?.selectedFlowerDetail,
+      totalAmount:
+        Number(item?.selectedCasketDetail?.price) +
+        Number(item?.selectedFlowerDetail?.price),
+    })),
+  }));
+
+  console.log("customData",data);
+  
 
   return (
     <div className="relative ">
@@ -59,7 +90,7 @@ function Booking() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {bookings.map((booking) => (
+          {customData?.map((booking:any) => (
             <div
               key={booking.id}
               className="group relative dark:bg-gray-800/40 backdrop-blur-xl shadow-xl shadow-black/10 rounded-3xl overflow-hidden border border-gray-700/30"
@@ -77,66 +108,134 @@ function Booking() {
               <div className="relative h-48">
                 <img
                   src="https://media.istockphoto.com/id/1447462464/photo/close-up-of-person-in-black-praying-at-outdoor-funeral.jpg?s=612x612&w=0&k=20&c=NQWKq6W8KemPyFuV9gtiPo7md4vskgiF1l5iQfj1MlU="
-                  alt={booking.deceasedName}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="flex items-center gap-2 text-white/80 text-sm">
                     <Heart className="w-4 h-4 text-sky-400" />
-                    <span>In Memory of</span>
+                    <span>Customer</span>
                   </div>
                   <h2 className="text-2xl font-semibold text-white mt-1">
-                    {booking.deceasedName}
+                    {booking?.funeralServiceName}
                   </h2>
                 </div>
               </div>
 
               <div className="p-6 space-y-6">
-                <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 md:h-52">
                   <div className="space-y-3">
-                    <div className="flex items-center dark:text-gray-300">
-                      <Users className="w-4 h-4 mr-2 text-sky-400" />
-                      <span className="text-xs">
-                        Arranged by: {booking.customerName}
-                      </span>
+                    <div className="flex flex-col">
+                      <p className="text-xs text-gray-500 mb-2">
+                        Funeral Service Detail:
+                      </p>
+                      <div className="flex items-center dark:text-gray-300">
+                        <Users className="w-4 h-4 mr-2 text-sky-400" />
+                        <span className="text-xs">
+                          Funeral: {booking?.funeralServiceName}
+                        </span>
+                      </div>
                     </div>
 
+                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
+                      <Mail className="w-4 h-4 mr-2 text-sky-400" />
+                      {booking.email}
+                    </div>
+                    <p className="text-xs text-gray-500 mb-2">
+                       Booked Location
+                      </p>
                     <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
                       <MapPin className="w-4 h-4 mr-2 text-sky-400" />
                       {booking.location}
                     </div>
-
-                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
-                      <Calendar className="w-4 h-4 mr-2 text-sky-400" />
-                      {booking.date}
-                    </div>
-
-                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
-                      <Clock className="w-4 h-4 mr-2 text-sky-400" />
-                      {booking.time}
-                    </div>
                   </div>
 
                   <div className="space-y-3">
-                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
-                      <Box className="w-4 h-4 mr-2 text-sky-400" />
-                      {booking.services.casket}
+                    <div className="flex flex-col">
+                      <p className="text-xs text-gray-500 mb-2">
+                        Appointment / Order's
+                      </p>
+                      <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
+                        <CalendarClock className="w-4 h-4 mr-2 text-sky-400" />
+                        {booking?.appoinmentDate}
+                      </div>
                     </div>
 
-                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
-                      <Flower2 className="w-4 h-4 mr-2 text-sky-400" />
-                      {booking.services.flowers}
-                    </div>
+                    {booking?.customCasketDetail && (
+                      <div className="flex flex-col">
+                        <p className="text-xs text-gray-500 mb-2">
+                          Custom Casket{" "}
+                          <span className="text-xs text-red-500 font-medium">
+                            {" "}
+                            -
+                            {formatCurrency(
+                              booking?.customCasketDetail?.additionalCost
+                            )}
+                          </span>
+                        </p>
+                        <div className="flex items-center gap-5 dark:text-gray-300 text-xs tracking-wider">
+                          -{booking?.customCasketDetail?.material}
+                          <div
+                            className="w-5 h-5 rounded-full border-2 border-white ring-2 ring-gray-100"
+                            style={{
+                              backgroundColor:
+                                booking?.customCasketDetail?.color,
+                            }}
+                          />
+                        </div>
+                        <div className="flex items-center gap-2 mt-2">
+                          <div className="flex flex-col items-center dark:text-gray-300 text-xs tracking-wider">
+                            -Height: {booking?.customCasketDetail?.height} cm
+                          </div>
+                          <div className="flex flex-col items-center dark:text-gray-300 text-xs tracking-wider">
+                            -Width: {booking?.customCasketDetail?.width} cm
+                          </div>
+                          <div className="flex flex-col items-center dark:text-gray-300 text-xs tracking-wider">
+                            -Length: {booking?.customCasketDetail?.length} cm
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {booking?.serviceBookings?.map((item: any, index: any) => (
+                      <div
+                        key={index}
+                        className="flex items-center dark:text-gray-300 text-xs tracking-wider capitalize"
+                      >
+                        {item?.casket ? (
+                          <Box className="w-4 h-4 mr-2 text-sky-400" />
+                        ) : (
+                          <Flower2 className="w-4 h-4 mr-2 text-sky-400" />
+                        )}
+                        {item.details?.name}
+                        <span className="text-sky-500 font-medium text-xs">
+                          ({item?.casket?.size || item?.flower?.size})
+                        </span>
+                        <span className="text-xs text-red-500 font-medium">
+                          {" "}
+                          -
+                          {formatCurrency(
+                            item?.casket?.price || item?.flower?.price
+                          )}
+                        </span>
+                      </div>
+                    ))}
 
-                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
-                      <Church className="w-4 h-4 mr-2 text-sky-400" />
-                      {booking.services.memorial}
-                    </div>
-
-                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
-                      <DollarSign className="w-4 h-4 mr-2 text-sky-400" />$
-                      {booking.totalPrice.toLocaleString()}
+                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider capitalize">
+                      <DollarSign className="w-4 h-4 mr-2 text-sky-400" />
+                      {formatCurrency(
+                        Number(
+                          booking?.serviceBookings?.reduce(
+                            (sum: number, item: any) =>
+                              sum +
+                              (Number(item?.casket?.price) || 0) +
+                              (Number(item?.flower?.price) || 0),
+                            0
+                          )
+                        ) +
+                          Number(
+                            booking?.customCasketDetail?.additionalCost ?? 0
+                          )
+                      )}
                     </div>
                   </div>
                 </div>
@@ -153,7 +252,10 @@ function Booking() {
                       {booking.status}
                     </span>
                     <button
-                      onClick={() => setSelectedBooking(booking)}
+                      onClick={() => {
+                        setBooking(booking)
+                        setSelectedBooking(booking)
+                      }}
                       className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-full text-sm transition-all duration-300 shadow-2xl shadow-sky-500/50"
                     >
                       View Details

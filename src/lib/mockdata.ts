@@ -376,3 +376,57 @@ export const bookings = [
       "https://images.unsplash.com/photo-1490122417551-6ee9691429d0?auto=format&fit=crop&q=80&w=1000",
   },
 ];
+
+
+
+
+
+
+
+// payment
+import { PaymentMethod } from '@/types/payment';
+
+export const paymentMethods: PaymentMethod[] = [
+  {
+    id: '1',
+    paymentInfoImageUrl: 'https://images.pexels.com/photos/6771607/pexels-photo-6771607.jpeg',
+    paymentName: 'GCash',
+    paymentType: 'e-wallet',
+    paymentNumber: '0917-454-5-3456',
+  },
+  {
+    id: '2',
+    paymentInfoImageUrl: 'https://images.pexels.com/photos/259249/pexels-photo-259249.jpeg',
+    paymentName: 'BDO',
+    paymentType: 'bank',
+    paymentNumber: '1234-454-5-7890',
+  },
+  {
+    id: '3',
+    paymentInfoImageUrl: 'https://images.pexels.com/photos/6289028/pexels-photo-6289028.jpeg',
+    paymentName: 'PayMaya',
+    paymentType: 'e-wallet',
+    paymentNumber: '0918-454-5-5678',
+  },
+  {
+    id: '4',
+    paymentInfoImageUrl: 'https://images.pexels.com/photos/4386431/pexels-photo-4386431.jpeg',
+    paymentName: 'BPI',
+    paymentType: 'bank',
+    paymentNumber: '0853-767-765476',
+  },
+  {
+    id: '5',
+    paymentInfoImageUrl: 'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg',
+    paymentName: 'Visa',
+    paymentType: 'credit-card',
+    paymentNumber: '4123-454-5-8765',
+  },
+  {
+    id: '6',
+    paymentInfoImageUrl: 'https://images.pexels.com/photos/6289151/pexels-photo-6289151.jpeg',
+    paymentName: 'Metrobank',
+    paymentType: 'bank',
+    paymentNumber: '1290-454-5-3421',
+  }
+];

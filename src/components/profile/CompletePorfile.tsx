@@ -1,30 +1,39 @@
-import { useState } from "react";
+import  { useState } from "react";
 import { X, Check, X as XIcon, User } from "lucide-react";
 import PersonalInfo from "./PersonalInfo";
+import UploadDocumentId from "./UploadDocumentId";
+import useProgressProfile from "@/hooks/controllers/useUserProgress";
+import { useProfileProgress } from "@/store/completeProfileStore";
 
 
 const CompleteTaskModal = () => {
-const [completeProfileModal, setCompleteProfileModal] = useState<boolean>(true);
-const [isOpenPersonalInfo, setIsOpenPersonalInfo] = useState<boolean>(false);
- 
-  const calculatedProgress = 50
+const [isOpenPersonal, setIsOpenPersonal] = useState<boolean>(false)
+const [isOpenDocument, setIsOpenDocument] = useState<boolean>(false)
+const {isCompleteProfileModalOpen, setCompleteProfileModal} = useProfileProgress()
 
-  if (!completeProfileModal) {
-    return null;
-  }
+  const {
+    data: tasks,
+    isLoading,
+    id,
+    progress,
+  } = useProgressProfile();
 
-  const profileRequiremennt = [
-    {
-      title: "Complete Personal Information",
-      description: "First name, Last name , email, address etc.",
-      isComplete: true,
-    },
-    {
-      title: "Upload Verification Documents",
-      description: "ID Card, Passport, or Driver's License.",
-      isComplete: false
-    }
-  ]
+  if (!isCompleteProfileModalOpen || progress >= 100) return null;
+  if (isLoading) return <>loading</>
+
+  const completedTasks = tasks?.filter((task:any) => task?.completed).length;
+  const totalTasks = tasks.length;
+  const calculatedProgress = Math.round((completedTasks / totalTasks) * 100);
+
+  const handleContinueSetup = () => {
+    if (id === "personal") {
+      setIsOpenPersonal(true);
+    } else if (id === "documents") {
+      setIsOpenDocument(true);
+    } 
+  };
+
+  
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center  bg-black/60 backdrop-blur-sm z-50 p-1">
         <div className="w-full max-w-lg  mt-5 md:h-auto overflow-y-auto rounded-3xl bg-[#121212] text-gray-100 shadow-2xl py-4">
@@ -69,11 +78,11 @@ const [isOpenPersonalInfo, setIsOpenPersonalInfo] = useState<boolean>(false);
             </div>
 
             <div className="space-y-3 max-h-[400px] pr-1 ">
-              {profileRequiremennt.map((item, index) => (
+              {tasks?.map((item:any, index:number) => (
                 <div
                   key={index}
                   className={`flex items-center justify-between rounded-2xl border-b  hover:border-primary ${
-                    true
+                    item?.completed
                       ? "border-gray-700/30 bg-gray-700/10"
                       : "border-sky-700/30 bg-sky-700/5"
                   } p-4 transition-colors `}
@@ -97,12 +106,12 @@ const [isOpenPersonalInfo, setIsOpenPersonalInfo] = useState<boolean>(false);
                   </div>
                   <div
                     className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full ${
-                      item.isComplete
+                      item.completed
                         ? "bg-green-500/20 text-green-400"
                         : "bg-sky-500/10 text-sky-500"
                     }`}
                   >
-                    {item.isComplete ? (
+                    {item.completed ? (
                       <Check size={16} />
                     ) : (
                       <XIcon size={16} />
@@ -122,7 +131,7 @@ const [isOpenPersonalInfo, setIsOpenPersonalInfo] = useState<boolean>(false);
                 Skip for Now
               </button>
               <button
-                onClick={() => setIsOpenPersonalInfo(true)}
+                onClick={handleContinueSetup}
                 className="flex-1 rounded-full bg-sky-500 py-2.5 font-medium text-gray-900 transition-colors hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-gray-900"
               >
                 Continue Setup
@@ -135,10 +144,16 @@ const [isOpenPersonalInfo, setIsOpenPersonalInfo] = useState<boolean>(false);
           </div>
         </div>
 
-        {isOpenPersonalInfo && (
+        {isOpenPersonal && (
           <PersonalInfo
-            open={isOpenPersonalInfo}
-            setOpen={setIsOpenPersonalInfo}
+            open={isOpenPersonal}
+            setOpen={setIsOpenPersonal}
+          />
+        )}
+        {isOpenDocument && (
+          <UploadDocumentId
+           isOpen={isOpenDocument}
+           setIsOpen={setIsOpenDocument}
           />
         )}
       </div>
