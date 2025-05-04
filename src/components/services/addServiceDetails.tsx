@@ -19,6 +19,7 @@ import {
 } from "../ui/select";
 import { addCasketDetailService } from "@/hooks/controllers/useAddService";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAlertStore } from "@/store/alertStore";
 
 const AddCasketDetail = ({
   isOpen,
@@ -39,7 +40,7 @@ const AddCasketDetail = ({
     materialType: "",
     flowerType: "",
   });
-
+  const { showAlert } = useAlertStore();
   const { serviceType } = useServiceTypeStore();
   const mutation = addCasketDetailService();
 
@@ -66,15 +67,24 @@ const AddCasketDetail = ({
         id: Number(serviceId),
       },
       {
-        onSuccess: () => {
-          alert("Success added");
+        onSuccess:async () => {
+          await showAlert('success', {
+            title: 'Success Added!',
+            message: 'Your action was completed successfully.',
+            autoClose: true,
+          });
           setIsOpen(false);
           closeMain();
           queryClient.invalidateQueries({
             queryKey: ["my-services"],
           });
         },
-        onError: (error) => {
+        onError: async (error) => {
+          await showAlert('error', {
+            title: 'Error',
+            message: 'Something went wrong. Please try again.',
+            autoClose: true,
+          });
           console.error("Error adding casket detail", error);
         },
       }

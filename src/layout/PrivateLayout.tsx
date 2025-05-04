@@ -1,3 +1,4 @@
+import Alert from "@/components/alerts/Alert";
 import CompleteTaskModal from "@/components/profile/CompletePorfile";
 import Header from "@/components/shared/Header";
 import { ThemeProvider } from "@/components/shared/theme-provider";
@@ -12,10 +13,11 @@ const PrivateLayout = () => {
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <main className="pt-5 md:pt-7 container md:mx-auto">
             <Outlet />
+            <Alert />
           </main>
           <CompleteTaskModal />
         </ThemeProvider>
-       
+        
       </div>
     </div>
   );

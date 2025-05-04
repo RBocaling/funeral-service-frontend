@@ -13,6 +13,7 @@ import { Button } from "../ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import useUser from "@/hooks/controllers/useUser";
 import { useUpdatePersonalInfo } from "@/hooks/controllers/useAddPersonalInfo";
+import { useAlertStore } from "@/store/alertStore";
 
 type PersonalInfoProps = {
   open: boolean;
@@ -33,7 +34,7 @@ const UpdatePersonalInfo = ({ open, setOpen }: PersonalInfoProps) => {
   const { data: user } = useUser();
 
   console.log("user",user);
-  
+  const { showAlert } = useAlertStore();
 
   useEffect(() => {
     if (user) {
@@ -60,14 +61,22 @@ const UpdatePersonalInfo = ({ open, setOpen }: PersonalInfoProps) => {
     };
 
     updatePersonalInfo.mutate(payload, {
-      onSuccess: () => {
-        alert("Profile updated successfully!");
+      onSuccess: async() => {
+        await showAlert('success', {
+          title: 'Success Updated!',
+          message: 'Your action was completed successfully.',
+          autoClose: true,
+        });
         queryClient.invalidateQueries({ queryKey: ["getProfileProgress"] });
         queryClient.invalidateQueries({ queryKey: ["user-info"] });
         setOpen(false); // Close modal after success
       },
-      onError: (error: any) => {
-        alert("Failed to update: " + JSON.stringify(error));
+      onError: async(error: any) => {
+        await showAlert('error', {
+          title: 'Error Add',
+          message: 'Something went wrong. Please try again.',
+          autoClose: true,
+        });
       },
     });
   };

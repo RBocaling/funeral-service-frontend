@@ -34,3 +34,12 @@ export const getUserProgress = async () => {
         throw new Error("Invalid Credentials")
     }
 }
+
+export const getUserList = async () => {
+    try {
+        const response = await api.get("/auth/user-list");
+        return response.data
+    } catch (error) {
+        throw new Error("Invalid Credentials")
+    }
+}

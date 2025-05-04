@@ -15,6 +15,7 @@ import { useServiceTypeStore } from "@/store/serviceStore";
 import { deleteService, useGetServices } from "@/hooks/controllers/useAddService";
 import ViewServiceDetails from "./ViewServiceDetails";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAlertStore } from "@/store/alertStore";
 
 const ViewService = ({
   viewModalOpen,
@@ -31,7 +32,7 @@ const ViewService = ({
   const [selectedService, setSelectedService] = useState<boolean>();
   const mutation = deleteService();
   const queryClient = useQueryClient();
-
+  const { showAlert } = useAlertStore();
 
   if(isLoading) return <>loading...</>
   const filterData = data?.filter((item: any) => item.serviceType === serviceType);
@@ -42,15 +43,25 @@ const ViewService = ({
        Number(id),
       
       {
-        onSuccess: () => {
-          alert("Success deleted");
+        onSuccess:async () => {
+          await showAlert('success', {
+            title: 'Success Deleted!',
+            message: 'Your action was completed successfully.',
+            autoClose: true,
+          });
+          
           setIsOpen(false);
          
           queryClient.invalidateQueries({
             queryKey: ["my-services"],
           });
         },
-        onError: (error) => {
+        onError: async (error) => {
+          await showAlert('error', {
+            title: 'Error Deleted',
+            message: 'Something went wrong. Please try again.',
+            autoClose: true,
+          });
           console.error("Error adding casket detail", error);
         },
       }
@@ -162,6 +173,7 @@ const ViewService = ({
     <CreateService
         isOpen={isOpen}
         setIsOpen={setIsOpen}
+        onClose={()=>setViewModalOpen(false)}
       />
       <ViewServiceDetails
         selectedService={selectedService}

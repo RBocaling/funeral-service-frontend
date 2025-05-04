@@ -15,6 +15,7 @@ import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import L from "leaflet";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAddPersonalInfo } from "@/hooks/controllers/useAddPersonalInfo";
+import { useAlertStore } from "@/store/alertStore";
 
 type PersonalInfoProps = {
   open: boolean;
@@ -42,7 +43,7 @@ const PersonalInfo = ({ open, setOpen }: PersonalInfoProps) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
-
+  const { showAlert } = useAlertStore();
   const handleSubmit = () => {
     const fullAddress = `${formData.city} ${formData.barangay} ${formData.purok}`.trim();
    
@@ -56,14 +57,22 @@ const PersonalInfo = ({ open, setOpen }: PersonalInfoProps) => {
     addPersonalInfo.mutate(
       payload,
       {
-        onSuccess: () => {
-          alert("success")
+        onSuccess: async() => {
+          await showAlert('success', {
+            title: 'Success Updated!',
+            message: 'Your action was completed successfully.',
+            autoClose: true,
+          });
             queryClient.invalidateQueries({ queryKey: ["getProfileProgress"] });
             queryClient.invalidateQueries({ queryKey: ["user-info"] });
-          
+            setOpen(false)
         },
-        onError: (error: any) => {
-          alert("Failed: " + JSON.stringify(error));
+        onError:async (error: any) => {
+          await showAlert('error', {
+            title: 'Error Add',
+            message: 'Something went wrong. Please try again.',
+            autoClose: true,
+          });
         },
       }
     );
@@ -73,7 +82,7 @@ const PersonalInfo = ({ open, setOpen }: PersonalInfoProps) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[600px] p-0 rounded-2xl overflow-hidden">
         <DialogHeader className="p-6 pb-0">
-          <DialogTitle className="text-xl">Create Service</DialogTitle>
+          <DialogTitle className="text-xl">Create Personal Info</DialogTitle>
           <DialogDescription>
             Create a meaningful tribute with our personalized memorial services.
           </DialogDescription>

@@ -151,7 +151,14 @@ const queryClient = useQueryClient();
   const allCompleted = steps.every((step) => step.status === "completed");
 
   
-  console.log("selectedSBooking",booking);
+  const handleMarkCompleted = () => {
+    handleUpdate({ 
+      id: booking?.id,
+      data: { 
+        bookingStatus: "COMPLETED" 
+      } 
+  })
+}
   
   
 

@@ -3,6 +3,9 @@ import { Box, CalendarClock, CalendarDays, Church, DollarSign, Flower2, Heart, M
 import BookingStatus from "./BookingStatus";
 import { formatCurrency } from "@/lib/utils";
 import { useServiceTypeStore } from "@/store/serviceStore";
+import { usUpdateBooking } from "@/hooks/controllers/useBooking";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAlertStore } from "@/store/alertStore";
 
 const BookingModal = ({
     booking,
@@ -15,7 +18,45 @@ const BookingModal = ({
     isTrack: boolean;
     setIsTrack: (isTrack:boolean)=>void;
     }) =>{
-    const {setSelectedBooking} = useServiceTypeStore()
+  const { setSelectedBooking } = useServiceTypeStore()
+    const updateStatusMutation = usUpdateBooking();
+    const queryClient = useQueryClient();
+const { showAlert } = useAlertStore();
+  const handleUpdate = (payload:any) => {
+    updateStatusMutation.mutate(
+      payload,
+      {
+        onSuccess: () => {
+          showAlert('success', {
+            title: 'Success Added!',
+            message: 'Your action was completed successfully.',
+            autoClose: true,
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["customesr-booking"],
+          });
+          onClose()
+        },
+        onError: (error: any) => {
+          alert("Failed: " + JSON.stringify(error));
+        },
+      }
+    );
+  }
+
+
+  const handleMarkCompleted = () => {
+    handleUpdate({ 
+      id: booking?.id,
+      data: { 
+        bookingStatus: "COMPLETED" 
+      } 
+  })
+  }
+  
+
+  console.log("booking?.bookingStatus",booking);
+  
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div
@@ -189,6 +230,11 @@ const BookingModal = ({
                   </div>
                 </div>
                 <div className="flex items-center gap-5">
+                  {
+                    booking?.status !== "COMPLETED" && <button                       className="text-sky-500 font-medium bg-sky-70s0/10 py-3 px-5 rounded-full flex items-center gap-2 cursor-pointer"
+                    onClick={handleMarkCompleted}>Mark as Complete</button>
+                  }
+                 
                   <span
                     className={`px-4 py-2 rounded-full text-sm border-r pr-5 ${
                       booking.status === "Confirmed"

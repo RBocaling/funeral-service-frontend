@@ -1,9 +1,9 @@
 import  { useState } from "react";
 import { X, Check, X as XIcon, User } from "lucide-react";
 import PersonalInfo from "./PersonalInfo";
-import UploadDocumentId from "./UploadDocumentId";
 import useProgressProfile from "@/hooks/controllers/useUserProgress";
 import { useProfileProgress } from "@/store/completeProfileStore";
+import UpdateDocumentId from "./UpdateDocumentId";
 
 
 const CompleteTaskModal = () => {
@@ -151,7 +151,7 @@ const {isCompleteProfileModalOpen, setCompleteProfileModal} = useProfileProgress
           />
         )}
         {isOpenDocument && (
-          <UploadDocumentId
+          <UpdateDocumentId
            isOpen={isOpenDocument}
            setIsOpen={setIsOpenDocument}
           />

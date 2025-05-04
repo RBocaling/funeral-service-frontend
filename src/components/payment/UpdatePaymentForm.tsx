@@ -13,6 +13,7 @@ import {
 import { useAddAvailablePayment, useUpdateAvailablePayment } from "@/hooks/controllers/useAvailablePayment";
 import { useQueryClient } from "@tanstack/react-query";
 import { uploadImageToCloudinary } from "@/utils/uploadImageToCloudinary";
+import { useAlertStore } from "@/store/alertStore";
 
 export default function UpdatePaymentForm({ onClose, paymentInfo }: any) {
   const queryClient = useQueryClient();
@@ -56,6 +57,7 @@ export default function UpdatePaymentForm({ onClose, paymentInfo }: any) {
     setFormData((prev) => ({ ...prev, paymentType: value }));
   };
 
+  const { showAlert } = useAlertStore();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -75,11 +77,21 @@ export default function UpdatePaymentForm({ onClose, paymentInfo }: any) {
         }
       },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
+          await showAlert('success', {
+            title: 'Success Updated!',
+            message: 'Your action was completed successfully.',
+            autoClose: true,
+          });
           queryClient.invalidateQueries({ queryKey: ["my-payment"] });
           onClose();
         },
-        onError: (error: any) => {
+        onError: async(error: any) => {
+          await showAlert('error', {
+            title: 'Error Add',
+            message: 'Something went wrong. Please try again.',
+            autoClose: true,
+          });
           console.error(
             "Add message failed:",
             error.response?.data?.message || error.message

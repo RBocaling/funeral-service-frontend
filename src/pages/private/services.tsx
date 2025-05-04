@@ -54,15 +54,10 @@ const Services = () => {
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { setServiceType } = useServiceTypeStore();
-  const { data: myServices, isLoading } = useGetServices();
-
   const handleViewService = (service: any) => {
     setServiceType(service?.type?.toUpperCase());
     setViewModalOpen(true);
   };
-
-console.log("myServices",myServices);
-
 
   return (
     <div className="space-y-6 container mx-auto px-5">
@@ -172,6 +167,7 @@ console.log("myServices",myServices);
         setViewModalOpen={setViewModalOpen}
         viewModalOpen={viewModalOpen}
       />
+      
     </div>
   );
 };

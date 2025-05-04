@@ -8,6 +8,7 @@ import { Camera } from "lucide-react";
 import { useAddUploadDocument } from "@/hooks/controllers/useAddPersonalInfo";
 import { useQueryClient } from "@tanstack/react-query";
 import useUserAuth from "@/hooks/controllers/useUserAuth";
+import { useAlertStore } from "@/store/alertStore";
 
 type UploadDocumentIdProps = {
   isOpen: boolean;
@@ -24,7 +25,7 @@ const UpdateProfilePicture: React.FC<UploadDocumentIdProps> = ({
   const [openCamera, setOpenCamera] = useState(false);
   const addDocumentMutate = useAddUploadDocument();
   const queryClient = useQueryClient();
-
+  const { showAlert } = useAlertStore();
   const selfieInputRef = useRef<HTMLInputElement>(null);
   const webcamRef = useRef<Webcam>(null);
 
@@ -74,17 +75,24 @@ const UpdateProfilePicture: React.FC<UploadDocumentIdProps> = ({
             profileUrl: selfieUrl,
         };
         addDocumentMutate.mutate(payload, {
-          onSuccess: () => {
-                alert("success");
+          onSuccess: async() => {
+            await showAlert('success', {
+              title: 'Success Updated!',
+              message: 'Your action was completed successfully.',
+              autoClose: true,
+            });
             queryClient.invalidateQueries({ queryKey: ["user-auth"] });
             queryClient.invalidateQueries({ queryKey: ["getProfileProgress"] });
                 queryClient.invalidateQueries({ queryKey: ["user-info"] });
                 setLoading(false);
                 setIsOpen(false);
-
-                alert("Upload successful!");
           },
-          onError: (error: any) => {
+          onError:async (error: any) => {
+            await showAlert('error', {
+              title: 'Error Add',
+              message: 'Something went wrong. Please try again.',
+              autoClose: true,
+            });
             setLoading(false);
           },
         });

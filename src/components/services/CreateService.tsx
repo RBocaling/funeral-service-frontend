@@ -14,31 +14,40 @@ import { Textarea } from "../ui/textarea";
 import { useAddService } from "@/hooks/controllers/useAddService";
 import { useState } from "react";
 import { uploadImageToCloudinary } from "@/utils/uploadImageToCloudinary";
+import { useAlertStore } from "@/store/alertStore";
+import useProgressProfile from "@/hooks/controllers/useUserProgress";
+import { useQueryClient } from "@tanstack/react-query";
 
 const CreateService = ({
   isOpen,
   setIsOpen,
+  onClose
 }: {
   isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
+    setIsOpen: (open: boolean) => void;
+    onClose: ()=>void
 }) => {
   const { serviceType } = useServiceTypeStore();
+  const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState({
     name: "",
     description: "",
   });
 
+  const {
+    
+    progress,
+  } = useProgressProfile();
+
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const addServiceMutation = useAddService();
+  const { showAlert } = useAlertStore();
 
   const handleAddServices = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    
-
     if (!file) {
       throw new Error("NO file selected");
     }
@@ -55,14 +64,26 @@ const CreateService = ({
       },
       {
         onSuccess: () => {
-          alert("Success Added");
+          queryClient.invalidateQueries({
+            queryKey: ["my-services"],
+          });
+           showAlert('success', {
+            title: 'Success Added!',
+            message: 'Your action was completed successfully.',
+            autoClose: true,
+          });
           setFormData({ name: '', description: '' });
           setFile(null);
           setIsOpen(false);
           setLoading(false);
+          // onClose()
         },
-        onError: (error: any) => {
-          alert("Failed: " + JSON.stringify(error));
+        onError: async (error: any) => {
+          await showAlert('error', {
+            title: 'Error Add',
+            message: 'Something went wrong. Please try again.',
+            autoClose: true,
+          });
           setLoading(false);
         },
       }
@@ -127,9 +148,12 @@ const CreateService = ({
             <Button className="rounded-full py-5 px-5 bg-red-500 shadow-xl shadow-red-500/10 text-white font-medium" onClick={() => setIsOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleAddServices} className="rounded-full py-5 px-5 bg-sky-500 shadow-xl shadow-sky-500/10 text-white font-medium">
+            <div className="flex flex-col gap-2">
+            <Button onClick={handleAddServices} disabled={progress < 100} className={`rounded-full py-5 px-5 bg-sky-500 shadow-xl shadow-sky-500/10 text-white font-medium ${progress < 100 && 'cursor-not-allowed'}`}>
                 {loading || addServiceMutation.isPending ? "Submitting.." : "Add Now"}
             </Button>
+            {(progress < 100) && <p className="text-xs font-medium text-red-500">Please Complete profile</p>}
+          </div>
           </div>
         </DialogFooter>
       </DialogContent>
