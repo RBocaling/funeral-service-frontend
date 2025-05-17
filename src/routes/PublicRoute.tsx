@@ -1,5 +1,4 @@
 import useUserAuth from "@/hooks/controllers/useUserAuth";
-import { useAuthStore } from "@/store/authStore";
 import { Navigate, Outlet } from "react-router-dom";
 
 export default function PublicRoute() {

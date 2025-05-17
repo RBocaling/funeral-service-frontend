@@ -1,5 +1,4 @@
-import { bookings } from "@/lib/mockdata";
-import { Box, CalendarClock, CalendarDays, Church, DollarSign, Flower2, Heart, Mail, MapPin, Phone, User, UserPlus, Users, WalletCards, X } from "lucide-react";
+import { Box, CalendarClock, DollarSign, Flower2, Heart, Mail, MapPin, Users, WalletCards, X } from "lucide-react";
 import BookingStatus from "./BookingStatus";
 import { formatCurrency } from "@/lib/utils";
 import { useServiceTypeStore } from "@/store/serviceStore";
@@ -168,6 +167,34 @@ const { showAlert } = useAlertStore();
                         </div>
                       </div>
                     )}
+
+{
+                      booking?.fullPackage && 
+                      <div className="flex flex-col">
+                        <p className="text-xs text-gray-500 mb-2 whitespace-nowrap">
+                          Complete Package{" "}
+                          <span className="text-xs text-red-500 font-medium">
+                            {" "}
+                            -
+                            {formatCurrency(
+                              booking?.fullPackage?.price
+                            )}
+                          </span>
+                          </p>
+                        <p className="text-xs text-gray-500 mb-2">
+                          <span className="text-xs text-white font-medium">
+                            {" "}
+                            -
+                              {booking?.fullPackage?.title} ({booking?.fullPackage?.details?.map((i:any, ind:number) => (
+                                <span className="text-xs text-gray-600" key={ind}>{i?.description },  </span>
+                            ))})
+                          </span>
+                          </p>
+                          </div>
+                    }
+
+
+
                     {booking?.serviceBookings?.map((item: any, index: any) => (
                       <div
                         key={index}
@@ -206,7 +233,7 @@ const { showAlert } = useAlertStore();
                         ) +
                           Number(
                             booking?.customCasketDetail?.additionalCost ?? 0
-                          )
+                          )+ Number(booking?.fullPackage?.price ?? 0)
                       )}
                     </div>
                   </div>

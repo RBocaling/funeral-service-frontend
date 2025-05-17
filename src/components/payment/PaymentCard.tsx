@@ -2,12 +2,10 @@ import { useState } from "react";
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
 } from "@/components/ui/card";
 import { PaymentMethod } from "@/types/payment";
 import { Edit, Trash2, Eye, EyeOff } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 interface PaymentCardProps {

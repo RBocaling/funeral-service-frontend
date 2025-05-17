@@ -1,7 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { CircleEllipsis, MenuIcon, Search, X } from "lucide-react";
-import { Chat } from "@/lib/types";
+import { CircleEllipsis } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useMessageStore } from "@/store/messageStore";
 import CustomerDocument from "./funeralDocumentId";
@@ -12,7 +9,6 @@ import { useState } from "react";
 export function ChatHeader({ isSidebarOpen, setIsSidebarOpen }: any) {
   
   const { conversationid } = useMessageStore()
-  const [isOpen, setIsOpen] = useState(false)
   const [isOpenId, setIsOpenId] = useState(false)
   
   console.log("conversationid hehader",conversationid);

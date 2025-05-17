@@ -1,6 +1,6 @@
 import { getUserProgress } from "@/api/auth";
 import { useQuery } from "@tanstack/react-query";
-import { Building, Upload, User, Wallet } from "lucide-react";
+import {  Upload, User } from "lucide-react";
 
 const useProgressProfile = () => {
   const {

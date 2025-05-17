@@ -67,7 +67,7 @@ const PersonalInfo = ({ open, setOpen }: PersonalInfoProps) => {
             queryClient.invalidateQueries({ queryKey: ["user-info"] });
             setOpen(false)
         },
-        onError:async (error: any) => {
+        onError:async () => {
           await showAlert('error', {
             title: 'Error Add',
             message: 'Something went wrong. Please try again.',

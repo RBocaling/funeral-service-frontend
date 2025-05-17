@@ -13,7 +13,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 
 const PaymentMethodsPage = () => {
-  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>(
+  const [_, setPaymentMethods] = useState<PaymentMethod[]>(
     initialPaymentMethods
   );
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);

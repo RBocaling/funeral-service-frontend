@@ -2,17 +2,12 @@ import { useState } from "react";
 import { MessageList } from "@/components/messaging/message-list";
 import { ChatSidebar } from "@/components/messaging/chat-sidebar";
 import { ChatHeader } from "@/components/messaging/chat-header";
-import { chats as initialChats, messages as initialMessages, messages, } from "@/lib/mockdata";
-import { Chat, Message, TabType } from "@/lib/types";
 import { useGetMessage } from "@/hooks/controllers/useMessage";
 import { useMessageStore } from "@/store/messageStore";
 import useProgressProfile from "@/hooks/controllers/useUserProgress";
 
 function Messages() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [selectedChatId, setSelectedChatId] = useState(initialChats[0].id);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [chats, setChats] = useState<Chat[]>(initialChats);
   const {conversationid} = useMessageStore()
   const {
     
@@ -32,7 +27,7 @@ function Messages() {
         <main onClick={()=> setIsSidebarOpen(false)} className="relative flex-1">
           <MessageList messages={data} />
         </main>
-      </div>: <div className="flex flex-1 flex-col h-40 flex items-center justify-center">
+      </div>: <div className=" flex-1 flex-col h-40 flex items-center justify-center">
        No Message Selected
       </div>
       }

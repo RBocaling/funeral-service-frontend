@@ -1,21 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChatList } from "./chat-list";
-import { Chat, TabType } from "@/lib/types";
-import { Plus } from "lucide-react";
 import { NewChatDialog } from "./new-chat.dialog";
 import TitlePage from "../ui/title-page";
-import { useGetMessageList } from "@/hooks/controllers/useMessage";
 
-interface SidebarProps {
-  isOpen: boolean;
-  chats: Chat[];
-  selectedChatId: string;
-  activeTab: TabType;
-  onTabChange: (tab: TabType) => void;
-  onChatSelect: (chatId: string) => void;
-  onNewChat: (chat: Chat) => void;
-}
 
 export function ChatSidebar() {
   return (
@@ -27,12 +13,7 @@ export function ChatSidebar() {
       <div className="flex h-16 items-center justify-between px-6">
         <TitlePage label="Messages" />
         <NewChatDialog
-          // onNewChat={onNewChat}
-          trigger={
-            <Button size="icon" variant="ghost" className="rounded-full">
-              <Plus className="h-5 w-5" />
-            </Button>
-          }
+          
         />
       </div>
       <div className="p-4">

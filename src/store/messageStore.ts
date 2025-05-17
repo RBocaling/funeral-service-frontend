@@ -7,7 +7,7 @@ type messageTypeState = {
   setConversationid: (data: any) => void;
 };
 
-export const useMessageStore = create<messageTypeState>((set, get) => ({
+export const useMessageStore = create<messageTypeState>((set) => ({
   conversationid: null,
   setConversationid: (data:any) => set({ conversationid: data }),
 }));

@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useAddAvailablePayment, useUpdateAvailablePayment } from "@/hooks/controllers/useAvailablePayment";
+import {  useUpdateAvailablePayment } from "@/hooks/controllers/useAvailablePayment";
 import { useQueryClient } from "@tanstack/react-query";
 import { uploadImageToCloudinary } from "@/utils/uploadImageToCloudinary";
 import { useAlertStore } from "@/store/alertStore";

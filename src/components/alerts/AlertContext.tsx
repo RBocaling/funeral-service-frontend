@@ -47,7 +47,7 @@ const AlertContext = createContext<AlertContextType | undefined>(undefined);
 // Provider component
 export const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [alertState, setAlertState] = useState<AlertState>(defaultAlertState);
-  const timeoutRef = useRef<number>();
+  const timeoutRef = useRef<any>(null);
 
   const hideAlert = () => {
     setAlertState((prev) => ({ ...prev, isOpen: false }));

@@ -114,7 +114,6 @@ const UpdateDocumentId: React.FC<UploadDocumentIdProps> = ({
       let documentUrl = documentPreviewUrl;
       let selfieUrl = selfiePreviewUrl;
 
-      // Kung may bagong upload na file, i-upload natin ulit
       if (documentFile) {
         documentUrl = await uploadImageToCloudinary(documentFile);
       }
@@ -143,7 +142,7 @@ const UpdateDocumentId: React.FC<UploadDocumentIdProps> = ({
           queryClient.invalidateQueries({ queryKey: ["user-auth"] });
           setIsOpen(false);
         },
-        onError: async(error: any) => {
+        onError: async() => {
           await showAlert('error', {
             title: 'Error Add',
             message: 'Something went wrong. Please try again.',

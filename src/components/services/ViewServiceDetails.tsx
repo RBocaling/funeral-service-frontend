@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 import { useState } from "react";
-import { Flower, Package2, Pencil, Trash2 } from "lucide-react";
+import { Flower, Package2, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import AddCasketDetail from "./addServiceDetails";
 import { deleteDetailService } from "@/hooks/controllers/useAddService";
@@ -44,7 +44,7 @@ const ViewServiceDetails = ({
     },
   ];
   const { serviceType } = useServiceTypeStore();
-  const [selectedSizes, setSelectedSizes] = useState<Record<number, any>>(
+  const [selectedSizes, _] = useState<Record<number, any>>(
     products.reduce((acc, product) => ({ ...acc, [product.id]: "MEDIUM" }), {})
   );
 

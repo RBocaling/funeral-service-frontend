@@ -1,16 +1,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { format } from "date-fns";
-import { Chat } from "@/lib/types";
 import { useGetMessageList } from "@/hooks/controllers/useMessage";
 import { useMessageStore } from "@/store/messageStore";
 
-interface ChatListProps {
-  chats: Chat[];
-  selectedChatId: string;
-  onChatSelect: (chatId: string) => void;
-}
+
 
 export function ChatList() {
   const {data} = useGetMessageList()

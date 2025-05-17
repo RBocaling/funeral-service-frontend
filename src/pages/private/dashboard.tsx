@@ -1,4 +1,3 @@
-import React from "react";
 import StatCard from "@/components/dashboard/StatCard";
 import { Badge } from "@/components/ui/badge";
 import { useGetServices } from "@/hooks/controllers/useAddService";
@@ -20,12 +19,10 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-import { BookingType } from "@/types/booking";
-import { ServiceType } from "@/types/service";
 
 const Dashboard = () => {
-  const { data: services }: { data: ServiceType[] | undefined } = useGetServices();
-  const { data: bookings }: { data: BookingType[] | undefined } = useGetBooking();
+  const { data: services }: { data: any[] | undefined } = useGetServices();
+  const { data: bookings }: { data: any[] | undefined } = useGetBooking();
 
   const totalTransactions = bookings?.length || 0;
   const completedTransactions = bookings?.filter((b) => b.bookingStatus === "COMPLETED").length || 0;
@@ -38,7 +35,7 @@ const Dashboard = () => {
   bookings?.forEach((booking) => {
     if (booking.bookingStatus === "COMPLETED") {
       const month = new Date(booking.createdAt).toLocaleString("default", { month: "short" });
-      const revenue = booking.serviceBookings.reduce((acc, s) => acc + (s.selectedCasketDetail?.price || 0), 0);
+      const revenue = booking.serviceBookings.reduce((acc:any, s:any) => acc + (s.selectedCasketDetail?.price || 0), 0);
       const monthData = revenueData.find(d => d.name === month);
       if (monthData) monthData.value += revenue;
     }
@@ -139,7 +136,7 @@ const Dashboard = () => {
             </thead>
             <tbody>
               {bookings?.slice(0, 5).map((booking, index) => {
-                const total = booking.serviceBookings.reduce((acc, s) => acc + (s.selectedCasketDetail?.price || 0), 0);
+                const total = booking.serviceBookings.reduce((acc:any, s:any) => acc + (s.selectedCasketDetail?.price || 0), 0);
                 return (
                   <tr key={index} className="border-b border-gray-600 hover:bg-gray-700 transition">
                     <td className="px-4 py-3">{`${booking?.customer?.firstName} ${booking?.customer?.lastName }` || 'Unknown'}</td>

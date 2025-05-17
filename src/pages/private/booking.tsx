@@ -1,15 +1,12 @@
 import { useState } from "react";
 import {
-  Calendar,
   MapPin,
   Users,
   MessageSquare,
   X,
   Flower2,
   Box,
-  Church,
   DollarSign,
-  Clock,
   Heart,
   Search,
   Filter,
@@ -29,7 +26,7 @@ function Booking() {
     (typeof bookings)[0] | null
   >(null);
   const [isTrack, setIsTrack] = useState<boolean>(false);
-const {setSelectedBooking:setBooking} = useServiceTypeStore()
+  const { setSelectedBooking: setBooking } = useServiceTypeStore();
   const { data, isLoading } = useGetBooking();
 
   if (isLoading) return <>loading..</>;
@@ -42,6 +39,7 @@ const {setSelectedBooking:setBooking} = useServiceTypeStore()
     phone: i?.customer?.phone,
     appoinmentDate: i?.appointmentDate,
     status: i?.bookingStatus,
+    fullPackage: i?.fullPackage,
     customCasketDetail: i?.customCasketDetail[0],
     serviceBookings: i?.serviceBookings?.map((item: any) => ({
       details: item?.service,
@@ -53,8 +51,7 @@ const {setSelectedBooking:setBooking} = useServiceTypeStore()
     })),
   }));
 
-  console.log("customData",data);
-  
+  console.log("customDatacustomData", customData);
 
   return (
     <div className="relative ">
@@ -90,7 +87,7 @@ const {setSelectedBooking:setBooking} = useServiceTypeStore()
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {customData?.map((booking:any) => (
+          {customData?.map((booking: any) => (
             <div
               key={booking.id}
               className="group relative dark:bg-gray-800/40 backdrop-blur-xl shadow-xl shadow-black/10 rounded-3xl overflow-hidden border border-gray-700/30"
@@ -123,7 +120,7 @@ const {setSelectedBooking:setBooking} = useServiceTypeStore()
               </div>
 
               <div className="p-6 space-y-6">
-              <div className="grid grid-cols-2 md:h-52">
+                <div className="grid grid-cols-2 md:h-52">
                   <div className="space-y-3">
                     <div className="flex flex-col">
                       <p className="text-xs text-gray-500 mb-2">
@@ -142,8 +139,8 @@ const {setSelectedBooking:setBooking} = useServiceTypeStore()
                       {booking.email}
                     </div>
                     <p className="text-xs text-gray-500 mb-2">
-                       Booked Location
-                      </p>
+                      Booked Location
+                    </p>
                     <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
                       <MapPin className="w-4 h-4 mr-2 text-sky-400" />
                       {booking.location}
@@ -196,6 +193,36 @@ const {setSelectedBooking:setBooking} = useServiceTypeStore()
                         </div>
                       </div>
                     )}
+
+                    {booking?.fullPackage && (
+                      <div className="flex flex-col">
+                        <p className="text-xs text-gray-500 mb-2 whitespace-nowrap">
+                          Complete Package{" "}
+                          <span className="text-xs text-red-500 font-medium">
+                            {" "}
+                            -{formatCurrency(booking?.fullPackage?.price)}
+                          </span>
+                        </p>
+                        <p className="text-xs text-gray-500 mb-2">
+                          <span className="text-xs text-white font-medium">
+                            {" "}
+                            -{booking?.fullPackage?.title} (
+                            {booking?.fullPackage?.details?.map(
+                              (i: any, ind: number) => (
+                                <span
+                                  className="text-xs text-gray-600"
+                                  key={ind}
+                                >
+                                  {i?.description},{" "}
+                                </span>
+                              )
+                            )}
+                            )
+                          </span>
+                        </p>
+                      </div>
+                    )}
+
                     {booking?.serviceBookings?.map((item: any, index: any) => (
                       <div
                         key={index}
@@ -234,7 +261,8 @@ const {setSelectedBooking:setBooking} = useServiceTypeStore()
                         ) +
                           Number(
                             booking?.customCasketDetail?.additionalCost ?? 0
-                          )
+                          ) +
+                          Number(booking?.fullPackage?.price ?? 0)
                       )}
                     </div>
                   </div>
@@ -253,8 +281,8 @@ const {setSelectedBooking:setBooking} = useServiceTypeStore()
                     </span>
                     <button
                       onClick={() => {
-                        setBooking(booking)
-                        setSelectedBooking(booking)
+                        setBooking(booking);
+                        setSelectedBooking(booking);
                       }}
                       className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-full text-sm transition-all duration-300 shadow-2xl shadow-sky-500/50"
                     >

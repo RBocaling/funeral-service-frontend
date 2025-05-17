@@ -3,12 +3,11 @@ import { CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { useAlertStore } from '@/store/alertStore';
 
 const Alert: React.FC = () => {
-  const { alertState, handleConfirm, handleCancel } = useAlertStore();
+  const { alertState, handleCancel } = useAlertStore();
   const {
     type,
     title,
     message,
-    confirmButtonText = 'OK',
     cancelButtonText = 'Cancel',
     isOpen,
   } = alertState;
@@ -52,18 +51,18 @@ const Alert: React.FC = () => {
     }
   };
 
-  const getButtonColor = () => {
-    switch (type) {
-      case 'success':
-        return 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 focus:ring-green-500';
-      case 'error':
-        return 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 focus:ring-red-500';
-      case 'confirmation':
-        return 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:ring-blue-500';
-      default:
-        return 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 focus:ring-gray-500';
-    }
-  };
+  // const getButtonColor = () => {
+  //   switch (type) {
+  //     case 'success':
+  //       return 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 focus:ring-green-500';
+  //     case 'error':
+  //       return 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 focus:ring-red-500';
+  //     case 'confirmation':
+  //       return 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:ring-blue-500';
+  //     default:
+  //       return 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 focus:ring-gray-500';
+  //   }
+  // };
 
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
@@ -102,12 +101,12 @@ const Alert: React.FC = () => {
               </button>
             )}
             
-            <button
+            {/* <button
               onClick={handleConfirm}
               className={`w-full px-6 py-3 text-sm font-medium text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg ${getButtonColor()}`}
             >
               {confirmButtonText}
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

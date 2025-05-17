@@ -10,7 +10,7 @@ const  StatCard = ({
   }: {
     icon: any;
     label: string;
-    value: string;
+    value: any;
       trend?: string;
       additional?: ReactNode
   })=> {

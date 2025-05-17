@@ -37,7 +37,7 @@ const defaultAlertState: AlertState = {
   confirmButtonText: 'OK',
   cancelButtonText: 'Cancel',
   autoClose: true,
-  autoCloseTime: 4000,
+  autoCloseTime: 1000,
 };
 
 export const useAlertStore = create<AlertStore>((set, get) => ({
@@ -76,7 +76,7 @@ export const useAlertStore = create<AlertStore>((set, get) => ({
         const newTimeoutId = window.setTimeout(() => {
           get().hideAlert();
           resolve(true);
-        }, options.autoCloseTime || 4000);
+        }, options.autoCloseTime || 1000);
         
         set({ timeoutId: newTimeoutId });
       }

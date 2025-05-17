@@ -21,7 +21,6 @@ import { useQueryClient } from "@tanstack/react-query";
 const CreateService = ({
   isOpen,
   setIsOpen,
-  onClose
 }: {
   isOpen: boolean;
     setIsOpen: (open: boolean) => void;
@@ -78,7 +77,7 @@ const CreateService = ({
           setLoading(false);
           // onClose()
         },
-        onError: async (error: any) => {
+        onError: async () => {
           await showAlert('error', {
             title: 'Error Add',
             message: 'Something went wrong. Please try again.',

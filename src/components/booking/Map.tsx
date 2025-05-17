@@ -1,8 +1,6 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { Box, Check, Truck } from "lucide-react";
-import BookingStatus from "./BookingStatus";
 
 const manilaCoords = { lat: 14.5995, lng: 120.9842 };
 

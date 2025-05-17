@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import Map from "./Map";
-import { useGetBooking, useGetBookingStatus, usUpdateBooking } from "@/hooks/controllers/useBooking";
-import { useServiceTypeStore } from "@/store/serviceStore";
+import { usUpdateBooking } from "@/hooks/controllers/useBooking";
 import { useQueryClient } from "@tanstack/react-query";
 
 type BookingStatusType = "CONFIRMED" | "PREPARING_ITEMS" | "ON_THE_WAY" | "COMPLETED";
@@ -23,7 +22,6 @@ const BookingStatus = ({booking}:{booking:any}) => {
   
   const updateStatusMutation = usUpdateBooking();
  
-const {selectedSBooking} = useServiceTypeStore()
 const queryClient = useQueryClient();
 
   const [steps, setSteps] = useState([
@@ -151,14 +149,6 @@ const queryClient = useQueryClient();
   const allCompleted = steps.every((step) => step.status === "completed");
 
   
-  const handleMarkCompleted = () => {
-    handleUpdate({ 
-      id: booking?.id,
-      data: { 
-        bookingStatus: "COMPLETED" 
-      } 
-  })
-}
   
   
 

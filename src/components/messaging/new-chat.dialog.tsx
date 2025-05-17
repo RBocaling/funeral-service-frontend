@@ -9,12 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Chat } from "@/lib/types";
 
-interface NewChatDialogProps {
-  onNewChat: (chat: Chat) => void;
-  trigger: React.ReactNode;
-}
 
 export function NewChatDialog() {
   const [name, setName] = useState("");
@@ -24,15 +19,7 @@ export function NewChatDialog() {
     e.preventDefault();
     if (!name.trim()) return;
 
-    const newChat: Chat = {
-      id: Date.now().toString(),
-      name: name.trim(),
-      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${Date.now()}`,
-      lastMessage: "Start a conversation...",
-      timestamp: new Date().toISOString(),
-      unread: 0,
-      online: true,
-    };
+   
 
     
     setName("");

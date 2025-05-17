@@ -7,7 +7,6 @@ import { uploadImageToCloudinary } from "@/utils/uploadImageToCloudinary";
 import { Camera } from "lucide-react";
 import { useAddUploadDocument } from "@/hooks/controllers/useAddPersonalInfo";
 import { useQueryClient } from "@tanstack/react-query";
-import useUserAuth from "@/hooks/controllers/useUserAuth";
 import { useAlertStore } from "@/store/alertStore";
 
 type UploadDocumentIdProps = {
@@ -87,7 +86,7 @@ const UpdateProfilePicture: React.FC<UploadDocumentIdProps> = ({
                 setLoading(false);
                 setIsOpen(false);
           },
-          onError:async (error: any) => {
+          onError:async () => {
             await showAlert('error', {
               title: 'Error Add',
               message: 'Something went wrong. Please try again.',

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type ServiceType = 'CASKET' | 'FLOWERS' | '';
+type ServiceType = 'CASKET' | 'FLOWERS' |  "FULL_PACKAGE" |  '';
 
 type ServiceTypeState = {
   serviceType: ServiceType;

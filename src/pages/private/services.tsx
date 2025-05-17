@@ -1,18 +1,14 @@
 import { useState } from "react";
 import {
   Eye,
-  Plus,
   Search,
-  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import TitlePage from "@/components/ui/title-page";
-import CreateService from "@/components/services/CreateService";
 import ViewService from "@/components/services/ViewService";
-import { useGetServices } from "@/hooks/controllers/useAddService";
 import { useServiceTypeStore } from "@/store/serviceStore";
 
 const data = [
@@ -46,7 +42,7 @@ const data = [
     thumbnail: "",
     isPrivate: false,
     list: 10,
-    type: "memorials",
+    type: "FULL_PACKAGE",
   },
 ];
 
@@ -58,6 +54,8 @@ const Services = () => {
     setServiceType(service?.type?.toUpperCase());
     setViewModalOpen(true);
   };
+
+  
 
   return (
     <div className="space-y-6 container mx-auto px-5">
@@ -76,13 +74,13 @@ const Services = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button
+          {/* <Button
             size="sm"
             className="rounded-full bg-primary/90 hover:bg-primary w-1/2 md:w-auto"
           >
             <Plus className="h-4 w-4 mr-2" />
             Create Service
-          </Button>
+          </Button> */}
         </div>
       </div>
 
@@ -113,7 +111,7 @@ const Services = () => {
                       ? "/casket1.jpg"
                       : service.type === "flowers"
                       ? "/flower2.webp"
-                      : service.type === "memorials"
+                      : service.type === "FULL_PACKAGE"
                       ? "/memorial.jpg"
                       : ""
                   }
@@ -131,7 +129,7 @@ const Services = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="rounded-full text-xs flex gap-1 cursor-pointer"
+                    className="rounded-full text-xs flex gap-1 cursor-pointer animate-bounce"
                     onClick={() => handleViewService(service)}
                   >
                     <Eye className="h-3.5 w-3.5" /> View List
@@ -143,7 +141,7 @@ const Services = () => {
           ))}
 
         {/* Create New Card */}
-        <Card
+        {/* <Card
           className="overflow-hidden border-dashed border-2 hover:border-primary/50 transition-colors bg-transparent hover:bg-muted/30 rounded-xl cursor-pointer flex items-center justify-center"
         >
           <CardContent className="p-8 flex flex-col items-center justify-center text-center">
@@ -156,7 +154,7 @@ const Services = () => {
               and memorials—that honor the lives of loved ones with grace.
             </p>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
 
       {/* Create Service Modal */}

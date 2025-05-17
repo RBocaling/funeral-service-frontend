@@ -71,7 +71,7 @@ const UpdatePersonalInfo = ({ open, setOpen }: PersonalInfoProps) => {
         queryClient.invalidateQueries({ queryKey: ["user-info"] });
         setOpen(false); // Close modal after success
       },
-      onError: async(error: any) => {
+      onError: async() => {
         await showAlert('error', {
           title: 'Error Add',
           message: 'Something went wrong. Please try again.',
