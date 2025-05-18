@@ -195,7 +195,7 @@ const AddCasketDetail = ({
               id="price"
               placeholder="Enter price"
               className="w-full py-4"
-              value={formData.price}
+              value={(formData.price > 0 || !formData.price ) ? formData.price:0}
               onChange={(e) => handleInputChange("price", e.target.value)}
             />
           </div>

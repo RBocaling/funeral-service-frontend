@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import Webcam from "react-webcam";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { uploadImageToCloudinary } from "@/utils/uploadImageToCloudinary";
-import { Camera } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAddUploadDocument } from "@/hooks/controllers/useAddPersonalInfo";
 import useUserAuth from "@/hooks/controllers/useUserAuth";
@@ -20,30 +18,39 @@ const UpdateDocumentId: React.FC<UploadDocumentIdProps> = ({
   setIsOpen,
 }) => {
   const [documentFile, setDocumentFile] = useState<File | null>(null);
-  const [selfieFile, setSelfieFile] = useState<File | null>(null);
+  const [bussinessPermit, setbussinessPermit] = useState<File | null>(null);
+  const [sanitaryPermit, setsanitaryPermit] = useState<File | null>(null);
+  const [embalmerLicense, setembalmerLicense] = useState<File | null>(null);
   const [documentPreviewUrl, setDocumentPreviewUrl] = useState<string | null>(null);
-  const [selfiePreviewUrl, setSelfiePreviewUrl] = useState<string | null>(null);
+  const [bussinessPermitPreviewUrl, setbussinessPermitPreviewUrl] = useState<string | null>(null);
+  const [sanitaryPermitPreviewUrl, setsanitaryPermitPreviewUrl] = useState<string | null>(null);
+  const [embalmerLicensePreviewUrl, setembalmerLicensePreviewUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [openCamera, setOpenCamera] = useState(false);
 
   const addDocumentMutate = useAddUploadDocument();
   const { data: docData } = useUserAuth();
   const queryClient = useQueryClient();
 
   const documentInputRef = useRef<HTMLInputElement>(null);
-  const selfieInputRef = useRef<HTMLInputElement>(null);
-  const webcamRef = useRef<Webcam>(null);
-
-
-  console.log("docDatadocDatadocData",documentPreviewUrl);
+  const bussinessPermitRef = useRef<HTMLInputElement>(null);
+  const sanitaryPermitRef = useRef<HTMLInputElement>(null);
+  const embalmerLicenseRef = useRef<HTMLInputElement>(null);
+  
+  console.log("docData?.data",docData?.data);
   
   useEffect(() => {
     if (isOpen && docData) {
       if (!documentPreviewUrl && docData?.data?.validIdUrl) {
         setDocumentPreviewUrl(docData?.data?.validIdUrl);
       }
-      if (!selfiePreviewUrl && docData?.data?.selfPictureUrl) {
-        setSelfiePreviewUrl(docData?.data?.selfPictureUrl);
+      if (!bussinessPermitPreviewUrl && docData?.data?.bussinessPermit) {
+        setbussinessPermitPreviewUrl(docData?.data?.bussinessPermit);
+      }
+      if (!sanitaryPermitPreviewUrl && docData?.data?.sanitaryPermit) {
+        setsanitaryPermitPreviewUrl(docData?.data?.sanitaryPermit);
+      }
+      if (!embalmerLicensePreviewUrl && docData?.data?.embalmerLicense) {
+        setembalmerLicensePreviewUrl(docData?.data?.embalmerLicense);
       }
     }
   }, [isOpen, docData]);
@@ -62,72 +69,108 @@ const UpdateDocumentId: React.FC<UploadDocumentIdProps> = ({
     }
   };
 
-  const handleSelfieChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlebussinessPermitRefChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
 
-    setSelfieFile(selectedFile);
+    setbussinessPermit(selectedFile);
 
     if (selectedFile.type.startsWith("image/")) {
       const url = URL.createObjectURL(selectedFile);
-      setSelfiePreviewUrl(url);
+      setbussinessPermitPreviewUrl(url);
     } else {
-      setSelfiePreviewUrl(null);
+      setbussinessPermitPreviewUrl(null);
+    }
+  };
+  const handlesanitaryPermitRefChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (!selectedFile) return;
+
+    setsanitaryPermit(selectedFile);
+
+    if (selectedFile.type.startsWith("image/")) {
+      const url = URL.createObjectURL(selectedFile);
+      setsanitaryPermitPreviewUrl(url);
+    } else {
+      setsanitaryPermitPreviewUrl(null);
+    }
+  };
+  const handleembalmerLicenseRefChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (!selectedFile) return;
+
+    setembalmerLicense(selectedFile);
+
+    if (selectedFile.type.startsWith("image/")) {
+      const url = URL.createObjectURL(selectedFile);
+      setembalmerLicensePreviewUrl(url);
+    } else {
+      setembalmerLicensePreviewUrl(null);
     }
   };
 
   const handleUploadDocumentClick = () => {
     documentInputRef.current?.click();
   };
-
-  const handleUploadSelfieClick = () => {
-    selfieInputRef.current?.click();
+  const handleUploadBussinesClick = () => {
+    bussinessPermitRef.current?.click();
+  };
+  const handleUploadSanitaryClick = () => {
+    sanitaryPermitRef.current?.click();
+  };
+  const handleUploadembalmerClick = () => {
+    embalmerLicenseRef.current?.click();
   };
 
-  const captureSelfie = () => {
-    if (!webcamRef.current) return;
-    const imageSrc = webcamRef.current.getScreenshot();
-    if (!imageSrc) return;
 
-    fetch(imageSrc)
-      .then((res) => res.blob())
-      .then((blob) => {
-        const file = new File([blob], "selfie.jpg", { type: "image/jpeg" });
-        setSelfieFile(file);
-        setSelfiePreviewUrl(imageSrc);
-        setOpenCamera(false);
-      });
-  };
+
+
   const { showAlert } = useAlertStore();
 
   const handleSubmit = async () => {
     if (!documentFile && !documentPreviewUrl) {
       return alert("Please upload Document ID.");
     }
-    if (!selfieFile && !selfiePreviewUrl) {
-      return alert("Please upload Selfie Picture.");
+    if (!bussinessPermit && !bussinessPermitPreviewUrl) {
+      return alert("Please upload bussinessPermit Picture.");
+    }
+    if (!sanitaryPermit && !sanitaryPermitPreviewUrl) {
+      return alert("Please upload sanitaryPermitPreviewUrl Picture.");
+    }
+    if (!embalmerLicense && !embalmerLicensePreviewUrl) {
+      return alert("Please upload embalmerLicensePreviewUrl Picture.");
     }
 
     setLoading(true);
 
     try {
       let documentUrl = documentPreviewUrl;
-      let selfieUrl = selfiePreviewUrl;
+      let businessPermitImg = bussinessPermitPreviewUrl;
+      let sanitaryPermitImg = sanitaryPermitPreviewUrl;
+      let embalmerPermitImg = embalmerLicensePreviewUrl;
 
       if (documentFile) {
         documentUrl = await uploadImageToCloudinary(documentFile);
       }
-      if (selfieFile) {
-        selfieUrl = await uploadImageToCloudinary(selfieFile);
+      if (bussinessPermit) {
+        businessPermitImg = await uploadImageToCloudinary(bussinessPermit);
+      }
+      if (sanitaryPermit) {
+        sanitaryPermitImg = await uploadImageToCloudinary(sanitaryPermit);
+      }
+      if (embalmerLicense) {
+        embalmerPermitImg = await uploadImageToCloudinary(embalmerLicense);
       }
 
-      if (!documentUrl || !selfieUrl) {
+      if (!documentUrl || !bussinessPermitPreviewUrl || !sanitaryPermitPreviewUrl || !embalmerLicensePreviewUrl) {
         throw new Error("Upload Cloudinary Error");
       }
 
       const payload = {
         validIdUrl: documentUrl,
-        selfPictureUrl: selfieUrl,
+        bussinessPermit: businessPermitImg,
+        sanitaryPermit: sanitaryPermitImg,
+        embalmerLicense: embalmerPermitImg,
       };
 
       addDocumentMutate.mutate(payload, {
@@ -167,7 +210,8 @@ const UpdateDocumentId: React.FC<UploadDocumentIdProps> = ({
           Upload Document ID & Selfie Picture
         </h2>
 
-        {/* Document Upload Section */}
+        <div className="grid grid-cols-2 gap-5">
+           {/* Document Upload Section */}
         <div className="w-full flex flex-col items-center gap-2 mb-8">
           <p className="text-center text-gray-500 text-sm mb-2">
             Upload a clear image of your Document ID.
@@ -191,72 +235,84 @@ const UpdateDocumentId: React.FC<UploadDocumentIdProps> = ({
             )}
           </div>
         </div>
-
-        {/* Selfie Upload Section */}
+        {/* bi=ussiness permit Upload Section */}
         <div className="w-full flex flex-col items-center gap-2 mb-8">
           <p className="text-center text-gray-500 text-sm mb-2">
-            Upload or Capture your Selfie Picture.
+            Upload a clear image of your Bussiness Permit.
           </p>
-
-          {/* Kung naka-open ang camera */}
-          {openCamera ? (
-            <div className="flex flex-col items-center">
-              <Webcam
-                ref={webcamRef}
-                audio={false}
-                screenshotFormat="image/jpeg"
-                className="rounded-xl max-h-52 w-full"
-                videoConstraints={{ facingMode: "user" }}
+          <div
+            className="border-2 border-dashed border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-gray-700/20 transition w-full"
+            onClick={handleUploadBussinesClick}
+          >
+            {bussinessPermitPreviewUrl ? (
+              <img
+                src={bussinessPermitPreviewUrl}
+                alt="Document Preview"
+                className="object-cover rounded-xl max-h-52"
               />
-              <button
-                onClick={captureSelfie}
-                className="mt-4 bg-sky-500 hover:bg-sky -700 text-white font-semibold py-2 px-6 rounded-full transition"
-              >
-                Capture Photo
-              </button>
-              <button
-                onClick={() => setOpenCamera(false)}
-                className=" text-red-500 font-medium animate-bounce mt-5"
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <div
-              className="border-2 border-dashed border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-gray-700/20 transition w-full"
-              onClick={handleUploadSelfieClick}
-            >
-              {selfiePreviewUrl ? (
-                <img
-                  src={selfiePreviewUrl}
-                  alt="Selfie Preview"
-                  className="object-cover rounded-xl max-h-52"
-                />
-              ) : (
-                <div className="flex flex-col items-center">
-                  <p className="text-gray-500 text-sm text-center">
-                    Click to upload a selfie
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-          <div className="flex items-center justify-center gap-7">
-            <div className="flex-1 w-[20%] h-1 bg-white">{""}</div>
-            <p className="text-white font-semibold">Or</p>
-            <div className="flex-1 h-1 bg-white"></div>
+            ) : (
+              <div className="flex flex-col items-center">
+                <p className="text-gray-500 text-sm text-center">
+                  Click to upload or drag and drop
+                </p>
+              </div>
+            )}
           </div>
-
-          {/* Button to open camera */}
-          {!openCamera && (
-            <button
-              onClick={() => setOpenCamera(true)}
-              className="border-2 border-dashed text-sm text-gray-500 border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-gray-700/20 transition w-full"
-            >
-              <Camera /> take a Capture selfie
-            </button>
-          )}
         </div>
+
+        
+        {/* sanitarypermit Upload Section */}
+        <div className="w-full flex flex-col items-center gap-2 mb-8">
+          <p className="text-center text-gray-500 text-sm mb-2">
+            Upload a clear image of your Sanitary Permit.
+          </p>
+          <div
+            className="border-2 border-dashed border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-gray-700/20 transition w-full"
+            onClick={handleUploadSanitaryClick}
+          >
+            {sanitaryPermitPreviewUrl ? (
+              <img
+                src={sanitaryPermitPreviewUrl}
+                alt="Document Preview"
+                className="object-cover rounded-xl max-h-52"
+              />
+            ) : (
+              <div className="flex flex-col items-center">
+                <p className="text-gray-500 text-sm text-center">
+                  Click to upload or drag and drop
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+        
+        {/* embalmerLicense Upload Section */}
+        <div className="w-full flex flex-col items-center gap-2 mb-8">
+          <p className="text-center text-gray-500 text-sm mb-2">
+            Upload a clear image of your Embalmer License.
+          </p>
+          <div
+            className="border-2 border-dashed border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-gray-700/20 transition w-full"
+            onClick={handleUploadembalmerClick}
+          >
+            {embalmerLicensePreviewUrl ? (
+              <img
+                src={embalmerLicensePreviewUrl}
+                alt="Document Preview"
+                className="object-cover rounded-xl max-h-52"
+              />
+            ) : (
+              <div className="flex flex-col items-center">
+                <p className="text-gray-500 text-sm text-center">
+                  Click to upload or drag and drop
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+       </div>
+        
 
         {/* Hidden Inputs */}
         <input
@@ -267,10 +323,24 @@ const UpdateDocumentId: React.FC<UploadDocumentIdProps> = ({
           className="hidden"
         />
         <input
-          ref={selfieInputRef}
+          ref={bussinessPermitRef}
           type="file"
           accept="image/*"
-          onChange={handleSelfieChange}
+          onChange={handlebussinessPermitRefChange}
+          className="hidden"
+        />
+        <input
+          ref={sanitaryPermitRef}
+          type="file"
+          accept="image/*"
+          onChange={handlesanitaryPermitRefChange}
+          className="hidden"
+        />
+        <input
+          ref={embalmerLicenseRef}
+          type="file"
+          accept="image/*"
+          onChange={handleembalmerLicenseRefChange}
           className="hidden"
         />
 

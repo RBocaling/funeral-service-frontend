@@ -78,6 +78,8 @@ const PersonalInfo = ({ open, setOpen }: PersonalInfoProps) => {
     );
   };
 
+
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[600px] p-0 rounded-2xl overflow-hidden">
