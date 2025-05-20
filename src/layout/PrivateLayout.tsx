@@ -10,7 +10,7 @@ const PrivateLayout = () => {
       <div className=" relative px-2 overflow-x-hidden w-full">
         <Header />
 
-        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
           <main className="pt-5 md:pt-7 container md:mx-auto">
             <Outlet />
             <Alert />

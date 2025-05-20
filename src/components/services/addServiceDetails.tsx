@@ -20,6 +20,8 @@ import {
 import { addCasketDetailService } from "@/hooks/controllers/useAddService";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAlertStore } from "@/store/alertStore";
+import { CircleHelp } from "lucide-react";
+import CasketSizeModal from "../casket-size/casketSize";
 
 const AddCasketDetail = ({
   isOpen,
@@ -31,7 +33,8 @@ const AddCasketDetail = ({
   setIsOpen: (open: boolean) => void;
   serviceId: number;
   closeMain: () => void;
-}) => {
+  }) => {
+  const [isOpenSize, setIsOpenSize] = useState(false);
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState<any>({
     selectedColor: "#fff",
@@ -94,7 +97,7 @@ const AddCasketDetail = ({
   console.log("serviceId", serviceId);
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>isOpenSize
       <DialogContent className="sm:max-w-[600px] p-0 rounded-2xl overflow-hidden">
         <DialogHeader className="p-6 pb-0">
           <DialogTitle className="text-xl">{serviceType} Details</DialogTitle>
@@ -103,7 +106,10 @@ const AddCasketDetail = ({
         <div className="space-y-4 p-7">
           {/* Size */}
           <div className="space-y-2">
-            <Label htmlFor="size">Select Size</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="size">Select Size</Label>
+              <button onClick={()=>setIsOpenSize(true)} className="text-sky-500 animate-bounce cursor-pointer"><CircleHelp /></button>
+            </div>
             <Select
               value={formData.selectedSize}
               onValueChange={(value) =>
@@ -253,6 +259,7 @@ const AddCasketDetail = ({
           </div>
         </DialogFooter>
       </DialogContent>
+      <CasketSizeModal isOpen={isOpenSize} setIsOpen={setIsOpenSize}/>
     </Dialog>
   );
 };

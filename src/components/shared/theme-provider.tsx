@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 export function ThemeProvider({
   children,
-  defaultTheme = "system",
+  defaultTheme = "light",
   storageKey = "vite-ui-theme",
 }: {
   children: React.ReactNode;

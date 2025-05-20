@@ -15,6 +15,7 @@ import { useLocation } from "wouter";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useThemeStore } from "@/store/themeStore";
+import useUserAuth from "@/hooks/controllers/useUserAuth";
 
 // Simple theme toggle component
 const ModeToggle = () => {
@@ -36,6 +37,9 @@ const ModeToggle = () => {
 };
 
 const Header = () => {
+    const { data:userAuth } = useUserAuth();
+  const { theme } = useThemeStore();
+
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -83,10 +87,7 @@ const Header = () => {
         <div className="flex items-center gap-2">
           <Link to="/dashboard">
             <div className="flex items-center gap-2 cursor-pointer">
-              <img src="/mockLogo.png" alt="Memorial" className="h-10 w-10" />
-              <span className="font-bold hidden sm:inline-block">
-                Memorial Services
-              </span>
+              <img src={theme === "dark" ? "/logo-funeral-dark.png":"/white-logo.png"} alt="Memorial" className=" w-[45%]" />  
             </div>
           </Link>
         </div>
@@ -114,7 +115,7 @@ const Header = () => {
           <ModeToggle />
           <Link to="/profile">
             <Avatar className="text-sky-500 shadow-xl shadow-violet-500/50">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarImage src={userAuth?.data?.profileUrl || "/empty.webp"}  alt="@shadcn" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </Link>

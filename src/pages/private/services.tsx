@@ -10,8 +10,30 @@ import { Card, CardContent } from "@/components/ui/card";
 import TitlePage from "@/components/ui/title-page";
 import ViewService from "@/components/services/ViewService";
 import { useServiceTypeStore } from "@/store/serviceStore";
+import { useGetServices } from "@/hooks/controllers/useAddService";
 
-const data = [
+
+
+const Services = ({isProfile=false}:{isProfile?:any}) => {
+  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const { setServiceType } = useServiceTypeStore();
+  const handleViewService = (service: any) => {
+    setServiceType(service?.type?.toUpperCase());
+    setViewModalOpen(true);
+  };
+    const {data:allService} = useGetServices()
+
+  
+  const filterDataTotal = (type: any) => {
+    const total = allService?.filter((item: any) => item?.serviceType === type);
+    return total?.length;
+  }
+
+
+ console.log("allService",);
+ 
+  const data = [
   {
     id: "1",
     title: "Serene Final Rest Casket",
@@ -19,7 +41,7 @@ const data = [
     scheduledDate: "2025-04-08T15:00:00",
     thumbnail: "",
     isPrivate: false,
-    list: 10,
+    list: filterDataTotal("CASKET"),
     type: "casket",
   },
   {
@@ -30,7 +52,7 @@ const data = [
     scheduledDate: "2025-04-08T15:00:00",
     thumbnail: "",
     isPrivate: false,
-    list: 10,
+    list: filterDataTotal("FLOWERS"),
     type: "flowers",
   },
   {
@@ -41,7 +63,7 @@ const data = [
     scheduledDate: "2025-04-08T15:00:00",
     thumbnail: "",
     isPrivate: false,
-    list: 10,
+    list: filterDataTotal("FULL_PACKAGE"),
     type: "FULL_PACKAGE",
   },
   {
@@ -52,25 +74,16 @@ const data = [
     scheduledDate: "2025-04-08T15:00:00",
     thumbnail: "",
     isPrivate: false,
-    list: 10,
+    list: filterDataTotal("ADDITIONAL"),
     type: "ADDITIONAL",
   },
 ];
-
-const Services = () => {
-  const [viewModalOpen, setViewModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const { setServiceType } = useServiceTypeStore();
-  const handleViewService = (service: any) => {
-    setServiceType(service?.type?.toUpperCase());
-    setViewModalOpen(true);
-  };
-
   
 
   return (
     <div className="space-y-6 container mx-auto px-5">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+      {
+        !isProfile && <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
         <TitlePage
           label="My Services"
           description="Create and manage funeral services for distant family members"
@@ -94,6 +107,7 @@ const Services = () => {
           </Button> */}
         </div>
       </div>
+      }
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {data

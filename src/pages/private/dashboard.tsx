@@ -83,8 +83,8 @@ const Dashboard = () => {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Revenue */}
-        <div className="bg-gray-800/40 backdrop-blur-sm rounded-3xl p-6 border border-gray-700/30">
-          <h3 className="text-lg font-semibold text-white mb-6">Revenue Overview</h3>
+        <div className="dark:bg-gray-800/40  bg-white backdrop-blur-sm rounded-3xl p-6 border border-gray-700/30">
+          <h3 className="text-lg font-semibold dark:text-white mb-6">Revenue Overview</h3>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={revenueData}>
@@ -105,8 +105,8 @@ const Dashboard = () => {
         </div>
 
         {/* Weekly Bookings */}
-        <div className="bg-gray-800/40 backdrop-blur-sm rounded-3xl p-6 border border-gray-700/30">
-          <h3 className="text-lg font-semibold text-white mb-6">Weekly Bookings</h3>
+        <div className="dark:bg-gray-800/40 backdrop-blur-sm rounded-3xl p-6 border border-gray-700/30">
+          <h3 className="text-lg font-semibold dark:text-white mb-6">Weekly Bookings</h3>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={bookingsData}>
@@ -122,11 +122,11 @@ const Dashboard = () => {
       </div>
 
       {/* Recent Bookings Table */}
-      <div className="bg-gray-800/40 backdrop-blur-sm rounded-3xl p-6 border border-gray-700/30 mt-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Recent Bookings</h3>
+      <div className="dark:bg-gray-800/40 backdrop-blur-sm rounded-3xl p-6 border border-gray-700/30 mt-6">
+        <h3 className="text-lg font-semibold dark:-white mb-4">Recent Bookings</h3>
         <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm text-gray-300">
-            <thead className="bg-gray-700/30 text-gray-200 uppercase text-xs">
+          <table className="min-w-full text-left text-sm dark:text-gray-300">
+            <thead className="bg-gray-700/30 dark:text-gray-200 uppercase text-xs">
               <tr>
                 <th className="px-4 py-3">Customer</th>
                 <th className="px-4 py-3">Status</th>

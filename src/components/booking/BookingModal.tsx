@@ -59,7 +59,7 @@ const { showAlert } = useAlertStore();
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div
-          className="bg-gray-800/90 rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+          className="dark:bg-gray-800/90  bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
           style={{
             boxShadow:
               "0 8px 32px -4px rgba(0, 0, 0, 0.3), 0 4px 16px -2px rgba(0, 0, 0, 0.15)",
@@ -257,7 +257,7 @@ const { showAlert } = useAlertStore();
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-gray-400 text-sm">Total Amount</span>
-                  <div className="text-2xl font-semibold text-white mt-1">
+                  <div className="text-2xl font-semibold dark:text-white mt-1">
                    {formatCurrency(
                         Number(
                           booking?.serviceBookings?.reduce(

@@ -154,11 +154,12 @@ const CreateAddtional = ({ isOpen, setIsOpen }: any) => {
               id="price"
               type="number"
               placeholder="Enter package price"
-              value={formData.price}
+                          value={Number(formData.price) > 0 || !formData.price ? formData.price : 0}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, price: e.target.value }))
               }
-              className="w-full py-4"
+                          className="w-full py-4"
+                          min={0}
             />
           </div>
 

@@ -92,10 +92,11 @@ const PersonalInfo = ({ open, setOpen }: PersonalInfoProps) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[600px] p-0 rounded-2xl overflow-hidden">
         <DialogHeader className="p-6 pb-0">
-          <DialogTitle className="text-xl">Create Personal Info</DialogTitle>
-          <DialogDescription>
-            Create a meaningful tribute with our personalized memorial services.
-          </DialogDescription>
+          <DialogTitle className="text-xl">Complete Your Profile</DialogTitle>
+<DialogDescription>
+  Help us personalize your experience by providing your basic information.
+</DialogDescription>
+
         </DialogHeader>
 
         <div className="space-y-4 p-7">

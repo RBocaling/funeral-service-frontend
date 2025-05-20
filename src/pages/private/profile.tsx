@@ -2,8 +2,6 @@ import { CalendarDays, LogOut, PanelBottomClose, Pencil, UserPen } from "lucide-
 import TitlePage from "@/components/ui/title-page";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import GridCard from "@/components/profile/GridCard";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
@@ -15,6 +13,7 @@ import UpdateProfilePicture from "@/components/profile/UpdateProfilePicture";
 import useUserAuth from "@/hooks/controllers/useUserAuth";
 import UpdateDocumentId from "@/components/profile/UpdateDocumentId";
 import UpdatePersonalInfo from "@/components/profile/UpdatePersonalInfo";
+import Services from "./services";
 
 const Profile = () => {
   const { setCompleteProfileModal } = useProfileProgress();
@@ -60,51 +59,7 @@ const Profile = () => {
       Icon: <CalendarDays className="w-5 h-5 mb-1" />,
     },
   ];
- const data = [
-  {
-    id: "1",
-    title: "Serene Final Rest Casket",
-    description: "Designed with care and craftsmanship, this casket honors a loved one with simplicity, beauty, and quiet strength.",
-    scheduledDate: "2025-04-08T15:00:00",
-    thumbnail: "",
-    isPrivate: false,
-    list: 10,
-    type: "casket",
-  },
-  {
-    id: "2",
-    title: "Floral Tribute of Peace",
-    description:
-      "Carefully selected blooms to convey heartfelt condolences and quiet strength during times of loss.",
-    scheduledDate: "2025-04-08T15:00:00",
-    thumbnail: "",
-    isPrivate: false,
-    list: 10,
-    type: "flowers",
-  },
-  {
-    id: "3",
-    title: "Full Service Memorial Package",
-    description:
-      "A comprehensive funeral solution that ensures every detail is handled with care, compassion, and dignity",
-    scheduledDate: "2025-04-08T15:00:00",
-    thumbnail: "",
-    isPrivate: false,
-    list: 10,
-    type: "FULL_PACKAGE",
-  },
-  {
-    id: "3",
-    title: "Optional Add-Ons & Setup Services",
-    description:
-      "Enhance the service setup with additional amenities tailored to your needs.",
-    scheduledDate: "2025-04-08T15:00:00",
-    thumbnail: "",
-    isPrivate: false,
-    list: 10,
-    type: "ADDITIONAL",
-  },
-];
+
 
 
   const handleLogout = () => {
@@ -125,21 +80,21 @@ const Profile = () => {
          
           <Button
             onClick={()=> setIsOpenUpdateDocument(true)}
-            className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-1.5 rounded-full text-sm flex items-center gap-2 shadow-xl shadow-sky-500/20"
+            className="bg-sky-500 hover:bg-sky-600 dark:text-white px-4 py-1.5 rounded-full text-sm flex items-center gap-2 shadow-xl shadow-sky-500/20"
           >
             <PanelBottomClose className="w-4 h-4" />
             Document Images
           </Button>
           <Button
             onClick={()=>setIsOpenUpdatePersonal(true)}
-            className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-1.5 rounded-full text-sm flex items-center gap-2 shadow-xl shadow-sky-500/20"
+            className="bg-sky-500 hover:bg-sky-600 dark:text-white px-4 py-1.5 rounded-full text-sm flex items-center gap-2 shadow-xl shadow-sky-500/20"
           >
             <UserPen className="w-4 h-4" />
            Personal Information
           </Button>
           <Button
             onClick={handleLogout}
-            className="bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-full text-sm flex items-center gap-2 shadow-xl shadow-red-500/20"
+            className="bg-red-500 hover:bg-red-600 dark:text-white px-4 py-1.5 rounded-full text-sm flex items-center gap-2 shadow-xl shadow-red-500/20"
           >
             <LogOut className="w-4 h-4" />
             Log Out
@@ -156,7 +111,7 @@ const Profile = () => {
           <div className="flex items-center gap-6 mb-5">
             <div className="relative">
             <Avatar className="h-32 w-32 relative">
-                <AvatarImage src={userAuth?.data?.profileUrl || "https://newprofilepic.photo-cdn.net//assets/images/article/profile.jpg?90af0c8"} />
+                <AvatarImage src={userAuth?.data?.profileUrl || "empty.webp"} />
               <AvatarFallback>Image</AvatarFallback>
               </Avatar>
               <button onClick={()=> setIsOpenUpdateProfile(true)} className="absolute -bottom-1  -right-1 cursor-pointer animate-bounce"> <Pencil className="text-2xl text-sky-500" /></button>
@@ -172,7 +127,7 @@ const Profile = () => {
                 </div>
               </div>
               <div className="flex flex-col md:flex-row items-center gap-12 my-5">
-                <GridCard key={1} title={userInfo?.user?.role} label="Role" />
+                {/* <GridCard key={1} title={userInfo?.user?.role} label="Role" /> */}
                 <GridCard
                   key={1}
                   title={userInfo?.phone}
@@ -237,7 +192,7 @@ const Profile = () => {
                   {Icon}
                 </div>
                 <div className="flex flex-col">
-                  <p className=" font-semibold text-xl">{value}</p>
+                  <p className=" font-semibold  text-black dark:text-white text-xl">{value}</p>
                   <p className="text-sm text-gray-400">{label}</p>
                 </div>
               </div>
@@ -247,53 +202,8 @@ const Profile = () => {
       </div>
 
       {/* totla services */}
-      <h1 className="text-xl font-medium text-white mt-5 mb-3">Our Services</h1>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {data?.map((stream: any) => (
-          <Card
-            key={stream.id}
-            className="overflow-hidden hover:shadow-md transition-shadow rounded-xl pt-0 relative"
-          >
-            <div className="relative h-48  flex items-center justify-center">
-              {stream.isPrivate && (
-                <Badge className="absolute top-3 right-3 bg-gray-800/70 text-white dark:bg-gray-700 flex items-center gap-1 px-2 py-1">
-                  Private
-                </Badge>
-              )}
-
-              <Badge className="absolute bottom-3 left-3 bg-gray-800 text-white flex items-center gap-1 whitespace-nowrap z-10 uppercase">
-                {stream.type}
-              </Badge>
-
-              {/* price */}
-              <div className="absolute top-3 right-3 bg-white/70 dark:bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-sm font-semibold shadow-lg z-10">
-                <span className="flex items-center">{stream.list} pcs</span>
-              </div>
-              {/* bg */}
-              <img
-                src={
-                  stream?.type === "caskets"
-                    ? "/casket1.jpg"
-                    : stream?.type === "flowers"
-                    ? "/flower2.webp"
-                    : stream?.type === "memorials"
-                    ? "/memorial.jpg"
-                    : ""
-                }
-                className="w-full h-full object-cover transition-transform hover:scale-105 duration-700 absolute top-0 left-0 "
-              />
-            </div>
-            <CardContent className="px-4">
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="font-semibold line-clamp-1">{stream.title}</h3>
-              </div>
-              <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                {stream.description}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <h1 className="text-xl font-medium dark:text-white mt-5 mb-3">Our Services</h1>
+     <Services isProfile={true}/>
 
 
       {
