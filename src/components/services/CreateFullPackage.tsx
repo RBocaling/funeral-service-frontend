@@ -128,7 +128,7 @@ const CreateServicePackage = ({ isOpen, setIsOpen }: any) => {
           <Plus className="h-5 w-5" /> Create Full Package
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg overflow-y-auto max-h-screen">
         <DialogHeader>
           <DialogTitle>Create New Package</DialogTitle>
         </DialogHeader>

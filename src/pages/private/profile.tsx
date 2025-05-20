@@ -60,40 +60,51 @@ const Profile = () => {
       Icon: <CalendarDays className="w-5 h-5 mb-1" />,
     },
   ];
-  const data = [
-    {
-      id: "1",
-      title: "Final Resting Cradle of Peace",
-      description: "Crafted with elegance to honor a life well lived.",
-      scheduledDate: "2025-04-08T15:00:00",
-      thumbnail: "",
-      isPrivate: false,
-      list: 10,
-      type: "caskets",
-    },
-    {
-      id: "2",
-      title: "Floral Tribute for Juan Dela Cruz",
-      description:
-        "A graceful arrangement of blooms to symbolize love, remembrance, and peace.",
-      scheduledDate: "2025-04-08T15:00:00",
-      thumbnail: "",
-      isPrivate: false,
-      list: 10,
-      type: "flowers",
-    },
-    {
-      id: "3",
-      title: "Memorial Setup for Juan Dela Cruz",
-      description:
-        "A heartfelt tribute space designed to reflect his legacy, love, and the memories he leaves behind.",
-      scheduledDate: "2025-04-08T15:00:00",
-      thumbnail: "",
-      isPrivate: false,
-      list: 10,
-      type: "memorials",
-    },
-  ];
+ const data = [
+  {
+    id: "1",
+    title: "Serene Final Rest Casket",
+    description: "Designed with care and craftsmanship, this casket honors a loved one with simplicity, beauty, and quiet strength.",
+    scheduledDate: "2025-04-08T15:00:00",
+    thumbnail: "",
+    isPrivate: false,
+    list: 10,
+    type: "casket",
+  },
+  {
+    id: "2",
+    title: "Floral Tribute of Peace",
+    description:
+      "Carefully selected blooms to convey heartfelt condolences and quiet strength during times of loss.",
+    scheduledDate: "2025-04-08T15:00:00",
+    thumbnail: "",
+    isPrivate: false,
+    list: 10,
+    type: "flowers",
+  },
+  {
+    id: "3",
+    title: "Full Service Memorial Package",
+    description:
+      "A comprehensive funeral solution that ensures every detail is handled with care, compassion, and dignity",
+    scheduledDate: "2025-04-08T15:00:00",
+    thumbnail: "",
+    isPrivate: false,
+    list: 10,
+    type: "FULL_PACKAGE",
+  },
+  {
+    id: "3",
+    title: "Optional Add-Ons & Setup Services",
+    description:
+      "Enhance the service setup with additional amenities tailored to your needs.",
+    scheduledDate: "2025-04-08T15:00:00",
+    thumbnail: "",
+    isPrivate: false,
+    list: 10,
+    type: "ADDITIONAL",
+  },
+];
 
 
   const handleLogout = () => {
