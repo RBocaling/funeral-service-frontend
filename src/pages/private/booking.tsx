@@ -6,13 +6,13 @@ import {
   X,
   Flower2,
   Box,
-  DollarSign,
   Heart,
   Search,
   Filter,
   ChevronDown,
   Mail,
   CalendarClock,
+  Hospital,
 } from "lucide-react";
 import TitlePage from "@/components/ui/title-page";
 import { bookings } from "@/lib/mockdata";
@@ -40,6 +40,8 @@ function Booking() {
     appoinmentDate: i?.appointmentDate,
     status: i?.bookingStatus,
     fullPackage: i?.fullPackage,
+        additionalDetails:i?.additionalDetails,
+    hospitalDetails:i?.hospitalDetails,
     customCasketDetail: i?.customCasketDetail[0],
     serviceBookings: i?.serviceBookings?.map((item: any) => ({
       details: item?.service,
@@ -145,6 +147,13 @@ function Booking() {
                       <MapPin className="w-4 h-4 mr-2 text-sky-400" />
                       {booking.location}
                     </div>
+                      <p className="text-xs text-gray-500 my-2 pt-1">
+                      Hospital Details
+                    </p>
+                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
+                      <Hospital className="w-4 h-4 mr-2 text-sky-400" />
+                      {booking.hospitalDetails}
+                    </div>
                   </div>
 
                   <div className="space-y-3">
@@ -247,9 +256,32 @@ function Booking() {
                       </div>
                     ))}
 
+                     {
+                      booking?.additionalDetails && 
+                      <div className="flex flex-col">
+                        <p className="text-xs text-gray-500 mb-2 whitespace-nowrap">
+                          Additional Order's{" "}
+                          <span className="text-xs text-red-500 font-medium">
+                            {" "}
+                            -
+                            {formatCurrency(
+                              booking?.additionalDetails?.price
+                            )}
+                          </span>
+                          </p>
+                        <p className="text-xs text-gray-500 mb-2 whitespace-">
+                          <span className="text-xs text-white font-medium">
+                            {" "}
+                          
+                              <span className="text-xs text-gray-600">  - { booking?.additionalDetails?.description}</span>
+                          </span>
+                          </p>
+                          </div>
+                    }
+
                     <div className="flex items-center dark:text-gray-300 text-xs tracking-wider capitalize">
-                      <DollarSign className="w-4 h-4 mr-2 text-sky-400" />
-                      {formatCurrency(
+                      {/* <DollarSign className="w-4 h-4 mr-2 text-sky-400" /> */}
+                     {formatCurrency(
                         Number(
                           booking?.serviceBookings?.reduce(
                             (sum: number, item: any) =>
@@ -261,8 +293,10 @@ function Booking() {
                         ) +
                           Number(
                             booking?.customCasketDetail?.additionalCost ?? 0
-                          ) +
-                          Number(booking?.fullPackage?.price ?? 0)
+                        ) + Number(booking?.fullPackage?.price ?? 0)
+                        
+                        
+                        + Number( booking?.additionalDetails?.price ??0)
                       )}
                     </div>
                   </div>

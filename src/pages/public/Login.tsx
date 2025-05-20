@@ -12,6 +12,8 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [roleError, setRoleError] = useState("");
+  const [notVerify, setNotVerify] = useState(false);
+
   const loginMutation = useLogin();
   const { data: userList = [] } = UseUserList();
 const { setCompleteProfileModal} = useProfileProgress()
@@ -33,9 +35,17 @@ const { setCompleteProfileModal} = useProfileProgress()
     loginMutation.mutate(
       { email, password },
       {
-        onSuccess: () => {
-          navigate("/")
-          setCompleteProfileModal(true)
+        onSuccess: (data) => {
+          console.log(":!data?.isEmailVerify",data?.token);
+          
+          if (!data?.token?.isEmailVerify) {
+            setNotVerify(true)
+          } else {
+            navigate("/")
+            setCompleteProfileModal(true)
+          }
+          
+          
         },
         onError: (error: any) => {
           console.error("Login failed:", error.response?.data?.message || error.message);
@@ -48,17 +58,18 @@ const { setCompleteProfileModal} = useProfileProgress()
     <div className="w-full min-h-screen text-white flex flex-col justify-center relative">
       <div className="max-w-md w-full mx-auto">
         <div className="flex items-center gap-2 cursor-pointer mb-5">
-          <img src="/mockLogo.png" alt="Memorial" className="h-10 w-10" />
-          <span className="font-bold hidden sm:inline-block">Memorial Services</span>
-        </div>
+ <img src="/logo-funeral-dark.png" alt="Memorial" className=" w-[70%]" />        </div>
 
-        <h2 className="text-2xl font-bold mb-2 text-gradient">Log in to your account</h2>
+        <h2 className="text-2xl font-bold mb-2 text-gradient">Funeral Service Log in</h2>
         <p className="text-sm text-gray-400 mb-6">
           Welcome back! Please enter your details.
         </p>
 
         {loginMutation.isError && (
           <MessageError message="Invalid credentials. Please verify your email and password, then try again." />
+        )}
+        {notVerify && (
+          <MessageError message="Email not verified. Check your inbox for the verification link to activate your account." />
         )}
         {roleError && <MessageError message={roleError} />}
 

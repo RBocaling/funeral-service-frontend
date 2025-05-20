@@ -33,8 +33,8 @@ const AddCasketDetail = ({
   closeMain: () => void;
 }) => {
   const queryClient = useQueryClient();
-  const [formData, setFormData] = useState({
-    selectedColor: "",
+  const [formData, setFormData] = useState<any>({
+    selectedColor: "#fff",
     selectedSize: "",
     price: 0,
     materialType: "",
@@ -45,7 +45,7 @@ const AddCasketDetail = ({
   const mutation = addCasketDetailService();
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev:any) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = () => {
@@ -67,10 +67,10 @@ const AddCasketDetail = ({
         id: Number(serviceId),
       },
       {
-        onSuccess:async () => {
-          await showAlert('success', {
-            title: 'Success Added!',
-            message: 'Your action was completed successfully.',
+        onSuccess: async () => {
+          await showAlert("success", {
+            title: "Success Added!",
+            message: "Your action was completed successfully.",
             autoClose: true,
           });
           setIsOpen(false);
@@ -80,9 +80,9 @@ const AddCasketDetail = ({
           });
         },
         onError: async (error) => {
-          await showAlert('error', {
-            title: 'Error',
-            message: 'Something went wrong. Please try again.',
+          await showAlert("error", {
+            title: "Error",
+            message: "Something went wrong. Please try again.",
             autoClose: true,
           });
           console.error("Error adding casket detail", error);
@@ -125,19 +125,58 @@ const AddCasketDetail = ({
           {serviceType === "CASKET" && (
             <div className="space-y-2">
               <Label htmlFor="color">Casket Color</Label>
-              <div
-                className={`py-4 px-4 rounded-2xl border border-dashed border-white/50 text-gray-400 text-sm font-medium h-14 relative flex items-center justify-center`}
-                style={{ background: formData.selectedColor }}
-              >
-                <input
-                  type="color"
-                  className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
-                  onChange={(e) =>
-                    handleInputChange("selectedColor", e.target.value)
-                  }
-                  value={formData.selectedColor}
-                />
-                {formData.selectedColor || "Select Color"}
+              <div className="flex items-center gap-7">
+                <div className="flex flex-col items-start">
+                  <p className="text-gray-400 text-xs mb-2">-Popular Color</p>
+                  <div className="flex -items-start gap-5">
+                    <div className="flex flex-col gap-2">
+                      <button
+                        className={`${formData.selectedColor==="#fff" && "border-2 border-sky-500"}  py-4 px-4 rounded-2xl border bg-white  text-gray-400 text-sm font-medium h-8 w-8 relative flex items-center justify-center`}
+                        onClick={()=> setFormData({selectedColor: "#fff"})}
+                      >
+
+                        {
+                          formData.selectedColor ==="#fff" &&<div className="absolute top-full left-1/2 -translate-x-1/2 h-1 translate-y-1 w-5 bg-sky-500"></div>
+                        }
+                      </button>
+                      <p className="text-white text-xs">White</p>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <button
+                        className={`${formData.selectedColor==="#261817" } relative py-4 px-4 rounded-2xl bg-[#261817] border border-dashed border-white/50 text-gray-400 text-sm font-medium h-8 w-8  flex items-center justify-center`}
+                        onClick={()=> setFormData({selectedColor: "#261817"})}
+
+                      >
+                        {
+                          formData.selectedColor ==="#261817" &&<div className="absolute top-full left-1/2 -translate-x-1/2 h-1 translate-y-1 w-5 bg-sky-500"></div>
+                        }
+                      </button>
+                      <p className="text-white text-xs">Brown</p>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <button onClick={()=> setFormData({selectedColor: "#000"})}
+                        className={`${formData.selectedColor==="#000"} py-4 px-4 rounded-2xl border border-dashed bg-[#000] border-white/50 text-gray-400 text-sm font-medium h-8 w-8 relative flex items-center justify-center`}
+                      >  {
+                          formData.selectedColor ==="#000" &&<div className="absolute top-full left-1/2 -translate-x-1/2 h-1 translate-y-1 w-5 bg-sky-500"></div>
+                        }</button>
+                      <p className="text-white text-xs">Black</p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className={`py-4 px-4 flex-1 rounded-2xl border border-dashed border-white/50 text-gray-400 text-sm font-medium h-14 relative flex items-center justify-center`}
+                  style={{ background: formData.selectedColor !== "#fff" ? formData.selectedColor : "bg-transparent"}}
+                >
+                  <input
+                    type="color"
+                    className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+                    onChange={(e) =>
+                      handleInputChange("selectedColor", e.target.value)
+                    }
+                    value={formData.selectedColor}
+                  />
+                  {formData.selectedColor =="#fff" ? "Select Color" : formData.selectedColor}
+                </div>
               </div>
             </div>
           )}
@@ -145,34 +184,34 @@ const AddCasketDetail = ({
           {serviceType === "CASKET" && (
             <div className="space-y-2">
               <Label htmlFor="materialType">Material Type</Label>
-                <Select
-                  value={formData.materialType}
-                  onValueChange={(value) =>
-                    handleInputChange("materialType", value)
-                  }
-                >
-                  <SelectTrigger className="w-full py-6 rounded-2xl">
-                    <SelectValue placeholder="Select material type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="HIGH_GLOSS_FINISH">
-                      HIGH-GLOSS FINISH (Smooth reflective surface with a premium
-                      look)
-                    </SelectItem>
-                    <SelectItem value="NATURAL_WOOD">
-                      NATURAL WOOD (Traditional wood grain texture)
-                    </SelectItem>
-                    <SelectItem value="FABRIC">
-                      FABRIC (Soft textile finish for interior components)
-                    </SelectItem>
-                    <SelectItem value="METAL">
-                      METAL (Durable metallic finish for hardware components)
-                    </SelectItem>
-                    <SelectItem value="COMPOSITE">
-                      COMPOSITE (Versatile and durable synthetic material)
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+              <Select
+                value={formData.materialType}
+                onValueChange={(value) =>
+                  handleInputChange("materialType", value)
+                }
+              >
+                <SelectTrigger className="w-full py-6 rounded-2xl">
+                  <SelectValue placeholder="Select material type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="HIGH_GLOSS_FINISH">
+                    HIGH-GLOSS FINISH (Smooth reflective surface with a premium
+                    look)
+                  </SelectItem>
+                  <SelectItem value="NATURAL_WOOD">
+                    NATURAL WOOD (Traditional wood grain texture)
+                  </SelectItem>
+                  <SelectItem value="FABRIC">
+                    FABRIC (Soft textile finish for interior components)
+                  </SelectItem>
+                  <SelectItem value="METAL">
+                    METAL (Durable metallic finish for hardware components)
+                  </SelectItem>
+                  <SelectItem value="COMPOSITE">
+                    COMPOSITE (Versatile and durable synthetic material)
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           )}
 
@@ -183,7 +222,9 @@ const AddCasketDetail = ({
                 type="text"
                 placeholder="Enter Flower type (Ex, Tulips,  Sampaguita)"
                 className="w-full py-4"
-                onChange={(e) => handleInputChange("flowerType", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("flowerType", e.target.value)
+                }
               />
             </div>
           )}
@@ -195,7 +236,7 @@ const AddCasketDetail = ({
               id="price"
               placeholder="Enter price"
               className="w-full py-4"
-              value={(formData.price > 0 || !formData.price ) ? formData.price:0}
+              value={formData.price > 0 || !formData.price ? formData.price : 0}
               onChange={(e) => handleInputChange("price", e.target.value)}
             />
           </div>

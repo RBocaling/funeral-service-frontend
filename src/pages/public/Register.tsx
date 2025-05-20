@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, CheckCircle } from "lucide-react";
 import { useAlertStore } from "@/store/alertStore";
+import TermsAgreement from "@/components/TermsAgreement/TermsAgreement";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -14,6 +15,12 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [agreed, setAgreed] = useState(false);
+
+  const handleAgreeChange = (value: boolean) => {
+    setAgreed(value);
+  };
 
   const [emailError, setEmailError] = useState("");
   const [usernameError, setUsernameError] = useState("");
@@ -78,11 +85,9 @@ const Register = () => {
     <div className="w-full min-h-screen text-white flex flex-col justify-center relative">
       <div className="max-w-md w-full mx-auto">
         <div className="flex items-center gap-2 mb-5">
-          <img src="/mockLogo.png" alt="Memorial" className="h-10 w-10" />
-          <span className="font-bold hidden sm:inline-block">Memorial Services</span>
-        </div>
+ <img src="/logo-funeral-dark.png" alt="Memorial" className=" w-[70%]" />        </div>
 
-        <h2 className="text-2xl font-bold mb-2 text-gradient">Registration</h2>
+        <h2 className="text-2xl font-bold mb-2 text-gradient">Funeral Service Registration</h2>
         <p className="text-sm text-gray-400 mb-6">
           Join us today and book funeral services with ease. Track, manage, and stay informed every step of the way.
         </p>
@@ -101,7 +106,7 @@ const Register = () => {
 
           <div>
             <Input
-              type="text"
+              type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -166,6 +171,12 @@ const Register = () => {
             {confirmPasswordError && <p className="text-sm text-red-500 mt-1">{confirmPasswordError}</p>}
           </div>
 
+          <TermsAgreement
+        title="Funeral Registration"
+        onAgreeChange={handleAgreeChange}
+        termsText={`1. You agree to provide valid identification.\n2. Booking is final once confirmed.\n3. Cancellations are subject to service policies.`}
+          />
+          
           {/* Submit */}
           <Button
             type="submit"
@@ -174,7 +185,8 @@ const Register = () => {
               !!emailError ||
               !!usernameError ||
               !allValid ||
-              !!confirmPasswordError
+              !!confirmPasswordError ||
+              !agreed
             }
             className="w-full py-6 bg-sky-500 hover:bg-sky-600 rounded-full font-semibold shadow-2xl shadow-sky-500/20"
           >

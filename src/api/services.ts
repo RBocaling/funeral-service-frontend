@@ -3,7 +3,7 @@ import api from "@/services/api";
 type ParamsType = {
   name: string;
   description: string;
-  serviceType: "CASKET" | "FLOWERS" | "FULL_PACKAGE" ;
+  serviceType: "CASKET" | "FLOWERS" | "FULL_PACKAGE" | "ADDITIONAL";
   imgUrl: string,
   detail?: any,
   price?:any

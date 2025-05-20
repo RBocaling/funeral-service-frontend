@@ -16,6 +16,14 @@ import L from "leaflet";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAddPersonalInfo } from "@/hooks/controllers/useAddPersonalInfo";
 import { useAlertStore } from "@/store/alertStore";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { caviteData } from "@/constants";
 
 type PersonalInfoProps = {
   open: boolean;
@@ -26,59 +34,59 @@ const PersonalInfo = ({ open, setOpen }: PersonalInfoProps) => {
   const [isOpenMap, setIsOpenMap] = useState(false);
   const addPersonalInfo = useAddPersonalInfo();
   const queryClient = useQueryClient();
+  const { showAlert } = useAlertStore();
+
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedBarangay, setSelectedBarangay] = useState("");
 
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
     contact: "",
-    city: "",
-    barangay: "",
     purok: "",
     funeralName: "",
+    personalEncharge: "",
   });
 
+  const barangays = caviteData.cities.find((c) => c.name === selectedCity)?.barangays || [];
   const manilaCoords = { lat: 14.5995, lng: 120.9842 };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
-  const { showAlert } = useAlertStore();
+
   const handleSubmit = () => {
-    const fullAddress = `${formData.city} ${formData.barangay} ${formData.purok}`.trim();
-   
+    const fullAddress = `${selectedCity} ${selectedBarangay} ${formData.purok}`.trim();
     const payload = {
-      firstName: formData?.firstname,
-      lastName: formData?.firstname,
+      firstName: formData.firstname,
+      lastName: formData.lastname,
       location: fullAddress,
-      funeralName: formData?.funeralName,
-      phone: formData?.contact,
-    }
-    addPersonalInfo.mutate(
-      payload,
-      {
-        onSuccess: async() => {
-          await showAlert('success', {
-            title: 'Success Updated!',
-            message: 'Your action was completed successfully.',
-            autoClose: true,
-          });
-            queryClient.invalidateQueries({ queryKey: ["getProfileProgress"] });
-            queryClient.invalidateQueries({ queryKey: ["user-info"] });
-            setOpen(false)
-        },
-        onError:async () => {
-          await showAlert('error', {
-            title: 'Error Add',
-            message: 'Something went wrong. Please try again.',
-            autoClose: true,
-          });
-        },
-      }
-    );
+      funeralName: formData.funeralName,
+      phone: formData.contact,
+      personalEncharge: formData.personalEncharge,
+    };
+
+    addPersonalInfo.mutate(payload, {
+      onSuccess: async () => {
+        await showAlert("success", {
+          title: "Success Updated!",
+          message: "Your action was completed successfully.",
+          autoClose: true,
+        });
+        queryClient.invalidateQueries({ queryKey: ["getProfileProgress"] });
+        queryClient.invalidateQueries({ queryKey: ["user-info"] });
+        setOpen(false);
+      },
+      onError: async () => {
+        await showAlert("error", {
+          title: "Error Add",
+          message: "Something went wrong. Please try again.",
+          autoClose: true,
+        });
+      },
+    });
   };
-
-
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -133,9 +141,39 @@ const PersonalInfo = ({ open, setOpen }: PersonalInfoProps) => {
               </div>
             ) : (
               <div className="grid grid-cols-3 gap-5">
-                <Input id="city" placeholder="City" className="py-4" onChange={handleChange} />
-                <Input id="barangay" placeholder="Barangay" className="py-4" onChange={handleChange} />
-                <Input id="purok" placeholder="Purok" className="py-4" onChange={handleChange} />
+                <div>
+                  <Label>City</Label>
+                  <Select onValueChange={setSelectedCity}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select city" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {caviteData.cities.map((city) => (
+                        <SelectItem key={city.name} value={city.name}>
+                          {city.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label>Barangay</Label>
+                  <Select onValueChange={setSelectedBarangay} disabled={!selectedCity}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select barangay" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {barangays.map((brgy) => (
+                        <SelectItem key={brgy} value={brgy}>
+                          {brgy}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <Input id="purok" placeholder="Address Description Ex. House No, purok etc" className="py-4" onChange={handleChange} />
               </div>
             )}
           </div>
@@ -144,6 +182,11 @@ const PersonalInfo = ({ open, setOpen }: PersonalInfoProps) => {
           <div className="space-y-2">
             <Label>Funeral's Name</Label>
             <Input id="funeralName" placeholder="Enter Funeral Name" className="py-4 w-full" onChange={handleChange} />
+          </div>
+          {/* Funeral Name */}
+          <div className="space-y-2">
+            <Label>Personal Encharge</Label>
+            <Input id="personalEncharge" placeholder="Enter Funeral Name" className="py-4 w-full" onChange={handleChange} />
           </div>
         </div>
 

@@ -15,6 +15,7 @@ import { useServiceTypeStore } from "@/store/serviceStore";
 import { useGetServices } from "@/hooks/controllers/useAddService";
 import ViewServiceDetails from "./ViewServiceDetails";
 import CreateServicePackage from "./CreateFullPackage";
+import CreateAddtional from "./CrwateAdditional";
 
 const ViewService = ({
   viewModalOpen,
@@ -30,10 +31,16 @@ const ViewService = ({
   const [isOpenViewDetail, setIsOpenViewDetail] = useState<boolean>(false);
   const [selectedService, setSelectedService] = useState<boolean>();
   const [isOpenAddPackage, setIsOpenPackage] = useState<boolean>(false);
+  const [isOpenAddAdditional, setIsOpenAddAdditional] = useState<boolean>(false);
 
   if(isLoading) return <>loading...</>
-  const filterData = data?.filter((item: any) => item.serviceType === serviceType);
+  const filterData = data?.filter((item: any) => item.serviceType === serviceType)?.map((item:any) => ({
+    ...item,
+    price: item?.additionalDetails?.reduce((acc:any,i:any)=> acc+i?.price, 0)
+  }));
 
+  
+  console.log("jj", serviceType);
   
   
   return (
@@ -93,7 +100,7 @@ const ViewService = ({
                        </div>
                        
                        {
-                         serviceType !=="FULL_PACKAGE" &&  <div className="flex items-center justify-start gap-4">
+                         (serviceType !=="FULL_PACKAGE" && serviceType !=="ADDITIONAL") &&  <div className="flex items-center justify-start gap-4">
                          {/* <button onClick={()=>handleDelete(item?.id)} className="rounded-full text-xs text-red-500 cursor-pointer">
                            <Trash2 size={20} />
                          </button> */}
@@ -110,6 +117,8 @@ const ViewService = ({
                            
                           
                        }
+
+                       {serviceType === "ADDITIONAL" && <p className="text-white">₱ { item?.price}</p>}
                        
                        {
                          serviceType === "FULL_PACKAGE" && <div className="flex flex-col gap-1">
@@ -155,6 +164,9 @@ const ViewService = ({
             <Button onClick={() => {
               if (serviceType === "FULL_PACKAGE") {
                 setIsOpenPackage(true)
+              } 
+              else if (serviceType === "ADDITIONAL") {
+                setIsOpenAddAdditional(true)
               } else {
                 setIsOpen(true)
 
@@ -178,6 +190,13 @@ const ViewService = ({
         isOpen={isOpenAddPackage}
         setIsOpen={setIsOpenPackage}
         onClose={()=>setIsOpenPackage(false)}
+      />
+      }
+      {
+        isOpenAddAdditional && <CreateAddtional
+        isOpen={isOpenAddAdditional}
+        setIsOpen={setIsOpenAddAdditional}
+        onClose={()=>setIsOpenAddAdditional(false)}
       />
       }
       <ViewServiceDetails

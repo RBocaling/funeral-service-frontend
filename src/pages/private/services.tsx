@@ -14,8 +14,8 @@ import { useServiceTypeStore } from "@/store/serviceStore";
 const data = [
   {
     id: "1",
-    title: "Final Resting Cradle of Peace",
-    description: "Crafted with elegance to honor a life well lived.",
+    title: "Serene Final Rest Casket",
+    description: "Designed with care and craftsmanship, this casket honors a loved one with simplicity, beauty, and quiet strength.",
     scheduledDate: "2025-04-08T15:00:00",
     thumbnail: "",
     isPrivate: false,
@@ -24,9 +24,9 @@ const data = [
   },
   {
     id: "2",
-    title: "Floral Tribute for Juan Dela Cruz",
+    title: "Floral Tribute of Peace",
     description:
-      "A graceful arrangement of blooms to symbolize love, remembrance, and peace.",
+      "Carefully selected blooms to convey heartfelt condolences and quiet strength during times of loss.",
     scheduledDate: "2025-04-08T15:00:00",
     thumbnail: "",
     isPrivate: false,
@@ -35,14 +35,25 @@ const data = [
   },
   {
     id: "3",
-    title: "Memorial Setup for Juan Dela Cruz",
+    title: "Full Service Memorial Package",
     description:
-      "A heartfelt tribute space designed to reflect his legacy, love, and the memories he leaves behind.",
+      "A comprehensive funeral solution that ensures every detail is handled with care, compassion, and dignity",
     scheduledDate: "2025-04-08T15:00:00",
     thumbnail: "",
     isPrivate: false,
     list: 10,
     type: "FULL_PACKAGE",
+  },
+  {
+    id: "3",
+    title: "Optional Add-Ons & Setup Services",
+    description:
+      "Enhance the service setup with additional amenities tailored to your needs.",
+    scheduledDate: "2025-04-08T15:00:00",
+    thumbnail: "",
+    isPrivate: false,
+    list: 10,
+    type: "ADDITIONAL",
   },
 ];
 
@@ -113,6 +124,8 @@ const Services = () => {
                       ? "/flower2.webp"
                       : service.type === "FULL_PACKAGE"
                       ? "/memorial.jpg"
+                      : service.type === "ADDITIONAL"
+                      ? "/additionImg.jpeg"
                       : ""
                   }
                   className="w-full h-full object-cover transition-transform hover:scale-105 duration-700 absolute top-0 left-0"

@@ -65,7 +65,7 @@ const {isCompleteProfileModalOpen, setCompleteProfileModal} = useProfileProgress
                     {calculatedProgress}%
                   </span>
                   <span className="text-xs font-medium text-gray-500 ml-1">
-                    ({50}/{100})
+                    /{100}
                   </span>
                 </div>
               </div>
@@ -138,8 +138,8 @@ const {isCompleteProfileModalOpen, setCompleteProfileModal} = useProfileProgress
               </button>
             </div>
             <p className="text-xs text-center text-gray-500 mt-3">
-              Complete your profile to unlock all P2P trading features and
-              higher limits
+             Complete your profile to unlock all  features like Booking, chats etc.
+
             </p>
           </div>
         </div>

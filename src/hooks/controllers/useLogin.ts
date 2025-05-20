@@ -17,7 +17,9 @@ export const useLogin = () => {
       },
       
     onSuccess: (data) => {
-      setToken(data.token?.accessToken, data.token?.refreshToken); 
+      if (data?.token?.isEmailVerify) {
+        setToken(data.token?.accessToken, data.token?.refreshToken);
+      } 
     },
   });
 };

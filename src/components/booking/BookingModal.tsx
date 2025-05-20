@@ -1,4 +1,4 @@
-import { Box, CalendarClock, DollarSign, Flower2, Heart, Mail, MapPin, Users, WalletCards, X } from "lucide-react";
+import { Box, CalendarClock, Flower2, Heart, Hospital, Mail, MapPin, Users, WalletCards, X } from "lucide-react";
 import BookingStatus from "./BookingStatus";
 import { formatCurrency } from "@/lib/utils";
 import { useServiceTypeStore } from "@/store/serviceStore";
@@ -118,7 +118,11 @@ const { showAlert } = useAlertStore();
                   <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
                     <MapPin className="w-4 h-4 mr-2 text-sky-400" />
                     {booking.location}
-                  </div>
+                    </div>
+                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
+                                          <Hospital className="w-4 h-4 mr-2 text-sky-400" />
+                                          {booking.hospitalDetails}
+                                        </div>
                 </div>
 
                 <div className="space-y-3">
@@ -219,9 +223,42 @@ const { showAlert } = useAlertStore();
                       </div>
                     ))}
 
-                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider capitalize">
-                      <DollarSign className="w-4 h-4 mr-2 text-sky-400" />
-                      {formatCurrency(
+                    
+                     {
+                      booking?.additionalDetails && 
+                      <div className="flex flex-col">
+                        <p className="text-xs text-gray-500 mb-2 whitespace-nowrap">
+                          Additional Order's{" "}
+                          <span className="text-xs text-red-500 font-medium">
+                            {" "}
+                            -
+                            {formatCurrency(
+                              booking?.additionalDetails?.price
+                            )}
+                          </span>
+                          </p>
+                        <p className="text-xs text-gray-500 mb-2 whitespace-">
+                          <span className="text-xs text-white font-medium">
+                            {" "}
+                          
+                              <span className="text-xs text-gray-600">  - { booking?.additionalDetails?.description}</span>
+                          </span>
+                          </p>
+                          </div>
+                    }
+
+
+
+                  </div>
+            </div>
+            )}
+  
+            <div className="border-t border-gray-700/30 pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-gray-400 text-sm">Total Amount</span>
+                  <div className="text-2xl font-semibold text-white mt-1">
+                   {formatCurrency(
                         Number(
                           booking?.serviceBookings?.reduce(
                             (sum: number, item: any) =>
@@ -233,26 +270,10 @@ const { showAlert } = useAlertStore();
                         ) +
                           Number(
                             booking?.customCasketDetail?.additionalCost ?? 0
-                          )+ Number(booking?.fullPackage?.price ?? 0)
-                      )}
-                    </div>
-                  </div>
-            </div>
-            )}
-  
-            <div className="border-t border-gray-700/30 pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className="text-gray-400 text-sm">Total Amount</span>
-                  <div className="text-2xl font-semibold text-white mt-1">
-                  {formatCurrency(
-                        booking?.serviceBookings?.reduce(
-                          (sum: number, item: any) =>
-                            sum +
-                            (Number(item?.casket?.price) || 0) +
-                            (Number(item?.flower?.price) || 0),
-                          0
-                        )
+                        ) + Number(booking?.fullPackage?.price ?? 0)
+                        
+                        
+                        + Number( booking?.additionalDetails?.price ??0)
                       )}
                   </div>
                 </div>

@@ -156,7 +156,7 @@ const ViewServiceDetails = ({
 
                     <div className="flex items-center justify-between">
                       <div className="text-xl font-bold text-white">
-                        $
+                        ₱
                         {getPrice(item.price, selectedSizes[item.id]).toFixed(
                           2
                         )}
