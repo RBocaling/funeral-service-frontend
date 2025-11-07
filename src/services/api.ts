@@ -10,7 +10,8 @@ interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
 }
 
-const baseURL = import.meta.env.VITE_API_URL || "https://funeral-service-server-1.onrender.com/api";
+const baseURL =
+  import.meta.env.VITE_API_URL || "https://api.funeral-service-api.site/api";
 
 const api = axios.create({
   baseURL,
