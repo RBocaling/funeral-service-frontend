@@ -14,26 +14,26 @@ import TitlePage from "@/components/ui/title-page";
 
 export default function FuneralPaymentManagement() {
       const { data:bookings, isLoading } = useBookingPayment();
-  const allPayments = bookings?.flatMap((b) =>
-    (b.payments || []).map((p:any) => ({ ...p, booking: b }))
-    );
-    console.log("allPayments", bookings);
-    
+  const allPayments = bookings?.flatMap((b: any) =>
+    (b.payments || []).map((p: any) => ({ ...p, booking: b }))
+  );
+  console.log("allPayments", bookings);
 
   const totalEarnings = allPayments
     ?.filter(
-      (p) => p.booking?.bookingStatus === "COMPLETED" && p?.status === "PAID"
+      (p: any) =>
+        p.booking?.bookingStatus === "COMPLETED" && p?.status === "PAID"
     )
-    .reduce((sum, p) => sum + p.amount, 0);
+    .reduce((sum: any, p: any) => sum + p.amount, 0);
 
   const pendingAmount = allPayments
     ?.filter(
-      (p) => p.booking?.bookingStatus === "PENDING" && p?.status === "PAID"
+      (p: any) => p.booking?.bookingStatus === "PENDING" && p?.status === "PAID"
     )
-    .reduce((sum, p) => sum + p.amount, 0);
+    .reduce((sum: any, p: any) => sum + p.amount, 0);
 
   const completedCount = allPayments?.filter(
-    (p) => p.booking?.bookingStatus === "COMPLETED" && p?.status === "PAID"
+    (p: any) => p.booking?.bookingStatus === "COMPLETED" && p?.status === "PAID"
   ).length;
 
   const stats = [
@@ -105,7 +105,7 @@ export default function FuneralPaymentManagement() {
               <p className="text-gray-500">No payments yet</p>
             </div>
           ) : (
-            allPayments?.map((payment) => (
+            allPayments?.map((payment: any) => (
               <div
                 key={payment.id}
                 className="p-6 hover:bg-gray-50 transition-colors"

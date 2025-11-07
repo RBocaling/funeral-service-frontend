@@ -41,8 +41,8 @@ const ModeToggle = () => {
 const Header = () => {
   const { data: userAuth } = useUserAuth();
   const { theme } = useThemeStore();
-  const { data: userInfo } = useUser();
-  const { data, isLoading } = useGetFuneralHelperPermissionsApi();
+  // const { data: userInfo } = useUser();
+  const { data } = useGetFuneralHelperPermissionsApi();
   const { role } = useUser();
 
   const [location] = useLocation();

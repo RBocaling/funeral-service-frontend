@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import Webcam from "react-webcam"; // <-- Import mo ito
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { uploadImageToCloudinary } from "@/utils/uploadImageToCloudinary";
-import { Camera, CloudUpload } from "lucide-react";
+import { CloudUpload } from "lucide-react";
 import { useAddUploadDocument } from "@/hooks/controllers/useAddPersonalInfo";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAlertStore } from "@/store/alertStore";

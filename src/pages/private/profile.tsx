@@ -1,7 +1,6 @@
 import {
   BadgeCheck,
   CalendarDays,
-  LogOut,
   PanelBottomClose,
   Pencil,
   UserPen,

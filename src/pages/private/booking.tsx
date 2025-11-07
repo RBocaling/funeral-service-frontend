@@ -2,8 +2,6 @@ import { useState } from "react";
 import {
   MapPin,
   Users,
-  MessageSquare,
-  X,
   Flower2,
   Box,
   Heart,

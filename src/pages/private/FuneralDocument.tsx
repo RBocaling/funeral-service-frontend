@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {
   useMyDocuments,
-  useDocumentStatus,
+  // useDocumentStatus,
   useAddDocument,
 } from "@/hooks/controllers/useFuneralDocuments";
 import { uploadImageToCloudinary } from "@/utils/uploadImageToCloudinary";
@@ -9,7 +9,7 @@ import { CloudUpload } from "lucide-react";
 
 export const MyFuneralDocuments = () => {
   const { data: myDocs, isLoading, refetch } = useMyDocuments();
-  const { data: statusData } = useDocumentStatus();
+  // const { data: statusData } = useDocumentStatus();
   const addMutation = useAddDocument();
 
   const [viewModalOpen, setViewModalOpen] = useState(false);
@@ -81,7 +81,7 @@ export const MyFuneralDocuments = () => {
   };
 
   const approvedDoc = myDocs?.approveDoc || null;
-  const hasVerified = !!approvedDoc; // if there's any verified doc, hide add button
+  // const hasVerified = !!approvedDoc; // if there's any verified doc, hide add button
 
   return (
     <div className="container mx-auto py-12">

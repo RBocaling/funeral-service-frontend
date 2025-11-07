@@ -11,98 +11,98 @@ import { addFuneralSubscription } from "@/api/subscribeApi";
 import { useGetSubscriptionMain } from "@/hooks/controllers/useSubscribe";
 import useUser from "@/hooks/controllers/useUser";
 
-interface PaymentInfo {
-  checkoutId: string;
-  status: string;
-  amount: number;
-  checkoutUrl: string;
-}
+// interface PaymentInfo {
+//   checkoutId: string;
+//   status: string;
+//   amount: number;
+//   checkoutUrl: string;
+// }
 
-interface Subscription {
-  id: number;
-  funeralServiceId: number;
-  amount: number;
-  status: "ACTIVE" | "PENDING" | "EXPIRED";
-  startDate: string;
-  expirationDate: string;
-  checkoutId: string;
-  paymentUrl: string;
-  adminHold: boolean;
-  createdAt: string;
-  updatedAt: string;
-  transactions: any[];
-  paymentInfo: PaymentInfo;
-}
+// interface Subscription {
+//   id: number;
+//   funeralServiceId: number;
+//   amount: number;
+//   status: "ACTIVE" | "PENDING" | "EXPIRED";
+//   startDate: string;
+//   expirationDate: string;
+//   checkoutId: string;
+//   paymentUrl: string;
+//   adminHold: boolean;
+//   createdAt: string;
+//   updatedAt: string;
+//   transactions: any[];
+//   paymentInfo: PaymentInfo;
+// }
 
 
-const mockSubscriptions2: Subscription[] = [
-  {
-    id: 3,
-    funeralServiceId: 1,
-    amount: 5000,
-    status: 'ACTIVE',
-    startDate: '2025-10-14T05:59:29.786Z',
-    expirationDate: '2025-11-14T05:59:29.786Z',
-    checkoutId: 'cs_WRhwP5tpTrGD5GSKNBywuJ9y',
-    paymentUrl: 'https://checkout.paymongo.com/cs_WRhwP5tpTrGD5GSKNBywuJ9y_client_MRLfAHpRoz4T43eFPwkg1qb2#cGtfdGVzdF9TdXR0WWptdmVqMmJLTEwxZ0RtaGZ6U2E=',
-    adminHold: true,
-    createdAt: '2025-10-14T05:59:29.787Z',
-    updatedAt: '2025-10-14T06:07:20.328Z',
-    transactions: [],
-    paymentInfo: {
-      checkoutId: 'cs_WRhwP5tpTrGD5GSKNBywuJ9y',
-      status: 'succeeded',
-      amount: 5000,
-      checkoutUrl: 'https://checkout.paymongo.com/cs_WRhwP5tpTrGD5GSKNBywuJ9y_client_MRLfAHpRoz4T43eFPwkg1qb2#cGtfdGVzdF9TdXR0WWptdmVqMmJLTEwxZ0RtaGZ6U2E=',
-    },
-  },
-  {
-    id: 2,
-    funeralServiceId: 1,
-    amount: 5000,
-    status: 'PENDING',
-    startDate: '2025-10-14T05:58:26.806Z',
-    expirationDate: '2025-11-14T05:58:26.806Z',
-    checkoutId: 'cs_hYUA5y5Q3ovhb9kBW8R5DrCx',
-    paymentUrl: 'https://checkout.paymongo.com/cs_hYUA5y5Q3ovhb9kBW8R5DrCx_client_Y6AmUSDyzhvPzVgfKTbEQaws#cGtfdGVzdF9TdXR0WWptdmVqMmJLTEwxZ0RtaGZ6U2E=',
-    adminHold: true,
-    createdAt: '2025-10-14T05:58:26.811Z',
-    updatedAt: '2025-10-14T05:58:26.811Z',
-    transactions: [],
-    paymentInfo: {
-      checkoutId: 'cs_hYUA5y5Q3ovhb9kBW8R5DrCx',
-      status: 'awaiting_payment_method',
-      amount: 5000,
-      checkoutUrl: 'https://checkout.paymongo.com/cs_hYUA5y5Q3ovhb9kBW8R5DrCx_client_Y6AmUSDyzhvPzVgfKTbEQaws#cGtfdGVzdF9TdXR0WWptdmVqMmJLTEwxZ0RtaGZ6U2E=',
-    },
-  },
-  {
-    id: 1,
-    funeralServiceId: 1,
-    amount: 5000,
-    status: 'ACTIVE',
-    startDate: '2025-10-14T05:45:06.415Z',
-    expirationDate: '2025-11-14T05:45:06.415Z',
-    checkoutId: 'cs_ToPAcR9cBrb6dZsfVTmRRig7',
-    paymentUrl: 'https://checkout.paymongo.com/cs_ToPAcR9cBrb6dZsfVTmRRig7_client_9V3uhBvygxUhh7MfcFFft1qm#cGtfdGVzdF9TdXR0WWptdmVqMmJLTEwxZ0RtaGZ6U2E=',
-    adminHold: true,
-    createdAt: '2025-10-14T05:45:06.418Z',
-    updatedAt: '2025-10-14T06:07:20.238Z',
-    transactions: [],
-    paymentInfo: {
-      checkoutId: 'cs_ToPAcR9cBrb6dZsfVTmRRig7',
-      status: 'succeeded',
-      amount: 5000,
-      checkoutUrl: 'https://checkout.paymongo.com/cs_ToPAcR9cBrb6dZsfVTmRRig7_client_9V3uhBvygxUhh7MfcFFft1qm#cGtfdGVzdF9TdXR0WWptdmVqMmJLTEwxZ0RtaGZ6U2E=',
-    },
-  },
-];
+// const mockSubscriptions2: Subscription[] = [
+//   {
+//     id: 3,
+//     funeralServiceId: 1,
+//     amount: 5000,
+//     status: 'ACTIVE',
+//     startDate: '2025-10-14T05:59:29.786Z',
+//     expirationDate: '2025-11-14T05:59:29.786Z',
+//     checkoutId: 'cs_WRhwP5tpTrGD5GSKNBywuJ9y',
+//     paymentUrl: 'https://checkout.paymongo.com/cs_WRhwP5tpTrGD5GSKNBywuJ9y_client_MRLfAHpRoz4T43eFPwkg1qb2#cGtfdGVzdF9TdXR0WWptdmVqMmJLTEwxZ0RtaGZ6U2E=',
+//     adminHold: true,
+//     createdAt: '2025-10-14T05:59:29.787Z',
+//     updatedAt: '2025-10-14T06:07:20.328Z',
+//     transactions: [],
+//     paymentInfo: {
+//       checkoutId: 'cs_WRhwP5tpTrGD5GSKNBywuJ9y',
+//       status: 'succeeded',
+//       amount: 5000,
+//       checkoutUrl: 'https://checkout.paymongo.com/cs_WRhwP5tpTrGD5GSKNBywuJ9y_client_MRLfAHpRoz4T43eFPwkg1qb2#cGtfdGVzdF9TdXR0WWptdmVqMmJLTEwxZ0RtaGZ6U2E=',
+//     },
+//   },
+//   {
+//     id: 2,
+//     funeralServiceId: 1,
+//     amount: 5000,
+//     status: 'PENDING',
+//     startDate: '2025-10-14T05:58:26.806Z',
+//     expirationDate: '2025-11-14T05:58:26.806Z',
+//     checkoutId: 'cs_hYUA5y5Q3ovhb9kBW8R5DrCx',
+//     paymentUrl: 'https://checkout.paymongo.com/cs_hYUA5y5Q3ovhb9kBW8R5DrCx_client_Y6AmUSDyzhvPzVgfKTbEQaws#cGtfdGVzdF9TdXR0WWptdmVqMmJLTEwxZ0RtaGZ6U2E=',
+//     adminHold: true,
+//     createdAt: '2025-10-14T05:58:26.811Z',
+//     updatedAt: '2025-10-14T05:58:26.811Z',
+//     transactions: [],
+//     paymentInfo: {
+//       checkoutId: 'cs_hYUA5y5Q3ovhb9kBW8R5DrCx',
+//       status: 'awaiting_payment_method',
+//       amount: 5000,
+//       checkoutUrl: 'https://checkout.paymongo.com/cs_hYUA5y5Q3ovhb9kBW8R5DrCx_client_Y6AmUSDyzhvPzVgfKTbEQaws#cGtfdGVzdF9TdXR0WWptdmVqMmJLTEwxZ0RtaGZ6U2E=',
+//     },
+//   },
+//   {
+//     id: 1,
+//     funeralServiceId: 1,
+//     amount: 5000,
+//     status: 'ACTIVE',
+//     startDate: '2025-10-14T05:45:06.415Z',
+//     expirationDate: '2025-11-14T05:45:06.415Z',
+//     checkoutId: 'cs_ToPAcR9cBrb6dZsfVTmRRig7',
+//     paymentUrl: 'https://checkout.paymongo.com/cs_ToPAcR9cBrb6dZsfVTmRRig7_client_9V3uhBvygxUhh7MfcFFft1qm#cGtfdGVzdF9TdXR0WWptdmVqMmJLTEwxZ0RtaGZ6U2E=',
+//     adminHold: true,
+//     createdAt: '2025-10-14T05:45:06.418Z',
+//     updatedAt: '2025-10-14T06:07:20.238Z',
+//     transactions: [],
+//     paymentInfo: {
+//       checkoutId: 'cs_ToPAcR9cBrb6dZsfVTmRRig7',
+//       status: 'succeeded',
+//       amount: 5000,
+//       checkoutUrl: 'https://checkout.paymongo.com/cs_ToPAcR9cBrb6dZsfVTmRRig7_client_9V3uhBvygxUhh7MfcFFft1qm#cGtfdGVzdF9TdXR0WWptdmVqMmJLTEwxZ0RtaGZ6U2E=',
+//     },
+//   },
+// ];
 
  function MySubscriptions() {
   const [months, setMonths] = useState<number>(1);
    const { data: mockSubscriptions } = useGetSubscriptionMain();
    console.log("mockSubscriptions", mockSubscriptions);
-     const { data: userInfo, role } = useUser();
+     const { data: userInfo } = useUser();
    
   const pricePerMonth = 1000;
   const totalAmount = months * pricePerMonth;

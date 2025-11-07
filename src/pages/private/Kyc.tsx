@@ -14,7 +14,7 @@ type MatchResult = {
 };
 
 const KYCVerification = () => {
-  const { data, isLoading } = useUserAuth();
+  const { isLoading } = useUserAuth();
   const { isKycVerify } = useUser();
   console.log("datafuneral", isKycVerify);
 

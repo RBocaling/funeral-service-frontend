@@ -7,25 +7,23 @@ import { uploadImageToCloudinary } from "@/utils/uploadImageToCloudinary";
 import { useGetIsHashActive } from "@/hooks/controllers/useSubscribe";
 import { useDocumentStatus } from "@/hooks/controllers/useFuneralDocuments";
 import useUser from "@/hooks/controllers/useUser";
-interface Assistant {
-  id: number;
-  firstName: string;
-  lastName: string;
-  user?: {
-    email: string;
-  };
-  isAllowServices: boolean;
-  isAllowBookings: boolean;
-}
+// interface Assistant {
+//   id: number;
+//   firstName: string;
+//   lastName: string;
+//   user?: {
+//     email: string;
+//   };
+//   isAllowServices: boolean;
+//   isAllowBookings: boolean;
+// }
 
 export default function FuneralAssistantsPage() {
    const mutation = useUpdateHelperPermission();
    const queryClient = useQueryClient();
- const { data: helpers, isLoading } = useFuneralHelpers();
- const { data: isHasActive, isLoading: isActiveLoading } =
-    useGetIsHashActive();
-   const { data: isActiveDoc, isLoading: isActiveDocLoading } =
-     useDocumentStatus();
+ const { data: helpers } = useFuneralHelpers();
+ const { data: isHasActive } = useGetIsHashActive();
+ const { data: isActiveDoc } = useDocumentStatus();
    const { role, isKycVerify } = useUser();
   const [isOpen, setIsOpen] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<string>("");
