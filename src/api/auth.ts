@@ -17,6 +17,21 @@ export const registerApi = async (email:string,password:string, role: String, us
         throw new Error("Invalid Credentials")
     }
 }
+export const addCustomer = async (data: {
+  email: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  location: string;
+}) => {
+  try {
+    const response = await api.post("/auth/add-customer", data);
+    return response.data;
+  } catch (error) {
+    throw new Error("Invalid Credentials");
+  }
+};
 export const getUserAuth = async () => {
     try {
         const response = await api.get("/auth/user-auth");

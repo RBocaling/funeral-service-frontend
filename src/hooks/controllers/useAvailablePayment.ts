@@ -23,6 +23,7 @@ export const useGetAvailablePayment = () => {
       queryKey: ["my-payment"],
       queryFn: getAvailablePaymentApi,
       refetchOnWindowFocus: true,
+      retry: false,
     });
  
     return {

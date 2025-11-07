@@ -82,39 +82,41 @@ const Services = ({isProfile=false}:{isProfile?:any}) => {
 
   return (
     <div className="space-y-6 container mx-auto px-5">
-      {
-        !isProfile && <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-        <TitlePage
-          label="My Services"
-          description="Create and manage funeral services for distant family members"
-        />
-        <div className="flex items-center gap-2 mt-4 sm:mt-0">
-          <div className="relative w-1/2 md:max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search services..."
-              className="pl-10 rounded-full"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          {/* <Button
+      {!isProfile && (
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+          <TitlePage
+            label="My Services"
+            description="Create and manage funeral services for distant family members"
+          />
+          <div className="flex items-center gap-2 mt-4 sm:mt-0">
+            <div className="relative w-1/2 md:max-w-md">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search services..."
+                className="pl-10 rounded-full"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            {/* <Button
             size="sm"
             className="rounded-full bg-primary/90 hover:bg-primary w-1/2 md:w-auto"
           >
             <Plus className="h-4 w-4 mr-2" />
             Create Service
           </Button> */}
+          </div>
         </div>
-      </div>
-      }
+      )}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {data
           ?.filter(
             (service) =>
               service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              service.description.toLowerCase().includes(searchQuery.toLowerCase())
+              service.description
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase())
           )
           .map((service: any) => (
             <Card
@@ -123,7 +125,7 @@ const Services = ({isProfile=false}:{isProfile?:any}) => {
             >
               <div className="relative h-48 flex items-center justify-center">
                 <Badge className="absolute bottom-3 left-3 bg-gray-800 text-white flex items-center gap-1 whitespace-nowrap z-10 uppercase">
-                  {service.type}
+                  {service.type}aa
                 </Badge>
 
                 <div className="absolute top-3 right-3 bg-white/70 dark:bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-sm font-semibold shadow-lg z-10">
@@ -147,7 +149,9 @@ const Services = ({isProfile=false}:{isProfile?:any}) => {
               </div>
               <CardContent className="px-4">
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-semibold line-clamp-1">{service.title}</h3>
+                  <h3 className="font-semibold line-clamp-1">
+                    {service.title}
+                  </h3>
                 </div>
                 <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
                   {service.description}
@@ -161,7 +165,6 @@ const Services = ({isProfile=false}:{isProfile?:any}) => {
                   >
                     <Eye className="h-3.5 w-3.5" /> View List
                   </Button>
-                 
                 </div>
               </CardContent>
             </Card>
@@ -185,14 +188,12 @@ const Services = ({isProfile=false}:{isProfile?:any}) => {
       </div>
 
       {/* Create Service Modal */}
-    
 
       {/* View Service Modal */}
       <ViewService
         setViewModalOpen={setViewModalOpen}
         viewModalOpen={viewModalOpen}
       />
-      
     </div>
   );
 };

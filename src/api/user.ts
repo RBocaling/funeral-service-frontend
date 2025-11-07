@@ -35,3 +35,14 @@ export const addDocumentApi = async (data:any) => {
         throw new Error("User not fount Please try again")
     }
 }
+
+export const updateKycStatusApi = async (updateKycStatus: string) => {
+  try {
+    const response = await api.put("/customers/kyc", {
+      isKycVerifiaction: updateKycStatus,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("User not fount Please try again");
+  }
+};

@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import Webcam from "react-webcam"; // <-- Import mo ito
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { uploadImageToCloudinary } from "@/utils/uploadImageToCloudinary";
-import { Camera } from "lucide-react";
+import { Camera, CloudUpload } from "lucide-react";
 import { useAddUploadDocument } from "@/hooks/controllers/useAddPersonalInfo";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAlertStore } from "@/store/alertStore";
@@ -74,24 +74,24 @@ const UpdateProfilePicture: React.FC<UploadDocumentIdProps> = ({
           profileUrl: selfieUrl,
         };
         addDocumentMutate.mutate(payload, {
-          onSuccess: async() => {
+          onSuccess: async () => {
             queryClient.invalidateQueries({ queryKey: ["user-auth"] });
             queryClient.invalidateQueries({ queryKey: ["getProfileProgress"] });
             queryClient.invalidateQueries({ queryKey: ["user-info"] });
             setLoading(false);
             setIsOpen(false);
 
-            await showAlert('success', {
-              title: 'Success Updated!',
-              message: 'Your action was completed successfully.',
+            await showAlert("success", {
+              title: "Success Updated!",
+              message: "Your action was completed successfully.",
               autoClose: true,
             });
           },
-          onError:async () => {
+          onError: async () => {
             setLoading(false);
-            await showAlert('error', {
-              title: 'Error Add',
-              message: 'Something went wrong. Please try again.',
+            await showAlert("error", {
+              title: "Error Add",
+              message: "Something went wrong. Please try again.",
               autoClose: true,
             });
           },
@@ -113,7 +113,7 @@ const UpdateProfilePicture: React.FC<UploadDocumentIdProps> = ({
         {/* Selfie Upload Section */}
         <div className="w-full flex flex-col items-center gap-2 mb-8">
           <p className="text-center text-gray-500 text-sm mb-2">
-            Upload or Capture your Selfie Picture.
+            Upload Funeral Logo
           </p>
 
           {/* Kung naka-open ang camera */}
@@ -151,7 +151,8 @@ const UpdateProfilePicture: React.FC<UploadDocumentIdProps> = ({
                   className="object-cover rounded-xl max-h-52"
                 />
               ) : (
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center justify-center">
+                  <CloudUpload className="text-sky-500" size={120} />
                   <p className="text-gray-500 text-sm text-center">
                     Click to upload a selfie
                   </p>
@@ -166,14 +167,14 @@ const UpdateProfilePicture: React.FC<UploadDocumentIdProps> = ({
           </div>
 
           {/* Button to open camera */}
-          {!openCamera && (
+          {/* {!openCamera && (
             <button
               onClick={() => setOpenCamera(true)}
               className="border-2 border-dashed text-sm text-gray-500 border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-gray-700/20 transition w-full"
             >
               <Camera /> take a Capture selfie
             </button>
-          )}
+          )} */}
         </div>
 
         <input

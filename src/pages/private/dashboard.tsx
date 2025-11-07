@@ -62,29 +62,56 @@ const Dashboard = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard icon={CircleDollarSign} label="Total Transaction" value={totalTransactions} additional={
-          <div className="flex items-center gap-7 mt-5">
-            {transactions.map((item, index) => (
-              <div key={index} className="relative flex flex-col items-center justify-center">
-                <Badge className="absolute -top-4 -right-4 bg-violet-500/10 h-7 w-7 text-violet-500 rounded-full animate-bounce">
-                  {item.value}
-                </Badge>
-                <p className="text-sm font-medium tracking-wide">{item.title}</p>
-              </div>
-            ))}
-          </div>
-        } />
+        <StatCard
+          icon={CircleDollarSign}
+          label="Total Transaction"
+          value={totalTransactions}
+          additional={
+            <div className="flex items-center gap-7 mt-5">
+              {transactions.map((item, index) => (
+                <div
+                  key={index}
+                  className="relative flex flex-col items-center justify-center"
+                >
+                  <Badge className="absolute -top-4 -right-4 bg-sky-200/10 h-7 w-7 text-sky-50 rounded-full animate-bounce">
+                    {item.value}
+                  </Badge>
+                  <p className="text-sm font-medium tracking-wide">
+                    {item.title}
+                  </p>
+                </div>
+              ))}
+            </div>
+          }
+        />
 
-        <StatCard icon={FolderDot} label="Total Active Bookings" value={totalActiveBookings} trend="+8.1% from last month" />
-        <StatCard icon={Users} label="Total Customer" value={totalCustomers} trend="+15.3% from last month" />
-        <StatCard icon={Bath} label="Total Services" value={services?.length || 0} trend="+10.2% from last month" />
+        <StatCard
+          icon={FolderDot}
+          label="Total Active Bookings"
+          value={totalActiveBookings}
+          trend="+8.1% from last month"
+        />
+        <StatCard
+          icon={Users}
+          label="Total Customer"
+          value={totalCustomers}
+          trend="+15.3% from last month"
+        />
+        <StatCard
+          icon={Bath}
+          label="Total Services"
+          value={services?.length || 0}
+          trend="+10.2% from last month"
+        />
       </div>
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Revenue */}
-        <div className="dark:bg-gray-800/40  bg-white backdrop-blur-sm rounded-3xl p-6 border border-gray-700/30">
-          <h3 className="text-lg font-semibold dark:text-white mb-6">Revenue Overview</h3>
+        <div className="dark:bg-gray-800/40   backdrop-blur-sm rounded-3xl p-6 border bg-sky-500/10 border-sky-300/30">
+          <h3 className="text-lg font-semibold dark:text-white mb-6">
+            Revenue Overview
+          </h3>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={revenueData}>
@@ -97,23 +124,43 @@ const Dashboard = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 <XAxis dataKey="name" stroke="#9CA3AF" />
                 <YAxis stroke="#9CA3AF" />
-                <Tooltip contentStyle={{ backgroundColor: "#1F2937", border: "1px solid #374151", borderRadius: "0.5rem" }} />
-                <Area type="monotone" dataKey="value" stroke="#A855F7" fillOpacity={1} fill="url(#colorRevenue)" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#1F2937",
+                    border: "1px solid #374151",
+                    borderRadius: "0.5rem",
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#A855F7"
+                  fillOpacity={1}
+                  fill="url(#colorRevenue)"
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Weekly Bookings */}
-        <div className="dark:bg-gray-800/40 backdrop-blur-sm rounded-3xl p-6 border border-gray-700/30">
-          <h3 className="text-lg font-semibold dark:text-white mb-6">Weekly Bookings</h3>
+        <div className="dark:bg-gray-800/40 backdrop-blur-sm rounded-3xl p-6 border bg-sky-500/10 border-sky-300/30">
+          <h3 className="text-lg font-semibold dark:text-white mb-6">
+            Weekly Bookings
+          </h3>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={bookingsData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 <XAxis dataKey="name" stroke="#9CA3AF" />
                 <YAxis stroke="#9CA3AF" />
-                <Tooltip contentStyle={{ backgroundColor: "#1F2937", border: "1px solid #374151", borderRadius: "0.5rem" }} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#1F2937",
+                    border: "1px solid #374151",
+                    borderRadius: "0.5rem",
+                  }}
+                />
                 <Bar dataKey="value" fill="#0a7efa" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -122,8 +169,10 @@ const Dashboard = () => {
       </div>
 
       {/* Recent Bookings Table */}
-      <div className="dark:bg-gray-800/40 backdrop-blur-sm rounded-3xl p-6 border border-gray-700/30 mt-6">
-        <h3 className="text-lg font-semibold dark:-white mb-4">Recent Bookings</h3>
+      <div className="dark:bg-gray-800/40 backdrop-blur-sm rounded-3xl p-6 border bg-sky-500/10 border-sky-300/30 mt-6">
+        <h3 className="text-lg font-semibold dark:-white mb-4">
+          Recent Bookings
+        </h3>
         <div className="overflow-x-auto">
           <table className="min-w-full text-left text-sm dark:text-gray-300">
             <thead className="bg-gray-700/30 dark:text-gray-200 uppercase text-xs">
@@ -136,16 +185,34 @@ const Dashboard = () => {
             </thead>
             <tbody>
               {bookings?.slice(0, 5).map((booking, index) => {
-                const total = booking.serviceBookings.reduce((acc:any, s:any) => acc + (s.selectedCasketDetail?.price || 0), 0);
+                const total = booking.serviceBookings.reduce(
+                  (acc: any, s: any) =>
+                    acc + (s.selectedCasketDetail?.price || 0),
+                  0
+                );
                 return (
-                  <tr key={index} className="border-b border-gray-600 hover:bg-gray-700 transition">
-                    <td className="px-4 py-3">{`${booking?.customer?.firstName} ${booking?.customer?.lastName }` || 'Unknown'}</td>
+                  <tr
+                    key={index}
+                    className="border-b border-gray-600 hover:bg-gray-700 transition"
+                  >
                     <td className="px-4 py-3">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${booking.bookingStatus === "COMPLETED" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"}`}>
+                      {`${booking?.customer?.firstName} ${booking?.customer?.lastName}` ||
+                        "Unknown"}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          booking.bookingStatus === "COMPLETED"
+                            ? "bg-green-500/10 text-green-400"
+                            : "bg-yellow-500/10 text-yellow-400"
+                        }`}
+                      >
                         {booking.bookingStatus}
                       </span>
                     </td>
-                    <td className="px-4 py-3">{new Date(booking.createdAt).toLocaleDateString()}</td>
+                    <td className="px-4 py-3">
+                      {new Date(booking.createdAt).toLocaleDateString()}
+                    </td>
                     <td className="px-4 py-3">₱ {total.toLocaleString()}</td>
                   </tr>
                 );

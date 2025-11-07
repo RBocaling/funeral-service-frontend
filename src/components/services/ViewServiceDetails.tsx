@@ -48,8 +48,8 @@ const ViewServiceDetails = ({
     products.reduce((acc, product) => ({ ...acc, [product.id]: "MEDIUM" }), {})
   );
 
-    const queryClient = useQueryClient();
-    
+  const queryClient = useQueryClient();
+
   const getPrice = (basePrice: number, size: any) => {
     switch (size) {
       case "SMALL":
@@ -61,11 +61,13 @@ const ViewServiceDetails = ({
     }
   };
 
-  const data = serviceType ==="CASKET" ?selectedService?.casketDetails:selectedService?.flowerDetails
+  const data =
+    serviceType === "CASKET"
+      ? selectedService?.casketDetails
+      : selectedService?.flowerDetails;
 
-    const mutation = deleteDetailService();
-  const handleDelete = (id:number) => {
-   
+  const mutation = deleteDetailService();
+  const handleDelete = (id: number) => {
     mutation.mutate(
       {
         serviceType,
@@ -75,7 +77,7 @@ const ViewServiceDetails = ({
         onSuccess: () => {
           alert("Success deleted");
           setIsOpen(false);
-         
+
           queryClient.invalidateQueries({
             queryKey: ["my-services"],
           });
@@ -86,8 +88,9 @@ const ViewServiceDetails = ({
       }
     );
   };
-    
-    
+
+  console.log("data", data);
+
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -116,27 +119,44 @@ const ViewServiceDetails = ({
                 <div
                   key={item.id}
                   className="relative bg-gray-700/10 border border-gray-500/10 rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl p-2"
-                  >
-                      <p className="text-white text-xs font-semibold ">{ serviceType ==="CASKET" ? item?.casketType : item?.flowerType}</p>
+                >
+                  <p className="text-white text-xs font-semibold ">
+                    {serviceType === "CASKET"
+                      ? item?.casketType
+                      : item?.flowerType}
+                  </p>
                   <div className="p-6">
                     {/* item Image */}
                     <div
                       className="rounded-xl p-8 mb-4 flex items-center justify-center transition-all duration-300"
                       style={{ backgroundColor: `${item.color}15` }}
-                          >
-                              {
-                                  serviceType ==="CASKET"?  <Package2
-                                  size={80}
-                                  className="transition-all duration-300"
-                                  style={{ color: item.color }}
-                                />:<Flower
-                                size={80}
-                                className="transition-all duration-300 text-rose-500 shadow-2xl shadow-rose-500/50 rounded-full bg-gray-800/10"
-                                
-                              />
-                              }
-                    
-                      
+                    >
+                      {serviceType === "CASKET" ? (
+                        item?.image_url ? (
+                          <img
+                            src={item?.image_url}
+                            alt=""
+                            className="size-40 rounded-3xl"
+                          />
+                        ) : (
+                          <Package2
+                            size={80}
+                            className="transition-all duration-300"
+                            style={{ color: item.color }}
+                          />
+                        )
+                      ) : item?.image_url ? (
+                        <img
+                          src={item?.image_url}
+                          alt=""
+                          className="size-40 rounded-3xl"
+                        />
+                      ) : (
+                        <Flower
+                          size={80}
+                          className="transition-all duration-300 text-rose-500 shadow-2xl shadow-rose-500/50 rounded-full bg-gray-800/10"
+                        />
+                      )}
                     </div>
 
                     <div className="flex items-center justify-between border-b border-gray-700/30 mb-5 pb-2">
@@ -162,7 +182,11 @@ const ViewServiceDetails = ({
                         )}
                       </div>
                       <div className={"flex items-center gap-3"}>
-                        <Trash2 onClick={()=> handleDelete(item?.id)} size={20} className="text-red-500" />
+                        <Trash2
+                          onClick={() => handleDelete(item?.id)}
+                          size={20}
+                          className="text-red-500"
+                        />
                       </div>
                     </div>
                   </div>
@@ -177,7 +201,12 @@ const ViewServiceDetails = ({
         </DialogContent>
       </Dialog>
 
-      <AddCasketDetail serviceId={selectedService?.id} isOpen={isOpenAddCasket} setIsOpen={setIsOpenCasket} closeMain={()=> setIsOpen(false)} />
+      <AddCasketDetail
+        serviceId={selectedService?.id}
+        isOpen={isOpenAddCasket}
+        setIsOpen={setIsOpenCasket}
+        closeMain={() => setIsOpen(false)}
+      />
     </>
   );
 };

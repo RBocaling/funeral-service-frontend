@@ -21,9 +21,9 @@ const { setCompleteProfileModal} = useProfileProgress()
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const existingUser = userList.find((user:any) => user.email === email);
+    const existingUser = userList.find((user: any) => user.email === email);
 
-    if (existingUser && existingUser.role !== "FUNERAL_SERVICE") {
+    if (existingUser && existingUser.role == "CUSTOMER") {
       setRoleError(
         `Your email is registered as ${existingUser.role}. You are not allowed to access this page.`
       );
@@ -36,31 +36,39 @@ const { setCompleteProfileModal} = useProfileProgress()
       { email, password },
       {
         onSuccess: (data) => {
-          console.log(":!data?.isEmailVerify",data?.token);
-          
+          console.log(":!data?.isEmailVerify", data?.token);
+
           if (!data?.token?.isEmailVerify) {
-            setNotVerify(true)
+            setNotVerify(true);
           } else {
-            navigate("/")
-            setCompleteProfileModal(true)
+            navigate("/services");
+            setCompleteProfileModal(true);
           }
-          
-          
         },
         onError: (error: any) => {
-          console.error("Login failed:", error.response?.data?.message || error.message);
+          console.error(
+            "Login failed:",
+            error.response?.data?.message || error.message
+          );
         },
       }
     );
   };
 
   return (
-    <div className="w-full min-h-screen text-white flex flex-col justify-center relative">
+    <div className="w-full min-h-screen bg-white flex flex-col justify-center relative">
       <div className="max-w-md w-full mx-auto">
         <div className="flex items-center gap-2 cursor-pointer mb-5">
- <img src="/logo-funeral-dark.png" alt="Memorial" className=" w-[70%]" />        </div>
+          <img
+            src="/logo-funeral-dark.png"
+            alt="Memorial"
+            className=" w-[70%]"
+          />{" "}
+        </div>
 
-        <h2 className="text-2xl font-bold mb-2 text-gradient">Funeral Service Log in</h2>
+        <h2 className="text-2xl font-bold mb-2 text-gradient">
+          Funeral Service Log in
+        </h2>
         <p className="text-sm text-gray-400 mb-6">
           Welcome back! Please enter your details.
         </p>
@@ -78,13 +86,13 @@ const { setCompleteProfileModal} = useProfileProgress()
             type="text"
             placeholder="Email"
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+            className="w-full px-4 py-3 bg-neutral-200 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sky-500 placeholder:text-neutral-500"
           />
           <Input
             type="password"
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+            className="w-full px-4 py-3 bg-neutral-200 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sky-500 placeholder:text-neutral-500"
           />
           <Button
             type="submit"

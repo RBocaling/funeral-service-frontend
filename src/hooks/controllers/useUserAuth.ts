@@ -5,11 +5,12 @@ import { useQuery } from "@tanstack/react-query";
 const useUserAuth = () => {
   const { accessToken } = useAuthStore.getState();
 
-  const { data, isError, isLoading , refetch} = useQuery({
+  const { data, isError, isLoading, refetch } = useQuery({
     queryKey: ["user-auth"],
     queryFn: getUserAuth,
-    enabled: !!accessToken, 
+    enabled: !!accessToken,
     refetchOnWindowFocus: true,
+    retry: false,
   });
 
   return {

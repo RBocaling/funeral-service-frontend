@@ -6,6 +6,7 @@ const UseUserList = () => {
   const { data, isError, isLoading } = useQuery({
     queryKey: ["user-list2"],
     queryFn: getUserList,
+    retry: false,
   });
 
     

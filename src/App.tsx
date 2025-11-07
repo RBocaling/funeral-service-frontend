@@ -17,6 +17,11 @@ import PublicRoute from "./routes/PublicRoute";
 import PrivateLayout from "./layout/PrivateLayout";
 import PublicLayout from "./layout/PublicLayout";
 import PaymentMethodsPage from "./pages/private/paymentMethod";
+import MySubscriptions from "./pages/private/MySubscriptions";
+import { MyFuneralDocuments } from "./pages/private/FuneralDocument";
+import FuneralHelpersPage from "./pages/private/FuneralHelpersPage";
+import KYCVerification from "./pages/private/Kyc";
+import BookingPayment from "./pages/private/bookingPayment";
 
 export default function App() {
   return (
@@ -36,6 +41,14 @@ export default function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/services" element={<Services />} />
           <Route path="/payment-method" element={<PaymentMethodsPage />} />
+          <Route path="/my-subscriptions" element={<MySubscriptions />} />
+          <Route path="/my-documents" element={<MyFuneralDocuments />} />
+          <Route path="/my-helpers" element={<FuneralHelpersPage />} />
+          <Route path="/kyc-verification" element={<KYCVerification />} />
+          <Route
+            path="/booking-payment-management"
+            element={<BookingPayment />}
+          />
         </Route>
       </Route>
 

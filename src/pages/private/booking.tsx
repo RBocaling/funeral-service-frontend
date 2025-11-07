@@ -22,6 +22,7 @@ import { formatCurrency } from "@/lib/utils";
 import { useServiceTypeStore } from "@/store/serviceStore";
 
 function Booking() {
+  
   const [selectedBooking, setSelectedBooking] = useState<
     (typeof bookings)[0] | null
   >(null);
@@ -38,10 +39,20 @@ function Booking() {
     email: i?.customer?.user?.email,
     phone: i?.customer?.phone,
     appoinmentDate: i?.appointmentDate,
+    hosName: i?.hospitalName,
+    hosAddress: i?.location,
+    hosrootNumber: i?.roomNumber,
+    hosCauseOfDeath: i?.causeOfDeath,
     status: i?.bookingStatus,
     fullPackage: i?.fullPackage,
-        additionalDetails:i?.additionalDetails,
-    hospitalDetails:i?.hospitalDetails,
+    payments: i?.payments,
+    cashPayment: i?.cashPayment,
+    isPartialPayment: i?.isPartialPayment,
+    partialBookingPayment: i?.partialBookingPayment,
+    isCash: i?.isCash,
+    additionalDetails: i?.additionalDetails,
+    additionalBookings: i?.additionalBookings,
+    hospitalDetails: i?.hospitalDetails,
     customCasketDetail: i?.customCasketDetail[0],
     serviceBookings: i?.serviceBookings?.map((item: any) => ({
       details: item?.service,
@@ -57,7 +68,7 @@ function Booking() {
 
   return (
     <div className="relative ">
-      <div className="container px-5 mx-auto">
+      <div className="container px-5 md:px-0 mx-auto">
         <div className="flex flex-col md:flex-row gap-5 md:justify-between md:items-center mb-7 md:mb-12">
           <TitlePage label="My Bookings" />
           <div className="relative flex items-center gap-5 mb-7">
@@ -95,15 +106,6 @@ function Booking() {
               className="group relative dark:bg-gray-800/40 backdrop-blur-xl shadow-xl shadow-black/10 rounded-3xl overflow-hidden border border-gray-700/30"
               //
             >
-              <div className="absolute top-4 right-4 z-10 flex gap-2">
-                <button className="bg-sky-500/50 hover:bg-sky-500/30 text-white-300 p-2 rounded-full transition-all duration-300">
-                  <MessageSquare className="w-5 h-5" />
-                </button>
-                <button className="bg-red-500/50 hover:bg-red-500/30 text-white-300 p-2 rounded-full transition-all duration-300">
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
               <div className="relative h-48">
                 <img
                   src="https://media.istockphoto.com/id/1447462464/photo/close-up-of-person-in-black-praying-at-outdoor-funeral.jpg?s=612x612&w=0&k=20&c=NQWKq6W8KemPyFuV9gtiPo7md4vskgiF1l5iQfj1MlU="
@@ -115,23 +117,23 @@ function Booking() {
                     <Heart className="w-4 h-4 text-sky-400" />
                     <span>Customer</span>
                   </div>
-                  <h2 className="text-2xl font-semibold text-white mt-1">
+                  <h2 className="text-2xl font-semibold text-white mt-1 capitalize">
                     {booking?.funeralServiceName}
                   </h2>
                 </div>
               </div>
 
               <div className="p-6 space-y-6">
-                <div className="grid grid-cols-2 md:h-52">
+                <div className="grid grid-cols-2 md:h-64">
                   <div className="space-y-3">
                     <div className="flex flex-col">
                       <p className="text-xs text-gray-500 mb-2">
-                        Funeral Service Detail:
+                        Customer Detail:
                       </p>
                       <div className="flex items-center dark:text-gray-300">
                         <Users className="w-4 h-4 mr-2 text-sky-400" />
-                        <span className="text-xs">
-                          Funeral: {booking?.funeralServiceName}
+                        <span className="text-xs capitalize">
+                          Customer: {booking?.funeralServiceName}
                         </span>
                       </div>
                     </div>
@@ -147,12 +149,24 @@ function Booking() {
                       <MapPin className="w-4 h-4 mr-2 text-sky-400" />
                       {booking.location}
                     </div>
-                      <p className="text-xs text-gray-500 my-2 pt-1">
+                    <p className="text-xs text-gray-500 my-2 pt-1">
                       Hospital Details
                     </p>
                     <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
                       <Hospital className="w-4 h-4 mr-2 text-sky-400" />
-                      {booking.hospitalDetails}
+                      Name: {booking?.hosName}
+                    </div>
+                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
+                      <Hospital className="w-4 h-4 mr-2 text-sky-400" />
+                      Address: {booking?.hosAddress}
+                    </div>
+                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
+                      <Hospital className="w-4 h-4 mr-2 text-sky-400" />
+                      Room Number: {booking.hosrootNumber}
+                    </div>
+                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider">
+                      <Hospital className="w-4 h-4 mr-2 text-sky-400" />
+                      Cause Of Death: {booking.hosCauseOfDeath}
                     </div>
                   </div>
 
@@ -256,48 +270,61 @@ function Booking() {
                       </div>
                     ))}
 
-                     {
-                      booking?.additionalDetails && 
+                    {booking?.additionalBookings && (
                       <div className="flex flex-col">
                         <p className="text-xs text-gray-500 mb-2 whitespace-nowrap">
                           Additional Order's{" "}
-                          <span className="text-xs text-red-500 font-medium">
-                            {" "}
-                            -
-                            {formatCurrency(
-                              booking?.additionalDetails?.price
-                            )}
-                          </span>
-                          </p>
-                        <p className="text-xs text-gray-500 mb-2 whitespace-">
-                          <span className="text-xs text-white font-medium">
-                            {" "}
-                          
-                              <span className="text-xs text-gray-600">  - { booking?.additionalDetails?.description}</span>
-                          </span>
-                          </p>
-                          </div>
-                    }
+                        </p>
+                        {booking?.additionalBookings?.map(
+                          (item: any, index: number) => (
+                            <div
+                              key={index}
+                              className="flex items-center gap-5"
+                            >
+                              <p className="text-xs dark:text-gray-300">
+                                - {item?.additional?.description}
+                              </p>
 
-                    <div className="flex items-center dark:text-gray-300 text-xs tracking-wider capitalize">
-                      {/* <DollarSign className="w-4 h-4 mr-2 text-sky-400" /> */}
-                     {formatCurrency(
-                        Number(
-                          booking?.serviceBookings?.reduce(
-                            (sum: number, item: any) =>
-                              sum +
-                              (Number(item?.casket?.price) || 0) +
-                              (Number(item?.flower?.price) || 0),
-                            0
+                              <span className="text-xs text-red-500 font-medium">
+                                {" "}
+                                -{formatCurrency(item?.additional?.price)}
+                              </span>
+                            </div>
                           )
-                        ) +
+                        )}
+                      </div>
+                    )}
+
+                    <div className="flex items-center gap-5 mt-5 dark:text-gray-300 text-xs tracking-wider capitalize">
+                      {/* <DollarSign className="w-4 h-4 mr-2 text-sky-400" /> */}
+                      <p className="text-lg font-medium text-sky-500 whitespace-nowrap">
+                        Total Payment:
+                      </p>
+                      <p className="text-lg font-medium underline">
+                        {" "}
+                        {formatCurrency(
                           Number(
-                            booking?.customCasketDetail?.additionalCost ?? 0
-                        ) + Number(booking?.fullPackage?.price ?? 0)
-                        
-                        
-                        + Number( booking?.additionalDetails?.price ??0)
-                      )}
+                            booking?.serviceBookings?.reduce(
+                              (sum: number, item: any) =>
+                                sum +
+                                (Number(item?.casket?.price) || 0) +
+                                (Number(item?.flower?.price) || 0),
+                              0
+                            )
+                          ) +
+                            Number(
+                              booking?.customCasketDetail?.additionalCost ?? 0
+                            ) +
+                            Number(booking?.fullPackage?.price ?? 0) +
+                            Number(
+                              booking?.additionalBookings?.reduce(
+                                (acc: any, i: any) =>
+                                  acc + i?.additional?.price,
+                                0
+                              ) ?? 0
+                            )
+                        )}
+                      </p>
                     </div>
                   </div>
                 </div>

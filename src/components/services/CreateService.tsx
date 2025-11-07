@@ -17,14 +17,15 @@ import { uploadImageToCloudinary } from "@/utils/uploadImageToCloudinary";
 import { useAlertStore } from "@/store/alertStore";
 import useProgressProfile from "@/hooks/controllers/useUserProgress";
 import { useQueryClient } from "@tanstack/react-query";
+import useUser from "@/hooks/controllers/useUser";
 
 const CreateService = ({
   isOpen,
   setIsOpen,
 }: {
   isOpen: boolean;
-    setIsOpen: (open: boolean) => void;
-    onClose: ()=>void
+  setIsOpen: (open: boolean) => void;
+  onClose: () => void;
 }) => {
   const { serviceType } = useServiceTypeStore();
   const queryClient = useQueryClient();
@@ -33,11 +34,9 @@ const CreateService = ({
     name: "",
     description: "",
   });
+  const { role } = useUser();
 
-  const {
-    
-    progress,
-  } = useProgressProfile();
+  const { progress } = useProgressProfile();
 
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -66,21 +65,21 @@ const CreateService = ({
           queryClient.invalidateQueries({
             queryKey: ["my-services"],
           });
-           showAlert('success', {
-            title: 'Success Added!',
-            message: 'Your action was completed successfully.',
+          showAlert("success", {
+            title: "Success Added!",
+            message: "Your action was completed successfully.",
             autoClose: true,
           });
-          setFormData({ name: '', description: '' });
+          setFormData({ name: "", description: "" });
           setFile(null);
           setIsOpen(false);
           setLoading(false);
           // onClose()
         },
         onError: async () => {
-          await showAlert('error', {
-            title: 'Error Add',
-            message: 'Something went wrong. Please try again.',
+          await showAlert("error", {
+            title: "Error Add",
+            message: "Something went wrong. Please try again.",
             autoClose: true,
           });
           setLoading(false);
@@ -144,15 +143,33 @@ const CreateService = ({
 
         <DialogFooter className="px-6 py-4 border-t">
           <div className="flex justify-end w-full gap-2">
-            <Button className="rounded-full py-5 px-5 bg-red-500 shadow-xl shadow-red-500/10 text-white font-medium" onClick={() => setIsOpen(false)}>
+            <Button
+              className="rounded-full py-5 px-5 bg-red-500 shadow-xl shadow-red-500/10 text-white font-medium"
+              onClick={() => setIsOpen(false)}
+            >
               Cancel
             </Button>
             <div className="flex flex-col gap-2">
-            <Button onClick={handleAddServices} disabled={progress < 100} className={`rounded-full py-5 px-5 bg-sky-500 shadow-xl shadow-sky-500/10 text-white font-medium ${progress < 100 && 'cursor-not-allowed'}`}>
-                {loading || addServiceMutation.isPending ? "Submitting.." : "Add Now"}
-            </Button>
-            {(progress < 100) && <p className="text-xs font-medium text-red-500">Please Complete profile</p>}
-          </div>
+              <Button
+                onClick={handleAddServices}
+                disabled={
+                  (role !== "HELPER" && progress < 100) ||
+                  addServiceMutation.isPending
+                }
+                className={`rounded-full py-5 px-5 bg-red-500 shadow-xl shadow-sky-500/10 text-white font-medium ${
+                  role !== "HELPER" && progress < 100 && "cursor-not-allowed"
+                }`}
+              >
+                {loading || addServiceMutation.isPending
+                  ? "Submitting.."
+                  : "Add Now"}
+              </Button>
+              {role !== "HELPER" && progress < 100 && (
+                <p className="text-xs font-medium text-red-500">
+                  Please Complete profile
+                </p>
+              )}
+            </div>
           </div>
         </DialogFooter>
       </DialogContent>

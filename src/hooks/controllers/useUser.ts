@@ -7,13 +7,15 @@ const useUser = () => {
     queryKey: ["user-info"],
     queryFn: getUser,
     refetchOnWindowFocus: true,
+    retry: false,
   });
 
-    
   return {
     data,
+    role: data?.user?.role,
     isError,
     isLoading,
+    isKycVerify: data?.isKycVerifiaction ?? false,
   };
 };
 

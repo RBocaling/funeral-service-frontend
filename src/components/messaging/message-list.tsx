@@ -120,7 +120,7 @@ export function MessageList({ messages }: any) {
                   setIsOpenUploadFile(true);
                 }}
               >
-                📄 Upload Proof of Payment
+                📄 Upload Photo
               </button>
 
               <button

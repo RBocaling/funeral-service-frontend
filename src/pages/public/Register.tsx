@@ -82,26 +82,36 @@ const Register = () => {
   };
 
   return (
-    <div className="w-full min-h-screen text-white flex flex-col justify-center relative">
+    <div className="w-full min-h-screen bg-white flex flex-col justify-center relative">
       <div className="max-w-md w-full mx-auto">
         <div className="flex items-center gap-2 mb-5">
- <img src="/logo-funeral-dark.png" alt="Memorial" className=" w-[70%]" />        </div>
+          <img
+            src="/logo-funeral-dark.png"
+            alt="Memorial"
+            className=" w-[70%]"
+          />{" "}
+        </div>
 
-        <h2 className="text-2xl font-bold mb-2 text-gradient">Funeral Service Registration</h2>
+        <h2 className="text-2xl font-bold mb-2 text-gradient">
+          Funeral Service Registration
+        </h2>
         <p className="text-sm text-gray-400 mb-6">
-          Join us today and book funeral services with ease. Track, manage, and stay informed every step of the way.
+          Join us today and book funeral services with ease. Track, manage, and
+          stay informed every step of the way.
         </p>
 
         <form className="space-y-5" onSubmit={handleRegister}>
           <div>
             <Input
               type="text"
-              placeholder="Username"
+              placeholder="Funeral Service Name"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg"
+              className="w-full px-4 py-3 bg-neutral-200 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sky-500 placeholder:text-neutral-500 pr-10"
             />
-            {usernameError && <p className="text-sm text-red-500 mt-1">{usernameError}</p>}
+            {usernameError && (
+              <p className="text-sm text-red-500 mt-1">{usernameError}</p>
+            )}
           </div>
 
           <div>
@@ -110,9 +120,11 @@ const Register = () => {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg"
+              className="w-full px-4 py-3 bg-neutral-200 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sky-500 placeholder:text-neutral-500 pr-10"
             />
-            {emailError && <p className="text-sm text-red-500 mt-1">{emailError}</p>}
+            {emailError && (
+              <p className="text-sm text-red-500 mt-1">{emailError}</p>
+            )}
           </div>
 
           {/* Password Field */}
@@ -123,14 +135,18 @@ const Register = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onFocus={() => setPasswordTouched(true)}
-              className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg pr-10"
+              className="w-full px-4 py-3 bg-neutral-200 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sky-500 placeholder:text-neutral-500 pr-10"
             />
             <button
               type="button"
-              className="absolute right-3 top-3 text-gray-400 hover:text-white"
+              className="absolute right-3 top-3 text-gray-400"
               onClick={() => setShowPassword((prev) => !prev)}
             >
-              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              {showPassword ? (
+                <EyeOff className="w-5 h-5" />
+              ) : (
+                <Eye className="w-5 h-5" />
+              )}
             </button>
           </div>
 
@@ -144,7 +160,12 @@ const Register = () => {
                 ["a special character", isPasswordValid.hasSpecial],
                 ["8 characters minimum", isPasswordValid.hasMinLength],
               ].map(([label, valid], i) => (
-                <p key={i} className={`flex items-center gap-2 ${valid ? "text-green-400" : "text-gray-400"}`}>
+                <p
+                  key={i}
+                  className={`flex items-center gap-2 ${
+                    valid ? "text-green-400" : "text-gray-400"
+                  }`}
+                >
                   <CheckCircle className="w-4 h-4" />
                   {label}
                 </p>
@@ -159,24 +180,32 @@ const Register = () => {
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg pr-10"
+              className="w-full px-4 py-3 bg-neutral-200 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sky-500 placeholder:text-neutral-500 pr-10"
             />
             <button
               type="button"
-              className="absolute right-3 top-3 text-gray-400 hover:text-white"
+              className="absolute right-3 top-3 text-gray-400"
               onClick={() => setShowConfirmPassword((prev) => !prev)}
             >
-              {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              {showConfirmPassword ? (
+                <EyeOff className="w-5 h-5" />
+              ) : (
+                <Eye className="w-5 h-5" />
+              )}
             </button>
-            {confirmPasswordError && <p className="text-sm text-red-500 mt-1">{confirmPasswordError}</p>}
+            {confirmPasswordError && (
+              <p className="text-sm text-red-500 mt-1">
+                {confirmPasswordError}
+              </p>
+            )}
           </div>
 
           <TermsAgreement
-        title="Funeral Registration"
-        onAgreeChange={handleAgreeChange}
-        termsText={`1. You agree to provide valid identification.\n2. Booking is final once confirmed.\n3. Cancellations are subject to service policies.`}
+            title="Funeral Registration"
+            onAgreeChange={handleAgreeChange}
+            termsText={`1. You agree to provide valid identification.\n2. Booking is final once confirmed.\n3. Cancellations are subject to service policies.`}
           />
-          
+
           {/* Submit */}
           <Button
             type="submit"

@@ -5,40 +5,42 @@ import { ChatHeader } from "@/components/messaging/chat-header";
 import { useGetMessage } from "@/hooks/controllers/useMessage";
 import { useMessageStore } from "@/store/messageStore";
 import useProgressProfile from "@/hooks/controllers/useUserProgress";
+import useUser from "@/hooks/controllers/useUser";
 
 function Messages() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const {conversationid} = useMessageStore()
-  const {
-    
-    progress,
-  } = useProgressProfile();
-  const {data} = useGetMessage(conversationid?.id)
+  const { conversationid } = useMessageStore();
+  const { progress } = useProgressProfile();
+  const { data } = useGetMessage(conversationid?.id);
+  const { role } = useUser();
+
   return (
     <div className="flex overflow-hidden bg-background mx-auto max-w-7xl relative">
-      <ChatSidebar
-      />
-      {
-        data?.length > 0 ? <div className="flex flex-1 flex-col">
-        <ChatHeader
+      <ChatSidebar />
+      {data?.length > 0 ? (
+        <div className="flex flex-1 flex-col">
+          <ChatHeader
             isSidebarOpen={isSidebarOpen}
             setIsSidebarOpen={setIsSidebarOpen}
-        />
-        <main onClick={()=> setIsSidebarOpen(false)} className="relative flex-1">
-          <MessageList messages={data} />
-        </main>
-      </div>: <div className=" flex-1 flex-col h-40 flex items-center justify-center">
-       No Message Selected
-      </div>
-      }
-
-
-
-{
-        progress < 100 &&  <div className="absolute z-50 top-0 left-0 w-full h-full bg-black/40 flex items-center justify-center text-red-500 text-lg font-medium">
-        Please Complete Your Profile
+          />
+          <main
+            onClick={() => setIsSidebarOpen(false)}
+            className="relative flex-1"
+          >
+            <MessageList messages={data} />
+          </main>
         </div>
-      }
+      ) : (
+        <div className=" flex-1 flex-col h-40 flex items-center justify-center">
+          No Message Selected
+        </div>
+      )}
+
+      {progress < 100 && role === "FUNERAL_SERVICE" && (
+        <div className="absolute z-50 top-0 left-0 w-full h-full bg-black/40 flex items-center justify-center text-red-500 text-lg font-medium">
+          Please Complete Your Profile
+        </div>
+      )}
     </div>
   );
 }

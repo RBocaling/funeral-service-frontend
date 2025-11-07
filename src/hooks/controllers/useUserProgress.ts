@@ -11,6 +11,7 @@ const useProgressProfile = () => {
     queryKey: ["getProfileProgress"],
     queryFn: getUserProgress,
     refetchOnWindowFocus: true,
+    retry: false,
   });
 
   const customizeData = data?.map((item:any) => ({

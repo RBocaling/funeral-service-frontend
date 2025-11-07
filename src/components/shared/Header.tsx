@@ -16,6 +16,8 @@ import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useThemeStore } from "@/store/themeStore";
 import useUserAuth from "@/hooks/controllers/useUserAuth";
+import useUser from "@/hooks/controllers/useUser";
+import { useGetFuneralHelperPermissionsApi } from "@/hooks/controllers/useFuneralHelpers";
 
 // Simple theme toggle component
 const ModeToggle = () => {
@@ -37,8 +39,11 @@ const ModeToggle = () => {
 };
 
 const Header = () => {
-    const { data:userAuth } = useUserAuth();
+  const { data: userAuth } = useUserAuth();
   const { theme } = useThemeStore();
+  const { data: userInfo } = useUser();
+  const { data, isLoading } = useGetFuneralHelperPermissionsApi();
+  const { role } = useUser();
 
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -63,21 +68,37 @@ const Header = () => {
       label: "Services",
       icon: <Bath className="h-4 w-4 mr-2" />,
       href: "/services",
+      isHide: role === "HELPER" && !data?.isAllowServices,
     },
     {
       label: " Bookings",
       icon: <Shuffle className="h-4 w-4 mr-2" />,
       href: "/bookings",
+      isHide: role === "HELPER" && !data?.isAllowBookings,
+    },
+    {
+      label: "Payment Magement",
+      icon: <HandCoins className="h-4 w-4 mr-2" />,
+      href: "/booking-payment-management",
+      isHide: role === "HELPER",
     },
     {
       label: "Messages",
       icon: <MessageSquare className="h-4 w-4 mr-2" />,
       href: "/messages",
+      isHide: role === "HELPER",
     },
+    // {
+    //   label: "Payment Method",
+    //   icon: <HandCoins className="h-4 w-4 mr-2" />,
+    //   href: "/payment-method",
+    //   isHide: role === "HELPER",
+    // },
     {
-      label: "Payment Method",
+      label: "My Subscription",
       icon: <HandCoins className="h-4 w-4 mr-2" />,
-      href: "/payment-method",
+      href: "/my-subscriptions",
+      isHide: role === "HELPER",
     },
   ];
 
@@ -87,7 +108,15 @@ const Header = () => {
         <div className="flex items-center gap-2">
           <Link to="/dashboard">
             <div className="flex items-center gap-2 cursor-pointer">
-              <img src={theme === "dark" ? "/logo-funeral-dark.png":"/white-logo.png"} alt="Memorial" className=" w-[45%]" />  
+              <img
+                src={
+                  theme === "dark"
+                    ? "/logo-funeral-dark.png"
+                    : "/white-logo.png"
+                }
+                alt="Memorial"
+                className=" w-[45%]"
+              />
             </div>
           </Link>
         </div>
@@ -101,7 +130,7 @@ const Header = () => {
                   isActive(item.href)
                     ? "font-semibold"
                     : "text-muted-foreground hover:text-foreground"
-                }`}
+                } ${item?.isHide && "hidden"}`}
               >
                 {item.icon}
                 {item.label}
@@ -111,11 +140,13 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center gap-5">
-          
           <ModeToggle />
           <Link to="/profile">
             <Avatar className="text-sky-500 shadow-xl shadow-violet-500/50">
-              <AvatarImage src={userAuth?.data?.profileUrl || "/empty.webp"}  alt="@shadcn" />
+              <AvatarImage
+                src={userAuth?.data?.profileUrl || "/empty.webp"}
+                alt="@shadcn"
+              />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </Link>

@@ -14,6 +14,7 @@ export const usUpdateBooking = () => {
       queryKey: ["customesr-booking"],
       queryFn: getBookingApi,
       refetchOnWindowFocus: true,
+      retry: false,
     });
  
     return {

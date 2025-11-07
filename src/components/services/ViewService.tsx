@@ -1,4 +1,4 @@
-import {  X } from "lucide-react";
+import { Maximize, Minimize, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent } from "../ui/dialog";
 import {
@@ -16,200 +16,255 @@ import { useGetServices } from "@/hooks/controllers/useAddService";
 import ViewServiceDetails from "./ViewServiceDetails";
 import CreateServicePackage from "./CreateFullPackage";
 import CreateAddtional from "./CrwateAdditional";
+import { useDocumentStatus } from "@/hooks/controllers/useFuneralDocuments";
+import useUser from "@/hooks/controllers/useUser";
+import { useGetIsHashActive } from "@/hooks/controllers/useSubscribe";
 
 const ViewService = ({
   viewModalOpen,
   setViewModalOpen,
-
 }: {
   viewModalOpen: boolean;
-    setViewModalOpen: any;
-  }) => {
-  const {serviceType} = useServiceTypeStore()
-  const {data,isLoading} = useGetServices()
+  setViewModalOpen: any;
+}) => {
+  const { data: isHasActive, isLoading: isActiveLoading } =
+    useGetIsHashActive();
+
+  const { data: isActiveDoc, isLoading: isActiveDocLoading } =
+    useDocumentStatus();
+  const { role, isKycVerify } = useUser();
+
+  const { serviceType } = useServiceTypeStore();
+  const { data, isLoading } = useGetServices();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isFull, setIsFull] = useState<boolean>(false);
   const [isOpenViewDetail, setIsOpenViewDetail] = useState<boolean>(false);
   const [selectedService, setSelectedService] = useState<boolean>();
   const [isOpenAddPackage, setIsOpenPackage] = useState<boolean>(false);
-  const [isOpenAddAdditional, setIsOpenAddAdditional] = useState<boolean>(false);
+  const [isOpenAddAdditional, setIsOpenAddAdditional] =
+    useState<boolean>(false);
 
-  if(isLoading) return <>loading...</>
-  const filterData = data?.filter((item: any) => item.serviceType === serviceType)?.map((item:any) => ({
-    ...item,
-    price: item?.additionalDetails?.reduce((acc:any,i:any)=> acc+i?.price, 0)
-  }));
+  if (isLoading || isActiveLoading || isActiveDocLoading)
+    return <>loading...</>;
+  const filterData = data
+    ?.filter((item: any) => item.serviceType === serviceType)
+    ?.map((item: any) => ({
+      ...item,
+      price: item?.additionalDetails?.reduce(
+        (acc: any, i: any) => acc + i?.price,
+        0
+      ),
+    }));
 
-  
-  console.log("jj", serviceType);
-  
-  
   return (
-   <> <Dialog
-   open={viewModalOpen}
-   onOpenChange={(open) =>  setViewModalOpen(open)}
- >
-   <DialogContent className="sm:max-w-[800px] p-0 rounded-2xl overflow-hidden">
-     <div className="relative bg-transparent bg-gray-100 dark:bg-gray-800">
-       <h2 className="text-xl font-semibold mb-2 p-3">{serviceType} List</h2>
-       <Button
-         variant="ghost"
-         size="icon"
-         className="absolute right-2 top-2 z-10 rounded-full bg-black/50 text-white hover:bg-black/70 hover:text-white"
-         onClick={() => setViewModalOpen(false)}
-       >
-         <X className="h-4 w-4" />
-       </Button>
+    <>
+      {" "}
+      <Dialog
+        open={viewModalOpen}
+        onOpenChange={(open) => setViewModalOpen(open)}
+      >
+        <DialogContent
+          className={`${
+            isFull ? "sm:max-w-[1800px] h-[70vh]" : "sm:max-w-[800px]"
+          } p-0 rounded-2xl overflow-hidden`}
+        >
+          <div className="relative bg-gray-100 dark:bg-gray-800 ">
+            <h2 className="text-xl font-semibold mb-2 p-3">
+              {serviceType} List
+            </h2>
+            <div className="flex items-center gap-5  absolute right-2 top-2 z-20">
+              <button onClick={() => setIsFull(!isFull)}>
+                {isFull ? <Minimize size={24} /> : <Maximize size={24} />}
+              </button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className=" z-10 rounded-full bg-black/50 text-white hover:bg-black/70 hover:text-white"
+                onClick={() => setViewModalOpen(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
 
-       <div className="h-[400px] bg-gray-100 dark:bg-gray-800 flex items-center justify-center z-50">
-         <Carousel
-           opts={{
-             align: "start",
-           }}
-           className="w-full max-w-2xl z-20"
-         >
-           <CarouselContent>
-             {filterData?.map((item:any, index:number) => (
-               <CarouselItem
-                 key={index}
-                 className={`md:basis-1/2  shadow-2xl shadow-violet-500/20 ${serviceType !=="FULL_PACKAGE" && "lg:basis-1/3"}`}
-               >
-                 <Card className="overflow-hidden flex flex-col h-full rounded-2xl border border-border/40 shadow-xl hover:shadow-2xl transition-all duration-300 pt-0">
-                   <div className="relative h-32">
-                     <img
-                       src={item?.imgUrl}                       
-                       className="w-full h-full object-cover transition-transform hover:scale-105 duration-700"
-                     />
-                     <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/60 to-transparent"></div>
-                   </div>
+            <div className="h-[400px] bg-gray-100 px-10 dark:bg-gray-800 flex items-center justify-center z-50">
+              <Carousel
+                opts={{
+                  align: "start",
+                }}
+                className="w-full max-w-2xl  z-20"
+              >
+                <CarouselContent>
+                  {filterData?.map((item: any, index: number) => (
+                    <CarouselItem
+                      key={index}
+                      className={`md:basis-1/2  shadow-2xl shadow-violet-500/20 ${
+                        serviceType !== "FULL_PACKAGE" &&
+                        (isFull ? "lg:basis-1/2" : "lg:basis-1/3")
+                      }`}
+                    >
+                      <Card className="overflow-hidden flex flex-col h-full rounded-2xl border border-border/40 shadow-xl hover:shadow-2xl transition-all duration-300 pt-0">
+                        <div className="relative h-32">
+                          <img
+                            src={item?.imgUrl}
+                            className="w-full h-full object-cover transition-transform hover:scale-105 duration-700"
+                          />
+                          <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        </div>
 
-                   <CardContent className="px-2 flex-grow py-0">
-                     <div className="flex items-center justify-between gap-7 px-2">
-                       <div className="flex">
-                       <div className="text-sm font-semibold shadow-lg">
-                         <span className="flex items-center text-lg">
-                           {item?.name}
-                           </span>
-                           {/* {
+                        <CardContent className="px-2 flex-grow py-0">
+                          <div className="flex items-center justify-between gap-7 px-2">
+                            <div className="flex">
+                              <div className="text-sm font-semibold shadow-lg">
+                                <span className="flex items-center text-lg">
+                                  {item?.name}
+                                </span>
+                                {/* {
                              serviceType === "FULL_PACKAGE" &&<button onClick={()=>handleDelete(item?.id)} className="rounded-full flex items-center gap-3 text-xs mt-3 text-red-500 cursor-pointer">
                              <Trash2 size={18} /> delete
                          </button>
                            } */}
-                       </div>
+                              </div>
+                            </div>
 
-                      
-                       </div>
-                       
-                       {
-                         (serviceType !=="FULL_PACKAGE" && serviceType !=="ADDITIONAL") &&  <div className="flex items-center justify-start gap-4">
-                         {/* <button onClick={()=>handleDelete(item?.id)} className="rounded-full text-xs text-red-500 cursor-pointer">
+                            {serviceType !== "FULL_PACKAGE" &&
+                              serviceType !== "ADDITIONAL" && (
+                                <div className="flex items-center justify-start gap-4">
+                                  {/* <button onClick={()=>handleDelete(item?.id)} className="rounded-full text-xs text-red-500 cursor-pointer">
                            <Trash2 size={20} />
                          </button> */}
-                         <button onClick={() =>
-                         {
-                           setSelectedService(item)
-                           setIsOpenViewDetail(true);
-                           }
-                         } className="rounded-full text-xs text-sky-500 cursor-pointer flex items-center gap-1 underline font-medium">
-                           {/* <Eye size={20} /> */}
-                           Prices
-                         </button>
-                         </div>
-                           
-                          
-                       }
+                                  <button
+                                    onClick={() => {
+                                      setSelectedService(item);
+                                      setIsOpenViewDetail(true);
+                                    }}
+                                    className="rounded-full text-xs text-sky-500 cursor-pointer flex items-center gap-1 underline font-medium"
+                                  >
+                                    {/* <Eye size={20} /> */}
+                                    Prices
+                                  </button>
+                                </div>
+                              )}
 
-                       {serviceType === "ADDITIONAL" && <p className="text-white">₱ { item?.price}</p>}
-                       
-                       {
-                         serviceType === "FULL_PACKAGE" && <div className="flex flex-col gap-1">
-                         {
-                           item.fullPacakge[0]?.details?.map((i:any, ind:number) => {
-                            return  <p className="text-xs text-gray-500" key={ind}>*{i?.description}</p>
-                           })
-                         }
-                        </div>
-                      }
-                     </div>
-                   </CardContent>
-                 </Card>
-               </CarouselItem>
-             ))}
-           </CarouselContent>
-           <CarouselPrevious />
-           <CarouselNext />
-         </Carousel>
-       </div>
+                            {serviceType === "ADDITIONAL" && (
+                              <p className="text-white">₱ {item?.price}</p>
+                            )}
 
-       <img
-         src="/transparent-hive.png"
-         className="absolute top-0 left-0 opacity-20 w-full h-full"
-         alt=""
-       />
-     </div>
+                            {serviceType === "FULL_PACKAGE" && (
+                              <div className="flex flex-col gap-1">
+                                {item.fullPacakge[0]?.details?.map(
+                                  (i: any, ind: number) => {
+                                    return (
+                                      <p
+                                        className="text-xs text-gray-500"
+                                        key={ind}
+                                      >
+                                        *{i?.description}
+                                      </p>
+                                    );
+                                  }
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
+            </div>
 
-     <div className="p-6 flex items-start justify-between">
-       <div className="flex flex-col gap-3">
-         <h2 className="text-xl font-semibold mb-2">Services</h2>
-         <p className="text-muted-foreground mb-4">
-           {/* This is the service description. You can edit this content. */}
-         </p>
-       </div>
-       <div className="flex items-center gap-5">
-         {/* <Button
+            <img
+              src="/transparent-hive.png"
+              className="absolute top-0 left-0 opacity-20 w-full h-full"
+              alt=""
+            />
+          </div>
+
+          <div className="p-6 flex items-start justify-between">
+            <div className="flex flex-col gap-3">
+              <h2 className="text-xl font-semibold mb-2">Services</h2>
+              <p className="text-muted-foreground mb-4">
+                {/* This is the service description. You can edit this content. */}
+              </p>
+            </div>
+            <div className="flex items-center gap-5">
+              {/* <Button
            size="sm"
            className="rounded-full bg-red-600/10 hover:bg-red-600/30 text-xs text-red-500 cursor-pointer"
          >
            <Trash2 className="h-3.5 w-3.5 mr-1" /> Delete All
          </Button> */}
-            <Button onClick={() => {
-              if (serviceType === "FULL_PACKAGE") {
-                setIsOpenPackage(true)
-              } 
-              else if (serviceType === "ADDITIONAL") {
-                setIsOpenAddAdditional(true)
-              } else {
-                setIsOpen(true)
+              <div className="flex flex-col gap-4">
+                <Button
+                  disabled={
+                    !isHasActive?.hasActive ||
+                    (role !== "HELPER" && isActiveDoc?.status != "VERIFIED") ||
+                    (role !== "HELPER" && !isKycVerify)
+                  }
+                  onClick={() => {
+                    if (serviceType === "FULL_PACKAGE") {
+                      setIsOpenPackage(true);
+                    } else if (serviceType === "ADDITIONAL") {
+                      setIsOpenAddAdditional(true);
+                    } else {
+                      setIsOpen(true);
+                    }
+                  }}
+                  className="rounded-full font-medium"
+                >
+                  Add {serviceType}
+                </Button>
+                {!isHasActive?.hasActive && (
+                  <span className="text-sm text-red-500 font-medium tracking-wider">
+                    Oops! It looks like you haven’t subscribed. Subscribe now to
+                    enjoy all features
+                  </span>
+                )}
 
-              }
-         }} className="rounded-full font-medium">
-           Add {serviceType}
-         </Button>
-       </div>
-     </div>
-   </DialogContent>
-    </Dialog>
-    
-    <CreateService
+                {role !== "HELPER" && isActiveDoc?.status != "VERIFIED" && (
+                  <span className="text-sm text-red-500 font-medium tracking-wider">
+                    Documents Not Verified
+                  </span>
+                )}
+                {role !== "HELPER" && !isKycVerify && (
+                  <span className="text-sm text-red-500 font-medium tracking-wider">
+                    You are not KYC Verified, Please Verify your Kyc
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+      <CreateService
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        onClose={()=>setViewModalOpen(false)}
+        onClose={() => setViewModalOpen(false)}
       />
-    
-      {
-        isOpenAddPackage && <CreateServicePackage
-        isOpen={isOpenAddPackage}
-        setIsOpen={setIsOpenPackage}
-        onClose={()=>setIsOpenPackage(false)}
-      />
-      }
-      {
-        isOpenAddAdditional && <CreateAddtional
-        isOpen={isOpenAddAdditional}
-        setIsOpen={setIsOpenAddAdditional}
-        onClose={()=>setIsOpenAddAdditional(false)}
-      />
-      }
+      {isOpenAddPackage && (
+        <CreateServicePackage
+          isOpen={isOpenAddPackage}
+          setIsOpen={setIsOpenPackage}
+          onClose={() => setIsOpenPackage(false)}
+        />
+      )}
+      {isOpenAddAdditional && (
+        <CreateAddtional
+          isOpen={isOpenAddAdditional}
+          setIsOpen={setIsOpenAddAdditional}
+          onClose={() => setIsOpenAddAdditional(false)}
+        />
+      )}
       <ViewServiceDetails
         selectedService={selectedService}
         isOpen={isOpenViewDetail}
         setIsOpen={setIsOpenViewDetail}
       />
-    
     </>
-    
-            )
+  );
 };
 
 export default ViewService;
-
-
