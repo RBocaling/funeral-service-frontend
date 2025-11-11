@@ -1,14 +1,17 @@
-import { Box, Check, MapPin, Truck, X } from "lucide-react";
+import { Box, Check, Truck, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { Card, CardContent } from "../ui/card";
 import Map from "./Map";
 import { usUpdateBooking } from "@/hooks/controllers/useBooking";
 import { useQueryClient } from "@tanstack/react-query";
 
-type BookingStatusType = "CONFIRMED" | "PREPARING_ITEMS" | "ON_THE_WAY" | "COMPLETED";
+type BookingStatusType =
+  | "CONFIRMED"
+  | "PREPARING_ITEMS"
+  | "ON_THE_WAY"
+  | "COMPLETED";
 
-const BookingStatus = ({booking}:{booking:any}) => {
+const BookingStatus = ({ booking }: { booking: any }) => {
   const [isAddLocation, setIsAddLocation] = useState<boolean>(false);
   const [currentStatus, setCurrentStatus] = useState<BookingStatusType>(
     booking?.status === "CONFIRMED"
@@ -19,16 +22,16 @@ const BookingStatus = ({booking}:{booking:any}) => {
       ? "COMPLETED"
       : "CONFIRMED"
   );
-  
+
   const updateStatusMutation = usUpdateBooking();
- 
-const queryClient = useQueryClient();
+
+  const queryClient = useQueryClient();
 
   const [steps, setSteps] = useState([
     {
       id: 1,
       title: "Booking Confirmed",
-      subtitle: "8:00 AM · Feb 8, 2023",
+      subtitle: "",
       icon: <Check className="w-5 h-5" />,
       status: "upcoming",
       statusName: "CONFIRMED",
@@ -36,7 +39,7 @@ const queryClient = useQueryClient();
     {
       id: 2,
       title: "Preparing Items",
-      subtitle: "Casket, Flowers & Setup",
+      subtitle: "",
       icon: <Box className="w-5 h-5" />,
       status: "upcoming",
       statusName: "PREPARING_ITEMS",
@@ -44,7 +47,7 @@ const queryClient = useQueryClient();
     {
       id: 3,
       title: "On the Way",
-      subtitle: "Delivery in Progress",
+      subtitle: "",
       icon: <Truck className="w-5 h-5" />,
       status: "upcoming",
       statusName: "ON_THE_WAY",
@@ -66,7 +69,8 @@ const queryClient = useQueryClient();
         return { ...step, status: "completed" };
       } else if (
         currentStatus === "ON_THE_WAY" &&
-        (step.statusName === "CONFIRMED" || step.statusName === "PREPARING_ITEMS")
+        (step.statusName === "CONFIRMED" ||
+          step.statusName === "PREPARING_ITEMS")
       ) {
         return { ...step, status: "completed" };
       }
@@ -77,43 +81,38 @@ const queryClient = useQueryClient();
     setSteps(updatedSteps);
   }, [currentStatus]);
 
-  const handleUpdate = (payload:any) => {
-    updateStatusMutation.mutate(
-      payload,
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: ["customesr-booking"],
-          });
-        },
-        onError: (error: any) => {
-          alert("Failed: " + JSON.stringify(error));
-        },
-      }
-    );
-  }
+  const handleUpdate = (payload: any) => {
+    updateStatusMutation.mutate(payload, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["customesr-booking"],
+        });
+      },
+      onError: (error: any) => {
+        alert("Failed: " + JSON.stringify(error));
+      },
+    });
+  };
   const handleMarkAsDone = (index: number) => {
     const updatedSteps = [...steps];
     updatedSteps[index].status = "completed";
     if (updatedSteps[index + 1]) {
       updatedSteps[index + 1].status = "active";
       setCurrentStatus(updatedSteps[index + 1].statusName as BookingStatusType);
-        handleUpdate({ 
-          id: booking?.id,
-          data: { 
-            bookingStatus: updatedSteps[index].statusName as BookingStatusType 
-          } 
-      })
-     
+      handleUpdate({
+        id: booking?.id,
+        data: {
+          bookingStatus: updatedSteps[index].statusName as BookingStatusType,
+        },
+      });
     } else {
       setCurrentStatus("COMPLETED");
-        handleUpdate({ 
-          id: booking?.id,
-          data: { 
-            bookingStatus: "ON_THE_WAY" 
-          } 
-      })
-      
+      handleUpdate({
+        id: booking?.id,
+        data: {
+          bookingStatus: "ON_THE_WAY",
+        },
+      });
     }
     setSteps(updatedSteps);
   };
@@ -127,30 +126,25 @@ const queryClient = useQueryClient();
     setSteps(updatedSteps);
     setCurrentStatus(updatedSteps[index].statusName as BookingStatusType);
     if (index - 1 > 0) {
-      handleUpdate({ 
+      handleUpdate({
         id: booking?.id,
-        data: { 
-          bookingStatus: updatedSteps[index - 1].statusName as BookingStatusType
-        } 
-    })
+        data: {
+          bookingStatus: updatedSteps[index - 1]
+            .statusName as BookingStatusType,
+        },
+      });
     } else {
-      handleUpdate({ 
+      handleUpdate({
         id: booking?.id,
-        data: { 
-          bookingStatus: "PENDING"
-        } 
-    })
+        data: {
+          bookingStatus: "PENDING",
+        },
+      });
     }
-   
-    
   };
 
   const firstActiveIndex = steps.findIndex((step) => step.status === "active");
-  const allCompleted = steps.every((step) => step.status === "completed");
-
-  
-  
-  
+  // const allCompleted = steps.every((step) => step.status === "completed");
 
   return (
     <div className="flex flex-col gap-7 items-center">
@@ -176,7 +170,9 @@ const queryClient = useQueryClient();
             </div>
 
             <div className="mt-3 relative mb-12">
-              <h4 className="text-sm font-semibold text-white">{step.title}</h4>
+              <h4 className="text-sm font-semibold text-black dark:text-white">
+                {step.title}
+              </h4>
               <p className="text-xs text-gray-400">{step.subtitle}</p>
 
               <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
@@ -204,7 +200,7 @@ const queryClient = useQueryClient();
         ))}
       </div>
 
-      {allCompleted && !isAddLocation && (
+      {/* {allCompleted && !isAddLocation && (
         <Card
           onClick={() => setIsAddLocation(true)}
           className="overflow-hidden border-dashed border-2 hover:border-primary/50 transition-colors bg-transparent hover:bg-muted/30 rounded-xl cursor-pointer flex items-center justify-center max-w-sm p-0"
@@ -219,7 +215,7 @@ const queryClient = useQueryClient();
             </p>
           </CardContent>
         </Card>
-      )}
+      )} */}
 
       {isAddLocation && (
         <div className="w-full flex flex-col gap-5 items-center">

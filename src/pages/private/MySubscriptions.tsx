@@ -11,116 +11,29 @@ import { addFuneralSubscription } from "@/api/subscribeApi";
 import { useGetSubscriptionMain } from "@/hooks/controllers/useSubscribe";
 import useUser from "@/hooks/controllers/useUser";
 
-// interface PaymentInfo {
-//   checkoutId: string;
-//   status: string;
-//   amount: number;
-//   checkoutUrl: string;
-// }
-
-// interface Subscription {
-//   id: number;
-//   funeralServiceId: number;
-//   amount: number;
-//   status: "ACTIVE" | "PENDING" | "EXPIRED";
-//   startDate: string;
-//   expirationDate: string;
-//   checkoutId: string;
-//   paymentUrl: string;
-//   adminHold: boolean;
-//   createdAt: string;
-//   updatedAt: string;
-//   transactions: any[];
-//   paymentInfo: PaymentInfo;
-// }
-
-
-// const mockSubscriptions2: Subscription[] = [
-//   {
-//     id: 3,
-//     funeralServiceId: 1,
-//     amount: 5000,
-//     status: 'ACTIVE',
-//     startDate: '2025-10-14T05:59:29.786Z',
-//     expirationDate: '2025-11-14T05:59:29.786Z',
-//     checkoutId: 'cs_WRhwP5tpTrGD5GSKNBywuJ9y',
-//     paymentUrl: 'https://checkout.paymongo.com/cs_WRhwP5tpTrGD5GSKNBywuJ9y_client_MRLfAHpRoz4T43eFPwkg1qb2#cGtfdGVzdF9TdXR0WWptdmVqMmJLTEwxZ0RtaGZ6U2E=',
-//     adminHold: true,
-//     createdAt: '2025-10-14T05:59:29.787Z',
-//     updatedAt: '2025-10-14T06:07:20.328Z',
-//     transactions: [],
-//     paymentInfo: {
-//       checkoutId: 'cs_WRhwP5tpTrGD5GSKNBywuJ9y',
-//       status: 'succeeded',
-//       amount: 5000,
-//       checkoutUrl: 'https://checkout.paymongo.com/cs_WRhwP5tpTrGD5GSKNBywuJ9y_client_MRLfAHpRoz4T43eFPwkg1qb2#cGtfdGVzdF9TdXR0WWptdmVqMmJLTEwxZ0RtaGZ6U2E=',
-//     },
-//   },
-//   {
-//     id: 2,
-//     funeralServiceId: 1,
-//     amount: 5000,
-//     status: 'PENDING',
-//     startDate: '2025-10-14T05:58:26.806Z',
-//     expirationDate: '2025-11-14T05:58:26.806Z',
-//     checkoutId: 'cs_hYUA5y5Q3ovhb9kBW8R5DrCx',
-//     paymentUrl: 'https://checkout.paymongo.com/cs_hYUA5y5Q3ovhb9kBW8R5DrCx_client_Y6AmUSDyzhvPzVgfKTbEQaws#cGtfdGVzdF9TdXR0WWptdmVqMmJLTEwxZ0RtaGZ6U2E=',
-//     adminHold: true,
-//     createdAt: '2025-10-14T05:58:26.811Z',
-//     updatedAt: '2025-10-14T05:58:26.811Z',
-//     transactions: [],
-//     paymentInfo: {
-//       checkoutId: 'cs_hYUA5y5Q3ovhb9kBW8R5DrCx',
-//       status: 'awaiting_payment_method',
-//       amount: 5000,
-//       checkoutUrl: 'https://checkout.paymongo.com/cs_hYUA5y5Q3ovhb9kBW8R5DrCx_client_Y6AmUSDyzhvPzVgfKTbEQaws#cGtfdGVzdF9TdXR0WWptdmVqMmJLTEwxZ0RtaGZ6U2E=',
-//     },
-//   },
-//   {
-//     id: 1,
-//     funeralServiceId: 1,
-//     amount: 5000,
-//     status: 'ACTIVE',
-//     startDate: '2025-10-14T05:45:06.415Z',
-//     expirationDate: '2025-11-14T05:45:06.415Z',
-//     checkoutId: 'cs_ToPAcR9cBrb6dZsfVTmRRig7',
-//     paymentUrl: 'https://checkout.paymongo.com/cs_ToPAcR9cBrb6dZsfVTmRRig7_client_9V3uhBvygxUhh7MfcFFft1qm#cGtfdGVzdF9TdXR0WWptdmVqMmJLTEwxZ0RtaGZ6U2E=',
-//     adminHold: true,
-//     createdAt: '2025-10-14T05:45:06.418Z',
-//     updatedAt: '2025-10-14T06:07:20.238Z',
-//     transactions: [],
-//     paymentInfo: {
-//       checkoutId: 'cs_ToPAcR9cBrb6dZsfVTmRRig7',
-//       status: 'succeeded',
-//       amount: 5000,
-//       checkoutUrl: 'https://checkout.paymongo.com/cs_ToPAcR9cBrb6dZsfVTmRRig7_client_9V3uhBvygxUhh7MfcFFft1qm#cGtfdGVzdF9TdXR0WWptdmVqMmJLTEwxZ0RtaGZ6U2E=',
-//     },
-//   },
-// ];
-
- function MySubscriptions() {
+function MySubscriptions() {
   const [months, setMonths] = useState<number>(1);
-   const { data: mockSubscriptions } = useGetSubscriptionMain();
-   console.log("mockSubscriptions", mockSubscriptions);
-     const { data: userInfo } = useUser();
-   
+  const { data: mockSubscriptions } = useGetSubscriptionMain();
+  const { data: userInfo } = useUser();
+
   const pricePerMonth = 1000;
-  const totalAmount = months * pricePerMonth;
+
+  // ✅ DISCOUNT LOGIC (update total amount)
+  const totalAmount = months === 12 ? 10000 : months * pricePerMonth;
 
   const hasActiveSubscription = mockSubscriptions?.some(
-    (sub:any) => sub.status === "ACTIVE"
+    (sub: any) => sub.status === "ACTIVE"
   );
 
-   const {mutate, isPending} = useMutation({
-     mutationFn: addFuneralSubscription,
-     onSuccess: (data) => window.location.href = data?.checkoutUrl,
-     onError:()=>alert("Error")
-   });
+  const { mutate, isPending } = useMutation({
+    mutationFn: addFuneralSubscription,
+    onSuccess: (data) => (window.location.href = data?.checkoutUrl),
+    onError: () => alert("Error"),
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    mutate({months});
-    console.log("Number of months:", months);
-    console.log("Total amount:", totalAmount);
+    mutate({ months });
   };
 
   const getStatusIcon = (status: string) => {
@@ -174,6 +87,7 @@ import useUser from "@/hooks/controllers/useUser";
           </div>
 
           <div className="grid lg:grid-cols-2 gap-8">
+            {/* LEFT SIDE — FORM */}
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-3 bg-blue-100 rounded-lg">
@@ -199,6 +113,7 @@ import useUser from "@/hooks/controllers/useUser";
               )}
 
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Duration Selection */}
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-3">
                     Select Subscription Duration
@@ -221,6 +136,7 @@ import useUser from "@/hooks/controllers/useUser";
                   </div>
                 </div>
 
+                {/* Total */}
                 <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
@@ -229,13 +145,23 @@ import useUser from "@/hooks/controllers/useUser";
                         {formatAmount(pricePerMonth)}
                       </span>
                     </div>
+
                     <div className="flex justify-between items-center">
                       <span className="text-slate-600">Duration</span>
                       <span className="font-semibold text-slate-800">
                         {months} {months === 1 ? "Month" : "Months"}
                       </span>
                     </div>
+
                     <div className="h-px bg-slate-300 my-2"></div>
+
+                    {/* Discount label */}
+                    {months === 12 && (
+                      <p className="text-green-600 font-semibold text-sm bg-green-100 px-3 py-1 rounded-full inline-block">
+                        Discount applied — You saved ₱2,000!
+                      </p>
+                    )}
+
                     <div className="flex justify-between items-center">
                       <span className="text-lg font-bold text-slate-800">
                         Total Amount
@@ -247,6 +173,7 @@ import useUser from "@/hooks/controllers/useUser";
                   </div>
                 </div>
 
+                {/* Submit button */}
                 <button
                   type="submit"
                   disabled={
@@ -258,20 +185,24 @@ import useUser from "@/hooks/controllers/useUser";
                 >
                   {isPending ? "Subscribing.." : "Subscribe Now"}
                 </button>
+
+                {/* Validation messages */}
                 {hasActiveSubscription && (
                   <p className="text-red-500 py-4 px-5 w-full rounded-2xl bg-red-500/20">
                     You currently have an active subscription. Please wait until
                     it expires before subscribing again.
                   </p>
                 )}
+
                 {userInfo?.isKycVerifiaction !== "VERIFIED" && (
                   <p className="text-red-500 py-4 px-5 w-full rounded-2xl bg-red-500/20">
-                    You are not KYC Verified, Please Verify your Kyc
+                    You are not KYC Verified, Please verify your KYC
                   </p>
                 )}
               </form>
             </div>
 
+            {/* RIGHT SIDE — PAYMENT HISTORY */}
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-3 bg-slate-100 rounded-lg">
@@ -305,6 +236,7 @@ import useUser from "@/hooks/controllers/useUser";
                             {subscription.status}
                           </div>
                         </div>
+
                         {subscription?.status === "PENDING" && (
                           <button
                             onClick={() =>
@@ -313,7 +245,6 @@ import useUser from "@/hooks/controllers/useUser";
                             }
                             className="text-xs font-bold py-2 px-4 rounded-full bg-yellow-500 mt-2 cursor-pointer"
                           >
-                            {" "}
                             Complete Payment
                           </button>
                         )}
@@ -326,6 +257,7 @@ import useUser from "@/hooks/controllers/useUser";
                             {formatAmount(subscription.amount)}
                           </span>
                         </div>
+
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-slate-600">
                             Start Date
@@ -334,6 +266,7 @@ import useUser from "@/hooks/controllers/useUser";
                             {formatDate(subscription.startDate)}
                           </span>
                         </div>
+
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-slate-600">
                             Expiration
@@ -342,6 +275,7 @@ import useUser from "@/hooks/controllers/useUser";
                             {formatDate(subscription.expirationDate)}
                           </span>
                         </div>
+
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-slate-600">
                             Payment Status
@@ -362,6 +296,5 @@ import useUser from "@/hooks/controllers/useUser";
     </div>
   );
 }
-
 
 export default MySubscriptions;

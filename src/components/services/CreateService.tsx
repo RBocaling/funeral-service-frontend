@@ -156,7 +156,7 @@ const CreateService = ({
                   (role !== "HELPER" && progress < 100) ||
                   addServiceMutation.isPending
                 }
-                className={`rounded-full py-5 px-5 bg-red-500 shadow-xl shadow-sky-500/10 text-white font-medium ${
+                className={`rounded-full py-5 px-5 bg-sky-500 shadow-xl shadow-sky-500/10 text-white font-medium ${
                   role !== "HELPER" && progress < 100 && "cursor-not-allowed"
                 }`}
               >

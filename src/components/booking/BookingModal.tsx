@@ -498,7 +498,7 @@ const BookingModal = ({
                     className={`px-4 py-2 rounded-full text-sm border-r pr-5 ${
                       booking.status === "Confirmed"
                         ? "bg-green-500/20 text-green-300"
-                        : "bg-yellow-500/20 text-yellow-300"
+                        : "bg-yellow-500/40 text-yellow-800 font-medium"
                     }`}
                   >
                     {booking.status}

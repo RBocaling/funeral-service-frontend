@@ -56,7 +56,7 @@ const { setCompleteProfileModal} = useProfileProgress()
   };
 
   return (
-    <div className="w-full min-h-screen bg-white flex flex-col justify-center relative">
+    <div className="w-full h-screen md:overflow-hidden bg-white flex flex-col justify-center relative">
       <div className="max-w-md w-full mx-auto">
         <div className="flex items-center gap-2 cursor-pointer mb-5">
           <img

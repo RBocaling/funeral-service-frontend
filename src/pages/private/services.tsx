@@ -125,7 +125,7 @@ const Services = ({isProfile=false}:{isProfile?:any}) => {
             >
               <div className="relative h-48 flex items-center justify-center">
                 <Badge className="absolute bottom-3 left-3 bg-gray-800 text-white flex items-center gap-1 whitespace-nowrap z-10 uppercase">
-                  {service.type}
+                  {service.type?.replace(/_/g, " ")}
                 </Badge>
 
                 <div className="absolute top-3 right-3 bg-white/70 dark:bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-sm font-semibold shadow-lg z-10">

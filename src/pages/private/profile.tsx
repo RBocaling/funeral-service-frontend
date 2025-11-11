@@ -41,6 +41,8 @@ const Profile = () => {
   const { data: userInfo, role } = useUser();
   const { progress } = useProgressProfile();
 
+  console.log("userInfouserInfo", userInfo);
+  
   const totalCount = [
     {
       label: "Total Transactions",

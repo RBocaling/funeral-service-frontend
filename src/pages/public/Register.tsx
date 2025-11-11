@@ -1,27 +1,37 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
 import { useRegister } from "@/hooks/controllers/useRegister";
 import UseUserList from "@/hooks/controllers/UseUserList";
+
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, CheckCircle } from "lucide-react";
 import { useAlertStore } from "@/store/alertStore";
 import TermsAgreement from "@/components/TermsAgreement/TermsAgreement";
 
+import { useMutation } from "@tanstack/react-query";
+import api from "@/services/api";
+import OtpInput from "@/components/ui/otp-input";
+import { generateRandomText } from "@/utils/generae";
+
 const Register = () => {
   const navigate = useNavigate();
   const { showAlert } = useAlertStore();
+  const ss = generateRandomText();
+
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(ss);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [agreed, setAgreed] = useState(false);
-
-  const handleAgreeChange = (value: boolean) => {
-    setAgreed(value);
-  };
-
   const [emailError, setEmailError] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [passwordTouched, setPasswordTouched] = useState(false);
@@ -29,16 +39,50 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  // ✅ OTP modal and OTP value holder
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
+  const [otpValue, setOtpValue] = useState(""); // ✅ this stores the OTP digits
+
+  const otpVerify = useMutation({
+    mutationFn: async () => {
+      return await api.post("/auth/verify-account", {
+        otp: otpValue,
+        email,
+      });
+    },
+    onSuccess: async () => {
+      await showAlert("success", {
+        title: "OTP Verified!",
+        message: "Account successfully verified.",
+        autoClose: true,
+      });
+
+      navigate("/login");
+    },
+    onError: async () => {
+      await showAlert("error", {
+        title: "OTP Invalid",
+        message: "The OTP code is incorrect. Try again.",
+        autoClose: true,
+      });
+    },
+  });
+
   const registerMutation = useRegister();
   const { data: userList = [] } = UseUserList();
 
+  // ✅ Check if email exists
   useEffect(() => {
     const emailExists = userList.some((user: any) => user.email === email);
     setEmailError(emailExists ? "Email already exists." : "");
   }, [email, userList]);
 
+  // ✅ Check if username exists
   useEffect(() => {
-    const usernameExists = userList.some((user: any) => user.username === username);
+    const usernameExists = userList.some(
+      (user: any) => user.username === username
+    );
     setUsernameError(usernameExists ? "Username already exists." : "");
   }, [username, userList]);
 
@@ -52,33 +96,42 @@ const Register = () => {
 
   const allValid = Object.values(isPasswordValid).every(Boolean);
   const confirmPasswordError =
-    confirmPassword && confirmPassword !== password ? "Passwords do not match." : "";
+    confirmPassword && confirmPassword !== password
+      ? "Passwords do not match."
+      : "";
+
+  console.log("Sss", ss);
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    if (emailError || usernameError || !allValid || confirmPasswordError) return;
+    if (emailError || usernameError || !allValid || confirmPasswordError)
+      return;
 
     registerMutation.mutate(
       { email, password, role: "FUNERAL_SERVICE", username },
       {
         onSuccess: async () => {
-           await  showAlert('success', {
-            title: 'Success Updated!',
-            message: 'Your action was completed successfully.',
-            autoClose: true,
-           });
-          navigate("/login")
+          setRegisteredEmail(email);
+          setShowOtpModal(true); // ✅ open OTP modal
         },
-        onError:async (error: any) => {
-           await showAlert('error', {
-            title: 'Error Add',
-            message: 'Something went wrong. Please try again.',
+        onError: async () => {
+          await showAlert("error", {
+            title: "Error",
+            message: "Something went wrong. Please try again.",
             autoClose: true,
           });
-          console.error("Registration failed:", error.response?.data?.message || error.message);
         },
       }
     );
+  };
+
+  const handleOtpSubmit = () => {
+    if (!otpValue) {
+      console.log("No OTP entered");
+      return;
+    }
+
+    otpVerify.mutate();
   };
 
   return (
@@ -88,12 +141,12 @@ const Register = () => {
           <img
             src="/logo-funeral-dark.png"
             alt="Memorial"
-            className=" w-[70%]"
-          />{" "}
+            className="w-[70%]"
+          />
         </div>
 
         <h2 className="text-2xl font-bold mb-2 text-gradient">
-          Funeral Service Registration
+          Customer Registration
         </h2>
         <p className="text-sm text-gray-400 mb-6">
           Join us today and book funeral services with ease. Track, manage, and
@@ -101,16 +154,16 @@ const Register = () => {
         </p>
 
         <form className="space-y-5" onSubmit={handleRegister}>
-          <div>
+          <div className="hidden">
             <Input
               type="text"
-              placeholder="Funeral Service Name"
-              value={username}
+              placeholder="Username"
+              value={ss}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-3 bg-neutral-200 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sky-500 placeholder:text-neutral-500 pr-10"
+              className="w-full px-4 py-3 bg-neutral-200 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-sky-500 text-sky-500"
             />
             {usernameError && (
-              <p className="text-sm text-red-500 mt-1">{usernameError}</p>
+              <p className="text-sm  text-red-500 mt-1">{usernameError}</p>
             )}
           </div>
 
@@ -120,14 +173,14 @@ const Register = () => {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-neutral-200 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sky-500 placeholder:text-neutral-500 pr-10"
+              className="w-full px-4 py-3 bg-neutral-200 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-sky-500 text-sky-500"
             />
             {emailError && (
               <p className="text-sm text-red-500 mt-1">{emailError}</p>
             )}
           </div>
 
-          {/* Password Field */}
+          {/* PASSWORD FIELD */}
           <div className="relative">
             <Input
               type={showPassword ? "text" : "password"}
@@ -135,7 +188,7 @@ const Register = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onFocus={() => setPasswordTouched(true)}
-              className="w-full px-4 py-3 bg-neutral-200 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sky-500 placeholder:text-neutral-500 pr-10"
+              className="w-full px-4 py-3 bg-neutral-200 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-sky-500 text-sky-500 pr-10"
             />
             <button
               type="button"
@@ -143,14 +196,14 @@ const Register = () => {
               onClick={() => setShowPassword((prev) => !prev)}
             >
               {showPassword ? (
-                <EyeOff className="w-5 h-5" />
+                <EyeOff className="w-6 h-6" />
               ) : (
-                <Eye className="w-5 h-5" />
+                <Eye className="w-6 h-6" />
               )}
             </button>
           </div>
 
-          {/* Password Checklist */}
+          {/* PASSWORD VALIDATION */}
           {passwordTouched && (
             <div className="mt-2 text-sm space-y-1">
               {[
@@ -173,14 +226,14 @@ const Register = () => {
             </div>
           )}
 
-          {/* Confirm Password Field */}
+          {/* CONFIRM PASSWORD */}
           <div className="relative">
             <Input
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-3 bg-neutral-200 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sky-500 placeholder:text-neutral-500 pr-10"
+              className="w-full px-4 py-3 bg-neutral-200 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-sky-500 text-sky-500 pr-10"
             />
             <button
               type="button"
@@ -188,9 +241,9 @@ const Register = () => {
               onClick={() => setShowConfirmPassword((prev) => !prev)}
             >
               {showConfirmPassword ? (
-                <EyeOff className="w-5 h-5" />
+                <EyeOff className="w-6 h-6" />
               ) : (
-                <Eye className="w-5 h-5" />
+                <Eye className="w-6 h-6" />
               )}
             </button>
             {confirmPasswordError && (
@@ -201,12 +254,10 @@ const Register = () => {
           </div>
 
           <TermsAgreement
-            title="Funeral Registration"
-            onAgreeChange={handleAgreeChange}
-            termsText={`1. You agree to provide valid identification.\n2. Booking is final once confirmed.\n3. Cancellations are subject to service policies.`}
+            title="Customer Registration"
+            onAgreeChange={setAgreed}
           />
 
-          {/* Submit */}
           <Button
             type="submit"
             disabled={
@@ -230,6 +281,39 @@ const Register = () => {
           </Link>
         </p>
       </div>
+
+      {/* ✅ OTP MODAL */}
+      <Dialog open={showOtpModal} onOpenChange={() => console.log("d")}>
+        <DialogContent className="max-w-sm rounded-3xl border-none shadow-xl backdrop-blur-2xl bg-white/75">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl font-semibold">
+              Verify Email
+            </DialogTitle>
+          </DialogHeader>
+
+          <p className="text-center text-sm text-gray-500">
+            We've sent a verification code to:
+          </p>
+          <p className="text-center text-sky-600 font-medium">
+            {registeredEmail}
+          </p>
+
+          <div className="mt-6 flex justify-center">
+            <OtpInput
+              length={6}
+              onChange={(value: string) => setOtpValue(value)} // ✅ Update while typing
+              onComplete={(value: string) => setOtpValue(value)} // ✅ Update when full
+            />
+          </div>
+
+          <Button
+            onClick={handleOtpSubmit}
+            className="rounded-full py-5 w-full mt-6 bg-sky-600 hover:bg-sky-700"
+          >
+            Submit Code
+          </Button>
+        </DialogContent>
+      </Dialog>
 
       <img
         src="/grid-bg.png"

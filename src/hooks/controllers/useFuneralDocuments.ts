@@ -27,6 +27,7 @@ export const useAddDocument = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["myDocuments"] });
       queryClient.invalidateQueries({ queryKey: ["documentStatus"] });
+      queryClient.invalidateQueries({ queryKey: ["myDocuments2"] });
     },
   });
 };

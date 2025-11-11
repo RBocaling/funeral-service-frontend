@@ -1,19 +1,12 @@
-import {
-  DollarSign,
-  TrendingUp,
-  Clock,
-  CheckCircle,
-  Calendar,
-} from "lucide-react";
+import { TrendingUp, Clock, CheckCircle, Calendar } from "lucide-react";
 import StatusBadge from "@/components/StatusBadge";
 import Card from "@/components/Card";
 import { formatCurrency, formatDateTime } from "@/utils/formatter";
 import useBookingPayment from "@/hooks/controllers/useBookingPayment";
 import TitlePage from "@/components/ui/title-page";
 
-
 export default function FuneralPaymentManagement() {
-      const { data:bookings, isLoading } = useBookingPayment();
+  const { data: bookings, isLoading } = useBookingPayment();
   const allPayments = bookings?.flatMap((b: any) =>
     (b.payments || []).map((p: any) => ({ ...p, booking: b }))
   );
@@ -101,7 +94,6 @@ export default function FuneralPaymentManagement() {
         <div className="divide-y divide-gray-100">
           {allPayments?.length === 0 ? (
             <div className="p-12 text-center">
-              <DollarSign className="w-12 h-12 text-gray-300 mx-auto mb-3" />
               <p className="text-gray-500">No payments yet</p>
             </div>
           ) : (

@@ -7,7 +7,7 @@ export default function PublicRoute() {
   if (isLoading) return <div>Loading...</div>;
 
   return !isAuthenticated ? (
-    <div className=" flex">
+    <div className="h-screen md:overflow-y-hidden flex">
       <div className="w-full md:w-1/2 relative z-50 bg-transparent">
         <Outlet />
       </div>

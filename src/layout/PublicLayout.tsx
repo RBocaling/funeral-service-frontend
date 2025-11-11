@@ -3,8 +3,8 @@ import { Outlet } from "react-router-dom";
 
 const PublicLayout = () => {
   return (
-    <div className="min-h-screen flex flex-col">
-      <main className="flex-1 p-4">
+    <div className="h-screen bg-red-500 flex flex-col md:overflow-hidden">
+      <main className="flex-1 p-4 md:p-0">
         <Outlet />
         <Alert />
       </main>

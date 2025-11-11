@@ -262,6 +262,7 @@ const PersonalInfo = ({ open, setOpen }: PersonalInfoProps) => {
                   className="py-4 w-full"
                   onChange={handleChange}
                   value={formData.contact}
+                  type="number"
                 />
               </div>
 

@@ -2,12 +2,7 @@ import StatCard from "@/components/dashboard/StatCard";
 import { Badge } from "@/components/ui/badge";
 import { useGetServices } from "@/hooks/controllers/useAddService";
 import { useGetBooking } from "@/hooks/controllers/useBooking";
-import {
-  Bath,
-  CircleDollarSign,
-  FolderDot,
-  Users,
-} from "lucide-react";
+import { Bath, FolderDot, Users } from "lucide-react";
 import {
   AreaChart,
   Area,
@@ -25,27 +20,51 @@ const Dashboard = () => {
   const { data: bookings }: { data: any[] | undefined } = useGetBooking();
 
   const totalTransactions = bookings?.length || 0;
-  const completedTransactions = bookings?.filter((b) => b.bookingStatus === "COMPLETED").length || 0;
-  const pendingTransactions = bookings?.filter((b) => b.bookingStatus === "PENDING").length || 0;
+  const completedTransactions =
+    bookings?.filter((b) => b.bookingStatus === "COMPLETED").length || 0;
+  const pendingTransactions =
+    bookings?.filter((b) => b.bookingStatus === "PENDING").length || 0;
   const totalActiveBookings = pendingTransactions;
   const totalCustomers = new Set(bookings?.map((b) => b.customerId)).size || 0;
 
-  const revenueData = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"].map(month => ({ name: month, value: 0 }));
+  const revenueData = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ].map((month) => ({ name: month, value: 0 }));
 
   bookings?.forEach((booking) => {
     if (booking.bookingStatus === "COMPLETED") {
-      const month = new Date(booking.createdAt).toLocaleString("default", { month: "short" });
-      const revenue = booking.serviceBookings.reduce((acc:any, s:any) => acc + (s.selectedCasketDetail?.price || 0), 0);
-      const monthData = revenueData.find(d => d.name === month);
+      const month = new Date(booking.createdAt).toLocaleString("default", {
+        month: "short",
+      });
+      const revenue = booking.serviceBookings.reduce(
+        (acc: any, s: any) => acc + (s.selectedCasketDetail?.price || 0),
+        0
+      );
+      const monthData = revenueData.find((d) => d.name === month);
       if (monthData) monthData.value += revenue;
     }
   });
 
-  const bookingsData = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(day => ({ name: day, value: 0 }));
+  const bookingsData = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
+    (day) => ({ name: day, value: 0 })
+  );
 
   bookings?.forEach((booking) => {
-    const day = new Date(booking.createdAt).toLocaleString("default", { weekday: "short" });
-    const dayData = bookingsData.find(d => d.name === day);
+    const day = new Date(booking.createdAt).toLocaleString("default", {
+      weekday: "short",
+    });
+    const dayData = bookingsData.find((d) => d.name === day);
     if (dayData) dayData.value += 1;
   });
 
@@ -57,13 +76,12 @@ const Dashboard = () => {
   return (
     <div className="container mx-auto px-5 space-y-6">
       <h1 className="text-gradient text-2xl font-bold flex items-center px-2">
-        Hello, Juan <img src="/waving.png" className="w-16" alt="" />
+        Hello, Funeral <img src="/waving.png" className="w-16" alt="" />
       </h1>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
-          icon={CircleDollarSign}
           label="Total Transaction"
           value={totalTransactions}
           additional={
@@ -89,19 +107,19 @@ const Dashboard = () => {
           icon={FolderDot}
           label="Total Active Bookings"
           value={totalActiveBookings}
-          trend="+8.1% from last month"
+          trend=""
         />
         <StatCard
           icon={Users}
           label="Total Customer"
           value={totalCustomers}
-          trend="+15.3% from last month"
+          trend=""
         />
         <StatCard
           icon={Bath}
           label="Total Services"
           value={services?.length || 0}
-          trend="+10.2% from last month"
+          trend=""
         />
       </div>
 

@@ -1,4 +1,5 @@
 import { addCustomer } from "@/api/auth";
+import { useAlertStore } from "@/store/alertStore";
 import { useMutation } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { useState, FormEvent } from "react";
@@ -27,16 +28,26 @@ export default function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
     location: "",
   });
 
+  const { showAlert } = useAlertStore();
+
   const { mutate, isPending } = useMutation({
     mutationFn: addCustomer as any,
-    onSuccess: () => {
-      alert("✅ Success! User added.");
+    onSuccess: async () => {
+      await showAlert("success", {
+        title: "Success Updated!",
+        message: "Your action was completed successfully.",
+        autoClose: true,
+      });
       onClose();
       resetForm();
     },
-    onError: (err: any) => {
+    onError: async (err: any) => {
       console.error(err);
-      alert("❌ Failed to add user. Please check your input.");
+      await showAlert("error", {
+        title: "Error Add",
+        message: "Something went wrong. Please try again.",
+        autoClose: true,
+      });
     },
   });
 

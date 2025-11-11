@@ -4,27 +4,41 @@ import PersonalInfo from "./PersonalInfo";
 import useProgressProfile from "@/hooks/controllers/useUserProgress";
 import { useProfileProgress } from "@/store/completeProfileStore";
 import UpdateProfilePicture from "./UpdateProfilePicture";
+import UploadDocumentsModal from "../kyc/UploadDocumentsModal";
+import KYCVerificationModal from "../kyc/KycModal";
+import SubscriptionModal from "../kyc/SubscriptionModal";
 
 const CompleteTaskModal = () => {
   const [isOpenPersonal, setIsOpenPersonal] = useState<boolean>(false);
   const [isOpenDocument, setIsOpenDocument] = useState<boolean>(false);
+  const [isOpenDoc, setOpenDocs] = useState<boolean>(false);
+  const [isOpenKyc, setIsOpenKyc] = useState<boolean>(false);
+  const [isOpenSubs, setIsOpenSubs] = useState<boolean>(false);
   const { isCompleteProfileModalOpen, setCompleteProfileModal } =
     useProfileProgress();
 
-  const { data: tasks, isLoading, id, progress } = useProgressProfile();
+  const { data: tasks, id, progress } = useProgressProfile();
 
   if (!isCompleteProfileModalOpen || progress >= 100) return null;
-  if (isLoading) return <>loading</>;
+  // if (isLoading) return <>loading</>;
 
   const completedTasks = tasks?.filter((task: any) => task?.completed).length;
   const totalTasks = tasks.length;
   const calculatedProgress = Math.round((completedTasks / totalTasks) * 100);
+
+  console.log("id", id);
 
   const handleContinueSetup = () => {
     if (id === "personal") {
       setIsOpenPersonal(true);
     } else if (id === "documents") {
       setIsOpenDocument(true);
+    } else if (id === "kyc") {
+      setIsOpenKyc(true);
+    } else if (id === "verification") {
+      setOpenDocs(true);
+    } else if (id === "subscription") {
+      setIsOpenSubs(true);
     }
   };
 
@@ -142,6 +156,18 @@ const CompleteTaskModal = () => {
           isOpen={isOpenDocument}
           setIsOpen={setIsOpenDocument}
         />
+      )}
+      {isOpenDoc && (
+        <UploadDocumentsModal open={isOpenDoc} setOpen={setOpenDocs} />
+      )}
+      {isOpenKyc && (
+        <KYCVerificationModal
+          open={isOpenKyc}
+          onClose={() => setIsOpenKyc(false)}
+        />
+      )}
+      {isOpenSubs && (
+        <SubscriptionModal open={isOpenSubs} setOpen={setIsOpenSubs} />
       )}
     </div>
   );

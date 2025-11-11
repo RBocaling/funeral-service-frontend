@@ -154,7 +154,7 @@ const UpdateProfilePicture: React.FC<UploadDocumentIdProps> = ({
                 <div className="flex flex-col items-center justify-center">
                   <CloudUpload className="text-sky-500" size={120} />
                   <p className="text-gray-500 text-sm text-center">
-                    Click to upload a selfie
+                    Click to upload a logo
                   </p>
                 </div>
               )}
